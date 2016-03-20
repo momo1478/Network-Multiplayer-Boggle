@@ -52,7 +52,6 @@
     <Compile Include="BoggleGUI.Designer.cs">
       <DependentUpon>BoggleGUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="IBoggleView.cs" />
     <Compile Include="Launch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BoggleGUI.resx">

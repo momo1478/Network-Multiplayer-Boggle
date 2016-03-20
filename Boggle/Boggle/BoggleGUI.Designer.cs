@@ -47,7 +47,7 @@
             this.Letter14 = new System.Windows.Forms.TextBox();
             this.Letter15 = new System.Windows.Forms.TextBox();
             this.Letter16 = new System.Windows.Forms.TextBox();
-            this.Letters = new System.Windows.Forms.GroupBox();
+            this.LettersGroup = new System.Windows.Forms.GroupBox();
             this.WordLabel = new System.Windows.Forms.Label();
             this.WordBox = new System.Windows.Forms.TextBox();
             this.Player1ScoreLabel = new System.Windows.Forms.Label();
@@ -56,8 +56,18 @@
             this.Player2ScoreBox = new System.Windows.Forms.TextBox();
             this.TimeLabel = new System.Windows.Forms.Label();
             this.TimeBox = new System.Windows.Forms.TextBox();
+            this.CreateNameGroup = new System.Windows.Forms.GroupBox();
+            this.CreateNameLabel = new System.Windows.Forms.Label();
+            this.JoinGroup = new System.Windows.Forms.GroupBox();
+            this.JoinTimeLabel = new System.Windows.Forms.Label();
+            this.CreateNameBox = new System.Windows.Forms.TextBox();
+            this.JoinTimeBox = new System.Windows.Forms.TextBox();
+            this.JoinServerLabel = new System.Windows.Forms.Label();
+            this.JoinServerBox = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
-            this.Letters.SuspendLayout();
+            this.LettersGroup.SuspendLayout();
+            this.CreateNameGroup.SuspendLayout();
+            this.JoinGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -67,7 +77,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(287, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(416, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -323,30 +333,30 @@
             this.Letter16.Text = "Qu";
             this.Letter16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letters
+            // LettersGroup
             // 
-            this.Letters.Controls.Add(this.Letter16);
-            this.Letters.Controls.Add(this.Letter7);
-            this.Letters.Controls.Add(this.Letter12);
-            this.Letters.Controls.Add(this.Letter1);
-            this.Letters.Controls.Add(this.Letter8);
-            this.Letters.Controls.Add(this.Letter5);
-            this.Letters.Controls.Add(this.Letter4);
-            this.Letters.Controls.Add(this.Letter9);
-            this.Letters.Controls.Add(this.Letter15);
-            this.Letters.Controls.Add(this.Letter13);
-            this.Letters.Controls.Add(this.Letter11);
-            this.Letters.Controls.Add(this.Letter2);
-            this.Letters.Controls.Add(this.Letter6);
-            this.Letters.Controls.Add(this.Letter3);
-            this.Letters.Controls.Add(this.Letter10);
-            this.Letters.Controls.Add(this.Letter14);
-            this.Letters.Location = new System.Drawing.Point(12, 27);
-            this.Letters.Name = "Letters";
-            this.Letters.Size = new System.Drawing.Size(150, 150);
-            this.Letters.TabIndex = 2;
-            this.Letters.TabStop = false;
-            this.Letters.Text = "Letters";
+            this.LettersGroup.Controls.Add(this.Letter16);
+            this.LettersGroup.Controls.Add(this.Letter7);
+            this.LettersGroup.Controls.Add(this.Letter12);
+            this.LettersGroup.Controls.Add(this.Letter1);
+            this.LettersGroup.Controls.Add(this.Letter8);
+            this.LettersGroup.Controls.Add(this.Letter5);
+            this.LettersGroup.Controls.Add(this.Letter4);
+            this.LettersGroup.Controls.Add(this.Letter9);
+            this.LettersGroup.Controls.Add(this.Letter15);
+            this.LettersGroup.Controls.Add(this.Letter13);
+            this.LettersGroup.Controls.Add(this.Letter11);
+            this.LettersGroup.Controls.Add(this.Letter2);
+            this.LettersGroup.Controls.Add(this.Letter6);
+            this.LettersGroup.Controls.Add(this.Letter3);
+            this.LettersGroup.Controls.Add(this.Letter10);
+            this.LettersGroup.Controls.Add(this.Letter14);
+            this.LettersGroup.Location = new System.Drawing.Point(12, 27);
+            this.LettersGroup.Name = "LettersGroup";
+            this.LettersGroup.Size = new System.Drawing.Size(150, 150);
+            this.LettersGroup.TabIndex = 2;
+            this.LettersGroup.TabStop = false;
+            this.LettersGroup.Text = "Letters";
             // 
             // WordLabel
             // 
@@ -417,11 +427,86 @@
             this.TimeBox.TabIndex = 6;
             this.TimeBox.Text = "120";
             // 
+            // CreateNameGroup
+            // 
+            this.CreateNameGroup.Controls.Add(this.CreateNameBox);
+            this.CreateNameGroup.Controls.Add(this.CreateNameLabel);
+            this.CreateNameGroup.Location = new System.Drawing.Point(251, 36);
+            this.CreateNameGroup.Name = "CreateNameGroup";
+            this.CreateNameGroup.Size = new System.Drawing.Size(149, 63);
+            this.CreateNameGroup.TabIndex = 7;
+            this.CreateNameGroup.TabStop = false;
+            this.CreateNameGroup.Text = "Create a Username";
+            // 
+            // CreateNameLabel
+            // 
+            this.CreateNameLabel.AutoSize = true;
+            this.CreateNameLabel.Location = new System.Drawing.Point(7, 16);
+            this.CreateNameLabel.Name = "CreateNameLabel";
+            this.CreateNameLabel.Size = new System.Drawing.Size(35, 13);
+            this.CreateNameLabel.TabIndex = 0;
+            this.CreateNameLabel.Text = "Name";
+            // 
+            // JoinGroup
+            // 
+            this.JoinGroup.Controls.Add(this.JoinServerBox);
+            this.JoinGroup.Controls.Add(this.JoinServerLabel);
+            this.JoinGroup.Controls.Add(this.JoinTimeLabel);
+            this.JoinGroup.Controls.Add(this.JoinTimeBox);
+            this.JoinGroup.Location = new System.Drawing.Point(250, 108);
+            this.JoinGroup.Name = "JoinGroup";
+            this.JoinGroup.Size = new System.Drawing.Size(150, 113);
+            this.JoinGroup.TabIndex = 7;
+            this.JoinGroup.TabStop = false;
+            this.JoinGroup.Text = "Join a Game";
+            // 
+            // JoinTimeLabel
+            // 
+            this.JoinTimeLabel.AutoSize = true;
+            this.JoinTimeLabel.Location = new System.Drawing.Point(8, 17);
+            this.JoinTimeLabel.Name = "JoinTimeLabel";
+            this.JoinTimeLabel.Size = new System.Drawing.Size(30, 13);
+            this.JoinTimeLabel.TabIndex = 0;
+            this.JoinTimeLabel.Text = "Time";
+            // 
+            // CreateNameBox
+            // 
+            this.CreateNameBox.Location = new System.Drawing.Point(10, 33);
+            this.CreateNameBox.Name = "CreateNameBox";
+            this.CreateNameBox.Size = new System.Drawing.Size(122, 20);
+            this.CreateNameBox.TabIndex = 1;
+            // 
+            // JoinTimeBox
+            // 
+            this.JoinTimeBox.Location = new System.Drawing.Point(11, 33);
+            this.JoinTimeBox.Name = "JoinTimeBox";
+            this.JoinTimeBox.Size = new System.Drawing.Size(27, 20);
+            this.JoinTimeBox.TabIndex = 6;
+            this.JoinTimeBox.Text = "120";
+            // 
+            // JoinServerLabel
+            // 
+            this.JoinServerLabel.AutoSize = true;
+            this.JoinServerLabel.Location = new System.Drawing.Point(11, 55);
+            this.JoinServerLabel.Name = "JoinServerLabel";
+            this.JoinServerLabel.Size = new System.Drawing.Size(79, 13);
+            this.JoinServerLabel.TabIndex = 7;
+            this.JoinServerLabel.Text = "Server Address";
+            // 
+            // JoinServerBox
+            // 
+            this.JoinServerBox.Location = new System.Drawing.Point(11, 68);
+            this.JoinServerBox.Name = "JoinServerBox";
+            this.JoinServerBox.Size = new System.Drawing.Size(122, 20);
+            this.JoinServerBox.TabIndex = 8;
+            // 
             // BoggleGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(287, 238);
+            this.ClientSize = new System.Drawing.Size(416, 234);
+            this.Controls.Add(this.JoinGroup);
+            this.Controls.Add(this.CreateNameGroup);
             this.Controls.Add(this.TimeBox);
             this.Controls.Add(this.Player2ScoreBox);
             this.Controls.Add(this.Player1ScoreBox);
@@ -431,14 +516,18 @@
             this.Controls.Add(this.TimeLabel);
             this.Controls.Add(this.WordLabel);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.Letters);
+            this.Controls.Add(this.LettersGroup);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "BoggleGUI";
             this.Text = "Boggle!";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.Letters.ResumeLayout(false);
-            this.Letters.PerformLayout();
+            this.LettersGroup.ResumeLayout(false);
+            this.LettersGroup.PerformLayout();
+            this.CreateNameGroup.ResumeLayout(false);
+            this.CreateNameGroup.PerformLayout();
+            this.JoinGroup.ResumeLayout(false);
+            this.JoinGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -465,7 +554,7 @@
         private System.Windows.Forms.TextBox Letter14;
         private System.Windows.Forms.TextBox Letter15;
         private System.Windows.Forms.TextBox Letter16;
-        private System.Windows.Forms.GroupBox Letters;
+        private System.Windows.Forms.GroupBox LettersGroup;
         private System.Windows.Forms.Label WordLabel;
         private System.Windows.Forms.TextBox WordBox;
         private System.Windows.Forms.Label Player1ScoreLabel;
@@ -474,6 +563,14 @@
         private System.Windows.Forms.TextBox Player2ScoreBox;
         private System.Windows.Forms.Label TimeLabel;
         private System.Windows.Forms.TextBox TimeBox;
+        private System.Windows.Forms.GroupBox CreateNameGroup;
+        private System.Windows.Forms.GroupBox JoinGroup;
+        private System.Windows.Forms.Label JoinTimeLabel;
+        private System.Windows.Forms.Label CreateNameLabel;
+        private System.Windows.Forms.TextBox JoinServerBox;
+        private System.Windows.Forms.Label JoinServerLabel;
+        private System.Windows.Forms.TextBox JoinTimeBox;
+        private System.Windows.Forms.TextBox CreateNameBox;
     }
 }
 
