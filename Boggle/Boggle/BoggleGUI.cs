@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 namespace Boggle
 {
+    //View Class
+
     public partial class BoggleGUI : Form
     {
         public BoggleGUI()
