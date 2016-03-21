@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,6 +66,7 @@
             this.JoinButton = new System.Windows.Forms.Button();
             this.JoinTimeLabel = new System.Windows.Forms.Label();
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -425,9 +427,9 @@
             // 
             this.TimeBox.Location = new System.Drawing.Point(193, 151);
             this.TimeBox.Name = "TimeBox";
+            this.TimeBox.ReadOnly = true;
             this.TimeBox.Size = new System.Drawing.Size(27, 20);
             this.TimeBox.TabIndex = 6;
-            this.TimeBox.Text = "120";
             // 
             // CreateNameGroup
             // 
@@ -496,6 +498,7 @@
             this.JoinButton.TabIndex = 9;
             this.JoinButton.Text = "Join";
             this.JoinButton.UseVisualStyleBackColor = true;
+            this.JoinButton.Click += new System.EventHandler(this.JoinButton_Click);
             // 
             // JoinTimeLabel
             // 
@@ -513,6 +516,11 @@
             this.JoinTimeBox.Size = new System.Drawing.Size(27, 20);
             this.JoinTimeBox.TabIndex = 6;
             this.JoinTimeBox.Text = "120";
+            // 
+            // timer
+            // 
+            this.timer.Interval = 1000;
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // BoggleGUI
             // 
@@ -586,6 +594,7 @@
         private System.Windows.Forms.Button JoinButton;
         private System.Windows.Forms.TextBox JoinStatusBox;
         private System.Windows.Forms.Label JoinStatusLabel;
+        private System.Windows.Forms.Timer timer;
     }
 }
 
