@@ -448,6 +448,7 @@
             this.CreateNameBox.Name = "CreateNameBox";
             this.CreateNameBox.Size = new System.Drawing.Size(122, 20);
             this.CreateNameBox.TabIndex = 1;
+            this.CreateNameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CreateNameBox_KeyDown);
             // 
             // CreateNameLabel
             // 
