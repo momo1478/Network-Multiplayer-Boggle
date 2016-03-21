@@ -13,9 +13,33 @@ namespace Boggle
     //View Class
     public partial class BoggleGUI : Form
     {
-        //Properties to comunicate with the server
-        public int Time { get; set; }
+        public int Time
+        {
+            get
+            {
+                int result;
+                return int.TryParse(TimeBox.Text, out result) ? result : 0;
+            }
+            set
+            {
+                TimeBox.Text = value.ToString();
+            }
+        }
+        public int JoinTimeBoxText
+        {
+            get
+            {
+                int result;
+                return int.TryParse(JoinTimeBox.Text, out result) ? result : 0;
+            }
+            set
+            {
+                JoinTimeBox.Text = value.ToString();
+            }
+        }
+
         public string Message { set { MessageBox.Show(value); } }
+
         public string CreateNameBoxText
         {
             get
@@ -27,11 +51,33 @@ namespace Boggle
                 CreateNameBox.Text = value;
             }
         }
+        public string Player1ScoreLabelText
+        {
+            get
+            {
+                return Player1ScoreLabel.Text;
+            }
+            set
+            {
+                Player1ScoreLabel.Text = value;
+            }
+        }
+        public string Player2ScoreLabelText
+        {
+            get
+            {
+                return Player2ScoreLabel.Text;
+            }
+            set
+            {
+                Player2ScoreLabel.Text = value;
+            }
+        }
 
 
         public event Action<string> CreateName;
 
-
+        public event Action<int> JoinGame;
 
         public BoggleGUI()
         {
@@ -59,6 +105,12 @@ namespace Boggle
         {
             timer.Start();
             TimeBox.Text = Time.ToString();
+
+            int temp;
+            if (JoinGame != null && int.TryParse(JoinTimeBox.Text , out temp) )
+            {
+                JoinGame(JoinTimeBoxText);
+            }
         }
         private void timer_Tick(object sender, EventArgs e)
         {
@@ -69,6 +121,6 @@ namespace Boggle
             }
         }
 
-        
+
     }
 }

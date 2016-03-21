@@ -30,6 +30,24 @@ namespace Boggle
             return client;
         }
 
+        public static string JoinGame(string playerToken, int time)
+        {
+            using (HttpClient client = CreateClient())
+            {
+                dynamic data = new ExpandoObject();
+                data.UserToken = playerToken;
+                data.TimeLimit = time;
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = client.PostAsync("games", content).Result;
+
+                string result = response.Content.ReadAsStringAsync().Result;
+                dynamic expando = JsonConvert.DeserializeObject(result);
+
+                return response.IsSuccessStatusCode ? expando.GameID : null;
+            }
+        }
+
         /// <summary>
         /// POSTs nickname to server.
         /// If successful : returns user token.
@@ -48,9 +66,9 @@ namespace Boggle
                 HttpResponseMessage response = client.PostAsync("users", content).Result;
 
                 string result = response.Content.ReadAsStringAsync().Result;
-                dynamic userToken = JsonConvert.DeserializeObject(result);
+                dynamic expando = JsonConvert.DeserializeObject(result);
 
-                return response.IsSuccessStatusCode ? userToken.UserToken : null;
+                return response.IsSuccessStatusCode ? expando.UserToken : null;
             }
         }
     }
