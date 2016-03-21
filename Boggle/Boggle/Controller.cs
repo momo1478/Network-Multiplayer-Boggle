@@ -8,6 +8,9 @@ namespace Boggle
 {
     class Controller
     {
+        public Controller(BoggleGUI view)
+        {
 
+        }
     }
 }

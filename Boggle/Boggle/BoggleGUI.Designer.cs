@@ -60,13 +60,11 @@
             this.CreateNameBox = new System.Windows.Forms.TextBox();
             this.CreateNameLabel = new System.Windows.Forms.Label();
             this.JoinGroup = new System.Windows.Forms.GroupBox();
+            this.JoinStatusBox = new System.Windows.Forms.TextBox();
+            this.JoinStatusLabel = new System.Windows.Forms.Label();
             this.JoinButton = new System.Windows.Forms.Button();
-            this.JoinServerBox = new System.Windows.Forms.TextBox();
-            this.JoinServerLabel = new System.Windows.Forms.Label();
             this.JoinTimeLabel = new System.Windows.Forms.Label();
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
-            this.JoinStatusLabel = new System.Windows.Forms.Label();
-            this.JoinStatusBox = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -463,16 +461,32 @@
             this.JoinGroup.Controls.Add(this.JoinStatusBox);
             this.JoinGroup.Controls.Add(this.JoinStatusLabel);
             this.JoinGroup.Controls.Add(this.JoinButton);
-            this.JoinGroup.Controls.Add(this.JoinServerBox);
-            this.JoinGroup.Controls.Add(this.JoinServerLabel);
             this.JoinGroup.Controls.Add(this.JoinTimeLabel);
             this.JoinGroup.Controls.Add(this.JoinTimeBox);
             this.JoinGroup.Location = new System.Drawing.Point(250, 108);
             this.JoinGroup.Name = "JoinGroup";
-            this.JoinGroup.Size = new System.Drawing.Size(150, 144);
+            this.JoinGroup.Size = new System.Drawing.Size(150, 113);
             this.JoinGroup.TabIndex = 7;
             this.JoinGroup.TabStop = false;
             this.JoinGroup.Text = "Join a Game";
+            // 
+            // JoinStatusBox
+            // 
+            this.JoinStatusBox.Enabled = false;
+            this.JoinStatusBox.Location = new System.Drawing.Point(11, 76);
+            this.JoinStatusBox.Name = "JoinStatusBox";
+            this.JoinStatusBox.ReadOnly = true;
+            this.JoinStatusBox.Size = new System.Drawing.Size(100, 20);
+            this.JoinStatusBox.TabIndex = 11;
+            // 
+            // JoinStatusLabel
+            // 
+            this.JoinStatusLabel.AutoSize = true;
+            this.JoinStatusLabel.Location = new System.Drawing.Point(8, 60);
+            this.JoinStatusLabel.Name = "JoinStatusLabel";
+            this.JoinStatusLabel.Size = new System.Drawing.Size(37, 13);
+            this.JoinStatusLabel.TabIndex = 10;
+            this.JoinStatusLabel.Text = "Status";
             // 
             // JoinButton
             // 
@@ -482,22 +496,6 @@
             this.JoinButton.TabIndex = 9;
             this.JoinButton.Text = "Join";
             this.JoinButton.UseVisualStyleBackColor = true;
-            // 
-            // JoinServerBox
-            // 
-            this.JoinServerBox.Location = new System.Drawing.Point(11, 68);
-            this.JoinServerBox.Name = "JoinServerBox";
-            this.JoinServerBox.Size = new System.Drawing.Size(122, 20);
-            this.JoinServerBox.TabIndex = 8;
-            // 
-            // JoinServerLabel
-            // 
-            this.JoinServerLabel.AutoSize = true;
-            this.JoinServerLabel.Location = new System.Drawing.Point(11, 55);
-            this.JoinServerLabel.Name = "JoinServerLabel";
-            this.JoinServerLabel.Size = new System.Drawing.Size(79, 13);
-            this.JoinServerLabel.TabIndex = 7;
-            this.JoinServerLabel.Text = "Server Address";
             // 
             // JoinTimeLabel
             // 
@@ -516,29 +514,11 @@
             this.JoinTimeBox.TabIndex = 6;
             this.JoinTimeBox.Text = "120";
             // 
-            // JoinStatusLabel
-            // 
-            this.JoinStatusLabel.AutoSize = true;
-            this.JoinStatusLabel.Location = new System.Drawing.Point(8, 94);
-            this.JoinStatusLabel.Name = "JoinStatusLabel";
-            this.JoinStatusLabel.Size = new System.Drawing.Size(37, 13);
-            this.JoinStatusLabel.TabIndex = 10;
-            this.JoinStatusLabel.Text = "Status";
-            // 
-            // JoinStatusBox
-            // 
-            this.JoinStatusBox.Enabled = false;
-            this.JoinStatusBox.Location = new System.Drawing.Point(11, 110);
-            this.JoinStatusBox.Name = "JoinStatusBox";
-            this.JoinStatusBox.ReadOnly = true;
-            this.JoinStatusBox.Size = new System.Drawing.Size(100, 20);
-            this.JoinStatusBox.TabIndex = 11;
-            // 
             // BoggleGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 264);
+            this.ClientSize = new System.Drawing.Size(416, 230);
             this.Controls.Add(this.JoinGroup);
             this.Controls.Add(this.CreateNameGroup);
             this.Controls.Add(this.TimeBox);
@@ -601,8 +581,6 @@
         private System.Windows.Forms.GroupBox JoinGroup;
         private System.Windows.Forms.Label JoinTimeLabel;
         private System.Windows.Forms.Label CreateNameLabel;
-        private System.Windows.Forms.TextBox JoinServerBox;
-        private System.Windows.Forms.Label JoinServerLabel;
         private System.Windows.Forms.TextBox JoinTimeBox;
         private System.Windows.Forms.TextBox CreateNameBox;
         private System.Windows.Forms.Button JoinButton;
