@@ -10,10 +10,20 @@ namespace Boggle
     {
         BoggleGUI View;
 
-
+        /// <summary>
+        /// Gets and sets the players token
+        /// </summary>
         public string PlayerToken { get; set; }
+
+        /// <summary>
+        /// Gets and sets the players GameID
+        /// </summary>
         public string GameID { get; set; }
 
+
+        /// <summary>
+        /// Begins controlling window.
+        /// </summary>
         public Controller(BoggleGUI view)
         {
             View = view;
@@ -22,6 +32,11 @@ namespace Boggle
             view.JoinGame += View_JoinGame;
         }
 
+
+        /// <summary>
+        /// Handles a request to Join a Game using the Network class.
+        /// </summary>
+        /// <param name="time"></param>
         private void View_JoinGame(int time)
         {
             string GID = Network.JoinGame(PlayerToken, time);
@@ -34,17 +49,15 @@ namespace Boggle
             {
                 View.Message = "Could not join game";
             }
-                
         }
 
         /// <summary>
-        /// Creates a name using the Network class.
+        /// Handles a request to create a name using the Network class.
         /// </summary>
         /// <param name="nickname"></param>
         private void View_CreateName(string nickname)
         {
             string token = Network.CreateName(nickname);
-
             if (token != null)
             {
                 PlayerToken = token;
@@ -55,5 +68,6 @@ namespace Boggle
                 View.Message = "Unable to create username";
             }
         }
+
     }
 }

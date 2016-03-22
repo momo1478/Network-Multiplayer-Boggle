@@ -30,20 +30,35 @@ namespace Boggle
             return client;
         }
 
+        /// <summary>
+        /// POSTs time to server.
+        /// If successful : returns GameID.
+        /// Otherwise : returns null;
+        /// </summary>
+        /// <param name="playerToken"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
         public static string JoinGame(string playerToken, int time)
         {
+            // Starts a HTTP client
             using (HttpClient client = CreateClient())
             {
+                // Creates an ExpandoObject
                 dynamic data = new ExpandoObject();
+
+                // POSTs userToken and Time to the server.
                 data.UserToken = playerToken;
                 data.TimeLimit = time;
 
+                // Retreives response from the server.
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync("games", content).Result;
 
+                // Converts response from the server.
                 string result = response.Content.ReadAsStringAsync().Result;
                 dynamic expando = JsonConvert.DeserializeObject(result);
 
+                // return the GameID if successfull, otherwise return null
                 return response.IsSuccessStatusCode ? expando.GameID : null;
             }
         }
@@ -59,15 +74,19 @@ namespace Boggle
         {
             using (HttpClient client = CreateClient())
             {
+                // Creates an ExpandoObject
                 dynamic data = new ExpandoObject();
                 data.Nickname = nickname;
 
+                // Retreives response from the server.
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync("users", content).Result;
 
+                // Converts response from the server.
                 string result = response.Content.ReadAsStringAsync().Result;
                 dynamic expando = JsonConvert.DeserializeObject(result);
 
+                // return the userToken if successfull, otherwise return null
                 return response.IsSuccessStatusCode ? expando.UserToken : null;
             }
         }

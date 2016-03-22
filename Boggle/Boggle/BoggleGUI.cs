@@ -13,6 +13,11 @@ namespace Boggle
     //View Class
     public partial class BoggleGUI : Form
     {
+        // Properties to communicate with the controller and model/BoggleAPI.
+        
+        /// <summary>
+        /// Gets and sets the current time.
+        /// </summary>
         public int Time
         {
             get
@@ -25,6 +30,10 @@ namespace Boggle
                 TimeBox.Text = value.ToString();
             }
         }
+
+        /// <summary>
+        /// Gets and sets the JoinTimeBox
+        /// </summary>
         public int JoinTimeBoxText
         {
             get
@@ -38,8 +47,14 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// Sets the Message for a pop up window.
+        /// </summary>
         public string Message { set { MessageBox.Show(value); } }
 
+        /// <summary>
+        /// Gets and sets the CreateNameBox
+        /// </summary>
         public string CreateNameBoxText
         {
             get
@@ -51,6 +66,10 @@ namespace Boggle
                 CreateNameBox.Text = value;
             }
         }
+
+        /// <summary>
+        /// Gets and sets the Player1ScoreLabelText
+        /// </summary>
         public string Player1ScoreLabelText
         {
             get
@@ -62,6 +81,10 @@ namespace Boggle
                 Player1ScoreLabel.Text = value;
             }
         }
+
+        /// <summary>
+        /// Gets and sets the Player2ScoreLabelText
+        /// </summary>
         public string Player2ScoreLabelText
         {
             get
@@ -74,17 +97,31 @@ namespace Boggle
             }
         }
 
-
+        // Actions to communicate with the controller and model/BoggleAPI.
+        /// <summary>
+        /// Fired when we generate a username.
+        /// The parameter is the user name.
+        /// </summary>
         public event Action<string> CreateName;
 
+        /// <summary>
+        /// Fired when we join a game.
+        /// The parameter is the join time.
+        /// </summary>
         public event Action<int> JoinGame;
-
+        
+        // Constructor for BoggleGUI.
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BoggleGUI"/> class.
+        /// </summary>
         public BoggleGUI()
         {
             new Controller(this);
             InitializeComponent();
         }
 
+
+        // Methods called by the GUI.
         /// <summary>
         /// On enter pressed...
         /// If Successful : Prompts player that username has been generated.
@@ -101,6 +138,12 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// On JoinButton clicked
+        /// Join game 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void JoinButton_Click(object sender, EventArgs e)
         {
             timer.Start();
@@ -112,6 +155,12 @@ namespace Boggle
                 JoinGame(JoinTimeBoxText);
             }
         }
+
+        /// <summary>
+        /// Activates on timer tick which interval is set to every second.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
             TimeBox.Text = Time.ToString();
@@ -120,7 +169,6 @@ namespace Boggle
                 timer.Stop();
             }
         }
-
 
     }
 }
