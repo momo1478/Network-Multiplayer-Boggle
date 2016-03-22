@@ -12,7 +12,7 @@ namespace Boggle
 {
     /// <summary>
     /// View class
-    /// Implements the GUI
+    /// Implement the GUI
     /// </summary>
     public partial class BoggleGUI : Form
     {

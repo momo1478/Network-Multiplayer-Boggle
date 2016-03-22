@@ -408,6 +408,7 @@
             this.Player1ScoreBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.Player1ScoreBox.Location = new System.Drawing.Point(171, 52);
             this.Player1ScoreBox.Name = "Player1ScoreBox";
+            this.Player1ScoreBox.ReadOnly = true;
             this.Player1ScoreBox.Size = new System.Drawing.Size(73, 20);
             this.Player1ScoreBox.TabIndex = 5;
             // 
@@ -416,6 +417,7 @@
             this.Player2ScoreBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.Player2ScoreBox.Location = new System.Drawing.Point(171, 95);
             this.Player2ScoreBox.Name = "Player2ScoreBox";
+            this.Player2ScoreBox.ReadOnly = true;
             this.Player2ScoreBox.Size = new System.Drawing.Size(73, 20);
             this.Player2ScoreBox.TabIndex = 5;
             // 
