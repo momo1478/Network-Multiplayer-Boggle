@@ -32,22 +32,22 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Letter1 = new System.Windows.Forms.TextBox();
-            this.Letter2 = new System.Windows.Forms.TextBox();
-            this.Letter3 = new System.Windows.Forms.TextBox();
-            this.Letter4 = new System.Windows.Forms.TextBox();
-            this.Letter5 = new System.Windows.Forms.TextBox();
-            this.Letter6 = new System.Windows.Forms.TextBox();
-            this.Letter7 = new System.Windows.Forms.TextBox();
-            this.Letter8 = new System.Windows.Forms.TextBox();
-            this.Letter9 = new System.Windows.Forms.TextBox();
-            this.Letter10 = new System.Windows.Forms.TextBox();
-            this.Letter11 = new System.Windows.Forms.TextBox();
-            this.Letter12 = new System.Windows.Forms.TextBox();
-            this.Letter13 = new System.Windows.Forms.TextBox();
-            this.Letter14 = new System.Windows.Forms.TextBox();
-            this.Letter15 = new System.Windows.Forms.TextBox();
-            this.Letter16 = new System.Windows.Forms.TextBox();
+            this.LetterD = new System.Windows.Forms.TextBox();
+            this.LetterL = new System.Windows.Forms.TextBox();
+            this.LetterN = new System.Windows.Forms.TextBox();
+            this.LetterG = new System.Windows.Forms.TextBox();
+            this.LetterF = new System.Windows.Forms.TextBox();
+            this.LetterM = new System.Windows.Forms.TextBox();
+            this.LetterB = new System.Windows.Forms.TextBox();
+            this.LetterE = new System.Windows.Forms.TextBox();
+            this.LetterH = new System.Windows.Forms.TextBox();
+            this.LetterO = new System.Windows.Forms.TextBox();
+            this.LetterK = new System.Windows.Forms.TextBox();
+            this.LetterC = new System.Windows.Forms.TextBox();
+            this.LetterJ = new System.Windows.Forms.TextBox();
+            this.LetterP = new System.Windows.Forms.TextBox();
+            this.LetterI = new System.Windows.Forms.TextBox();
+            this.LetterA = new System.Windows.Forms.TextBox();
             this.LettersGroup = new System.Windows.Forms.GroupBox();
             this.WordLabel = new System.Windows.Forms.Label();
             this.WordBox = new System.Windows.Forms.TextBox();
@@ -98,265 +98,265 @@
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
-            // Letter1
+            // LetterD
             // 
-            this.Letter1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterD.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter1.Location = new System.Drawing.Point(25, 26);
-            this.Letter1.MaxLength = 2;
-            this.Letter1.Name = "Letter1";
-            this.Letter1.ReadOnly = true;
-            this.Letter1.Size = new System.Drawing.Size(25, 20);
-            this.Letter1.TabIndex = 1;
-            this.Letter1.Tag = "Letter";
-            this.Letter1.Text = "Qu";
-            this.Letter1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterD.Location = new System.Drawing.Point(103, 34);
+            this.LetterD.MaxLength = 2;
+            this.LetterD.Name = "LetterD";
+            this.LetterD.ReadOnly = true;
+            this.LetterD.Size = new System.Drawing.Size(25, 20);
+            this.LetterD.TabIndex = 1;
+            this.LetterD.Tag = "Letter";
+            this.LetterD.Text = "Qu";
+            this.LetterD.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter2
+            // LetterL
             // 
-            this.Letter2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter2.Location = new System.Drawing.Point(51, 26);
-            this.Letter2.MaxLength = 2;
-            this.Letter2.Name = "Letter2";
-            this.Letter2.ReadOnly = true;
-            this.Letter2.Size = new System.Drawing.Size(25, 20);
-            this.Letter2.TabIndex = 1;
-            this.Letter2.Tag = "Letter";
-            this.Letter2.Text = "Qu";
-            this.Letter2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterL.Location = new System.Drawing.Point(103, 81);
+            this.LetterL.MaxLength = 2;
+            this.LetterL.Name = "LetterL";
+            this.LetterL.ReadOnly = true;
+            this.LetterL.Size = new System.Drawing.Size(25, 20);
+            this.LetterL.TabIndex = 1;
+            this.LetterL.Tag = "Letter";
+            this.LetterL.Text = "Qu";
+            this.LetterL.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter3
+            // LetterN
             // 
-            this.Letter3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterN.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.Letter3.Location = new System.Drawing.Point(77, 26);
-            this.Letter3.MaxLength = 2;
-            this.Letter3.Name = "Letter3";
-            this.Letter3.ReadOnly = true;
-            this.Letter3.Size = new System.Drawing.Size(25, 20);
-            this.Letter3.TabIndex = 1;
-            this.Letter3.Tag = "Letter";
-            this.Letter3.Text = "Qu";
-            this.Letter3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterN.Cursor = System.Windows.Forms.Cursors.Default;
+            this.LetterN.Location = new System.Drawing.Point(51, 104);
+            this.LetterN.MaxLength = 2;
+            this.LetterN.Name = "LetterN";
+            this.LetterN.ReadOnly = true;
+            this.LetterN.Size = new System.Drawing.Size(25, 20);
+            this.LetterN.TabIndex = 1;
+            this.LetterN.Tag = "Letter";
+            this.LetterN.Text = "Qu";
+            this.LetterN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter4
+            // LetterG
             // 
-            this.Letter4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterG.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter4.Location = new System.Drawing.Point(103, 26);
-            this.Letter4.MaxLength = 2;
-            this.Letter4.Name = "Letter4";
-            this.Letter4.ReadOnly = true;
-            this.Letter4.Size = new System.Drawing.Size(25, 20);
-            this.Letter4.TabIndex = 1;
-            this.Letter4.Tag = "Letter";
-            this.Letter4.Text = "Qu";
-            this.Letter4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterG.Location = new System.Drawing.Point(77, 58);
+            this.LetterG.MaxLength = 2;
+            this.LetterG.Name = "LetterG";
+            this.LetterG.ReadOnly = true;
+            this.LetterG.Size = new System.Drawing.Size(25, 20);
+            this.LetterG.TabIndex = 1;
+            this.LetterG.Tag = "Letter";
+            this.LetterG.Text = "Qu";
+            this.LetterG.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter5
+            // LetterF
             // 
-            this.Letter5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterF.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter5.Location = new System.Drawing.Point(25, 52);
-            this.Letter5.MaxLength = 2;
-            this.Letter5.Name = "Letter5";
-            this.Letter5.ReadOnly = true;
-            this.Letter5.Size = new System.Drawing.Size(25, 20);
-            this.Letter5.TabIndex = 1;
-            this.Letter5.Tag = "Letter";
-            this.Letter5.Text = "Qu";
-            this.Letter5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterF.Location = new System.Drawing.Point(51, 58);
+            this.LetterF.MaxLength = 2;
+            this.LetterF.Name = "LetterF";
+            this.LetterF.ReadOnly = true;
+            this.LetterF.Size = new System.Drawing.Size(25, 20);
+            this.LetterF.TabIndex = 1;
+            this.LetterF.Tag = "Letter";
+            this.LetterF.Text = "Qu";
+            this.LetterF.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter6
+            // LetterM
             // 
-            this.Letter6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterM.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter6.Location = new System.Drawing.Point(51, 52);
-            this.Letter6.MaxLength = 2;
-            this.Letter6.Name = "Letter6";
-            this.Letter6.ReadOnly = true;
-            this.Letter6.Size = new System.Drawing.Size(25, 20);
-            this.Letter6.TabIndex = 1;
-            this.Letter6.Tag = "Letter";
-            this.Letter6.Text = "Qu";
-            this.Letter6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterM.Location = new System.Drawing.Point(25, 104);
+            this.LetterM.MaxLength = 2;
+            this.LetterM.Name = "LetterM";
+            this.LetterM.ReadOnly = true;
+            this.LetterM.Size = new System.Drawing.Size(25, 20);
+            this.LetterM.TabIndex = 1;
+            this.LetterM.Tag = "Letter";
+            this.LetterM.Text = "Qu";
+            this.LetterM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter7
+            // LetterB
             // 
-            this.Letter7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter7.Location = new System.Drawing.Point(77, 52);
-            this.Letter7.MaxLength = 2;
-            this.Letter7.Name = "Letter7";
-            this.Letter7.ReadOnly = true;
-            this.Letter7.Size = new System.Drawing.Size(25, 20);
-            this.Letter7.TabIndex = 1;
-            this.Letter7.Tag = "Letter";
-            this.Letter7.Text = "Qu";
-            this.Letter7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterB.Location = new System.Drawing.Point(51, 34);
+            this.LetterB.MaxLength = 2;
+            this.LetterB.Name = "LetterB";
+            this.LetterB.ReadOnly = true;
+            this.LetterB.Size = new System.Drawing.Size(25, 20);
+            this.LetterB.TabIndex = 1;
+            this.LetterB.Tag = "Letter";
+            this.LetterB.Text = "Qu";
+            this.LetterB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter8
+            // LetterE
             // 
-            this.Letter8.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterE.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter8.Location = new System.Drawing.Point(103, 52);
-            this.Letter8.MaxLength = 2;
-            this.Letter8.Name = "Letter8";
-            this.Letter8.ReadOnly = true;
-            this.Letter8.Size = new System.Drawing.Size(25, 20);
-            this.Letter8.TabIndex = 1;
-            this.Letter8.Tag = "Letter";
-            this.Letter8.Text = "Qu";
-            this.Letter8.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterE.Location = new System.Drawing.Point(25, 58);
+            this.LetterE.MaxLength = 2;
+            this.LetterE.Name = "LetterE";
+            this.LetterE.ReadOnly = true;
+            this.LetterE.Size = new System.Drawing.Size(25, 20);
+            this.LetterE.TabIndex = 1;
+            this.LetterE.Tag = "Letter";
+            this.LetterE.Text = "Qu";
+            this.LetterE.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter9
+            // LetterH
             // 
-            this.Letter9.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterH.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter9.Location = new System.Drawing.Point(25, 78);
-            this.Letter9.MaxLength = 2;
-            this.Letter9.Name = "Letter9";
-            this.Letter9.ReadOnly = true;
-            this.Letter9.Size = new System.Drawing.Size(25, 20);
-            this.Letter9.TabIndex = 1;
-            this.Letter9.Tag = "Letter";
-            this.Letter9.Text = "Qu";
-            this.Letter9.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterH.Location = new System.Drawing.Point(103, 58);
+            this.LetterH.MaxLength = 2;
+            this.LetterH.Name = "LetterH";
+            this.LetterH.ReadOnly = true;
+            this.LetterH.Size = new System.Drawing.Size(25, 20);
+            this.LetterH.TabIndex = 1;
+            this.LetterH.Tag = "Letter";
+            this.LetterH.Text = "Qu";
+            this.LetterH.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter10
+            // LetterO
             // 
-            this.Letter10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterO.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter10.Location = new System.Drawing.Point(51, 78);
-            this.Letter10.MaxLength = 2;
-            this.Letter10.Name = "Letter10";
-            this.Letter10.ReadOnly = true;
-            this.Letter10.Size = new System.Drawing.Size(25, 20);
-            this.Letter10.TabIndex = 1;
-            this.Letter10.Tag = "Letter";
-            this.Letter10.Text = "Qu";
-            this.Letter10.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterO.Location = new System.Drawing.Point(77, 104);
+            this.LetterO.MaxLength = 2;
+            this.LetterO.Name = "LetterO";
+            this.LetterO.ReadOnly = true;
+            this.LetterO.Size = new System.Drawing.Size(25, 20);
+            this.LetterO.TabIndex = 1;
+            this.LetterO.Tag = "Letter";
+            this.LetterO.Text = "Qu";
+            this.LetterO.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter11
+            // LetterK
             // 
-            this.Letter11.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterK.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter11.Location = new System.Drawing.Point(77, 78);
-            this.Letter11.MaxLength = 2;
-            this.Letter11.Name = "Letter11";
-            this.Letter11.ReadOnly = true;
-            this.Letter11.Size = new System.Drawing.Size(25, 20);
-            this.Letter11.TabIndex = 1;
-            this.Letter11.Tag = "Letter";
-            this.Letter11.Text = "Qu";
-            this.Letter11.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterK.Location = new System.Drawing.Point(77, 81);
+            this.LetterK.MaxLength = 2;
+            this.LetterK.Name = "LetterK";
+            this.LetterK.ReadOnly = true;
+            this.LetterK.Size = new System.Drawing.Size(25, 20);
+            this.LetterK.TabIndex = 1;
+            this.LetterK.Tag = "Letter";
+            this.LetterK.Text = "Qu";
+            this.LetterK.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter12
+            // LetterC
             // 
-            this.Letter12.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterC.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter12.Location = new System.Drawing.Point(103, 78);
-            this.Letter12.MaxLength = 2;
-            this.Letter12.Name = "Letter12";
-            this.Letter12.ReadOnly = true;
-            this.Letter12.Size = new System.Drawing.Size(25, 20);
-            this.Letter12.TabIndex = 1;
-            this.Letter12.Tag = "Letter";
-            this.Letter12.Text = "Qu";
-            this.Letter12.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterC.Location = new System.Drawing.Point(77, 34);
+            this.LetterC.MaxLength = 2;
+            this.LetterC.Name = "LetterC";
+            this.LetterC.ReadOnly = true;
+            this.LetterC.Size = new System.Drawing.Size(25, 20);
+            this.LetterC.TabIndex = 1;
+            this.LetterC.Tag = "Letter";
+            this.LetterC.Text = "Qu";
+            this.LetterC.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter13
+            // LetterJ
             // 
-            this.Letter13.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterJ.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter13.Location = new System.Drawing.Point(25, 104);
-            this.Letter13.MaxLength = 2;
-            this.Letter13.Name = "Letter13";
-            this.Letter13.ReadOnly = true;
-            this.Letter13.Size = new System.Drawing.Size(25, 20);
-            this.Letter13.TabIndex = 1;
-            this.Letter13.Tag = "Letter";
-            this.Letter13.Text = "Qu";
-            this.Letter13.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterJ.Location = new System.Drawing.Point(51, 81);
+            this.LetterJ.MaxLength = 2;
+            this.LetterJ.Name = "LetterJ";
+            this.LetterJ.ReadOnly = true;
+            this.LetterJ.Size = new System.Drawing.Size(25, 20);
+            this.LetterJ.TabIndex = 1;
+            this.LetterJ.Tag = "Letter";
+            this.LetterJ.Text = "Qu";
+            this.LetterJ.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter14
+            // LetterP
             // 
-            this.Letter14.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterP.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter14.Location = new System.Drawing.Point(51, 104);
-            this.Letter14.MaxLength = 2;
-            this.Letter14.Name = "Letter14";
-            this.Letter14.ReadOnly = true;
-            this.Letter14.Size = new System.Drawing.Size(25, 20);
-            this.Letter14.TabIndex = 1;
-            this.Letter14.Tag = "Letter";
-            this.Letter14.Text = "Qu";
-            this.Letter14.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterP.Location = new System.Drawing.Point(103, 104);
+            this.LetterP.MaxLength = 2;
+            this.LetterP.Name = "LetterP";
+            this.LetterP.ReadOnly = true;
+            this.LetterP.Size = new System.Drawing.Size(25, 20);
+            this.LetterP.TabIndex = 1;
+            this.LetterP.Tag = "Letter";
+            this.LetterP.Text = "Qu";
+            this.LetterP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter15
+            // LetterI
             // 
-            this.Letter15.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterI.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter15.Location = new System.Drawing.Point(77, 104);
-            this.Letter15.MaxLength = 2;
-            this.Letter15.Name = "Letter15";
-            this.Letter15.ReadOnly = true;
-            this.Letter15.Size = new System.Drawing.Size(25, 20);
-            this.Letter15.TabIndex = 1;
-            this.Letter15.Tag = "Letter";
-            this.Letter15.Text = "Qu";
-            this.Letter15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterI.Location = new System.Drawing.Point(25, 81);
+            this.LetterI.MaxLength = 2;
+            this.LetterI.Name = "LetterI";
+            this.LetterI.ReadOnly = true;
+            this.LetterI.Size = new System.Drawing.Size(25, 20);
+            this.LetterI.TabIndex = 1;
+            this.LetterI.Tag = "Letter";
+            this.LetterI.Text = "Qu";
+            this.LetterI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // Letter16
+            // LetterA
             // 
-            this.Letter16.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LetterA.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Letter16.Location = new System.Drawing.Point(103, 104);
-            this.Letter16.MaxLength = 2;
-            this.Letter16.Name = "Letter16";
-            this.Letter16.ReadOnly = true;
-            this.Letter16.Size = new System.Drawing.Size(25, 20);
-            this.Letter16.TabIndex = 1;
-            this.Letter16.Tag = "Letter";
-            this.Letter16.Text = "Qu";
-            this.Letter16.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LetterA.Location = new System.Drawing.Point(26, 34);
+            this.LetterA.MaxLength = 2;
+            this.LetterA.Name = "LetterA";
+            this.LetterA.ReadOnly = true;
+            this.LetterA.Size = new System.Drawing.Size(25, 20);
+            this.LetterA.TabIndex = 1;
+            this.LetterA.Tag = "Letter";
+            this.LetterA.Text = "Qu";
+            this.LetterA.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LettersGroup
             // 
-            this.LettersGroup.Controls.Add(this.Letter16);
-            this.LettersGroup.Controls.Add(this.Letter7);
-            this.LettersGroup.Controls.Add(this.Letter12);
-            this.LettersGroup.Controls.Add(this.Letter1);
-            this.LettersGroup.Controls.Add(this.Letter8);
-            this.LettersGroup.Controls.Add(this.Letter5);
-            this.LettersGroup.Controls.Add(this.Letter4);
-            this.LettersGroup.Controls.Add(this.Letter9);
-            this.LettersGroup.Controls.Add(this.Letter15);
-            this.LettersGroup.Controls.Add(this.Letter13);
-            this.LettersGroup.Controls.Add(this.Letter11);
-            this.LettersGroup.Controls.Add(this.Letter2);
-            this.LettersGroup.Controls.Add(this.Letter6);
-            this.LettersGroup.Controls.Add(this.Letter3);
-            this.LettersGroup.Controls.Add(this.Letter10);
-            this.LettersGroup.Controls.Add(this.Letter14);
+            this.LettersGroup.Controls.Add(this.LetterA);
+            this.LettersGroup.Controls.Add(this.LetterB);
+            this.LettersGroup.Controls.Add(this.LetterC);
+            this.LettersGroup.Controls.Add(this.LetterD);
+            this.LettersGroup.Controls.Add(this.LetterE);
+            this.LettersGroup.Controls.Add(this.LetterF);
+            this.LettersGroup.Controls.Add(this.LetterG);
+            this.LettersGroup.Controls.Add(this.LetterH);
+            this.LettersGroup.Controls.Add(this.LetterI);
+            this.LettersGroup.Controls.Add(this.LetterJ);
+            this.LettersGroup.Controls.Add(this.LetterK);
+            this.LettersGroup.Controls.Add(this.LetterL);
+            this.LettersGroup.Controls.Add(this.LetterM);
+            this.LettersGroup.Controls.Add(this.LetterN);
+            this.LettersGroup.Controls.Add(this.LetterO);
+            this.LettersGroup.Controls.Add(this.LetterP);
             this.LettersGroup.Location = new System.Drawing.Point(12, 27);
             this.LettersGroup.Name = "LettersGroup";
             this.LettersGroup.Size = new System.Drawing.Size(150, 150);
@@ -588,22 +588,22 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.TextBox Letter1;
-        private System.Windows.Forms.TextBox Letter2;
-        private System.Windows.Forms.TextBox Letter3;
-        private System.Windows.Forms.TextBox Letter4;
-        private System.Windows.Forms.TextBox Letter5;
-        private System.Windows.Forms.TextBox Letter6;
-        private System.Windows.Forms.TextBox Letter7;
-        private System.Windows.Forms.TextBox Letter8;
-        private System.Windows.Forms.TextBox Letter9;
-        private System.Windows.Forms.TextBox Letter10;
-        private System.Windows.Forms.TextBox Letter11;
-        private System.Windows.Forms.TextBox Letter12;
-        private System.Windows.Forms.TextBox Letter13;
-        private System.Windows.Forms.TextBox Letter14;
-        private System.Windows.Forms.TextBox Letter15;
-        private System.Windows.Forms.TextBox Letter16;
+        private System.Windows.Forms.TextBox LetterD;
+        private System.Windows.Forms.TextBox LetterL;
+        private System.Windows.Forms.TextBox LetterN;
+        private System.Windows.Forms.TextBox LetterG;
+        private System.Windows.Forms.TextBox LetterF;
+        private System.Windows.Forms.TextBox LetterM;
+        private System.Windows.Forms.TextBox LetterB;
+        private System.Windows.Forms.TextBox LetterE;
+        private System.Windows.Forms.TextBox LetterH;
+        private System.Windows.Forms.TextBox LetterO;
+        private System.Windows.Forms.TextBox LetterK;
+        private System.Windows.Forms.TextBox LetterC;
+        private System.Windows.Forms.TextBox LetterJ;
+        private System.Windows.Forms.TextBox LetterP;
+        private System.Windows.Forms.TextBox LetterI;
+        private System.Windows.Forms.TextBox LetterA;
         private System.Windows.Forms.GroupBox LettersGroup;
         private System.Windows.Forms.Label WordLabel;
         private System.Windows.Forms.TextBox WordBox;

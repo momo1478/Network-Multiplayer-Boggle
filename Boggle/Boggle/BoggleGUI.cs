@@ -252,18 +252,7 @@ namespace Boggle
                     UpdateLetterBoxes();
             }
 
-            if (JoinStatusBox.Text.Equals("completed"))
-            {
-                timer.Start();
-
-                JoinTimeBox.ReadOnly = false;
-                CreateNameBox.ReadOnly = false;
-                JoinButton.Enabled = true;
-                CancelButton.Enabled = true;
-
-                WordBox.Enabled = false;
-                WordBox.ReadOnly = true;
-            }
+            
         }
 
         /// <summary>
@@ -277,6 +266,19 @@ namespace Boggle
             {
                 if (UpdateTimeBox != null)
                     UpdateTimeBox();
+
+                if (JoinStatusBox.Text.Equals("completed"))
+                {
+                    timer.Start();
+
+                    JoinTimeBox.ReadOnly = false;
+                    CreateNameBox.ReadOnly = false;
+                    JoinButton.Enabled = true;
+                    CancelButton.Enabled = true;
+
+                    WordBox.Enabled = false;
+                    WordBox.ReadOnly = true;
+                }
             }
         }
     }

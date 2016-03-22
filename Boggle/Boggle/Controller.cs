@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -78,6 +79,12 @@ namespace Boggle
             GameStatus = Network.GetStatus(GameID);
 
             View.TimeBoxText = GameStatus.TimeLeft;
+
+            if (GameStatus.TimeLeft == 0)
+            {
+                GameStatus = Network.GetStatus(GameID);
+                View.JoinStatusBoxText = "completed";
+            }
         }
 
         private void View_UpdateNameLabels()
