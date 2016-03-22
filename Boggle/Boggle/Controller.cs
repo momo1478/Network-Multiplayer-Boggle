@@ -9,10 +9,14 @@ using System.Windows.Forms;
 
 namespace Boggle
 {
+    /// <summary>
+    /// Class used to control the 
+    /// </summary>
     class Controller
     {
         BoggleGUI View;
 
+        // Properties
         /// <summary>
         /// Gets and sets the players token
         /// </summary>
@@ -23,8 +27,12 @@ namespace Boggle
         /// </summary>
         public string GameID { get; set; }
 
+        /// <summary>
+        /// Gets and sets the game 
+        /// </summary>
         public dynamic GameStatus { get; set; }
 
+        // Controller Constructor
         /// <summary>
         /// Begins controlling window.
         /// </summary>
@@ -50,6 +58,10 @@ namespace Boggle
             view.UpdateLetterBoxes += View_UpdateLetterBoxes;
         }
 
+        // Handler methods 
+        /// <summary>
+        /// Handles a request to update the board in the GUI using the server.
+        /// </summary>
         private void View_UpdateLetterBoxes()
         {
             GameStatus = Network.GetStatus(GameID);
@@ -66,6 +78,9 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// Handles a request to update the player1 and player2 ScoreBoxes in GUI, through the network
+        /// </summary>
         private void View_UpdateScoreBoxes()
         {
             GameStatus = Network.GetStatus(GameID);
@@ -74,6 +89,9 @@ namespace Boggle
             View.Player2ScoreBoxText = GameStatus.Player2.Score;
         }
 
+        /// <summary>
+        /// Handles a request to update the time box with the updated time and adjusts JoinStatusBox when there is 0 seconds left.
+        /// </summary>
         private void View_UpdateTimeBox()
         {
             GameStatus = Network.GetStatus(GameID);
@@ -87,6 +105,9 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// Handles a request to update the player1 and player2 names in GUI, through the network
+        /// </summary>
         private void View_UpdateNameLabels()
         {
             GameStatus = Network.GetStatus(GameID);
@@ -95,11 +116,18 @@ namespace Boggle
             View.Player2ScoreLabelText = GameStatus.Player2.Nickname;
         }
 
+
+        /// <summary>
+        /// Handles a request to sets our dynamic property to the updated GameStatus.
+        /// </summary>
         private void View_UpdateGame()
         {
             GameStatus = Network.GetStatus(GameID);
         }
 
+        /// <summary>
+        /// Handles a request to update the JoinStatusBox with the Game State
+        /// </summary>
         private void View_UpdateStatus()
         {
             View.JoinStatusBoxText = GameStatus.GameState;

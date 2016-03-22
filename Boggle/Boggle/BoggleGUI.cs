@@ -14,12 +14,14 @@ namespace Boggle
     public partial class BoggleGUI : Form
     {
         // Properties to communicate with the controller and model/BoggleAPI.
-
         /// <summary>
         /// Sets the Message for a pop up window.
         /// </summary>
         public string Message { set { MessageBox.Show(value); } }
 
+        /// <summary>
+        /// Gets the groupbox LettersGroup
+        /// </summary>
         public GroupBox Letters
         {
             get
@@ -103,17 +105,26 @@ namespace Boggle
                 Player2ScoreLabel.Text = value;
             }
         }
-
+        
+        /// <summary>
+        /// Sets the Player1ScoreBox.Text
+        /// </summary>
         public string Player1ScoreBoxText
         {
             set { Player1ScoreBox.Text = value; }
         }
 
+        /// <summary>
+        /// Sets the Player2ScoreBox.Text
+        /// </summary>
         public string Player2ScoreBoxText
         {
             set { Player2ScoreBox.Text = value; }
         }
 
+        /// <summary>
+        /// Sets the WordScoreBox.Text
+        /// </summary>
         public string WordScoreBoxText
         {
             set
@@ -122,6 +133,9 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// Sets JoinStatusBox.Text
+        /// </summary>
         public string JoinStatusBoxText
         {
             set
@@ -130,11 +144,15 @@ namespace Boggle
             }
         }
 
+        /// <summary>
+        /// Gets and sets the TimeBox.Text
+        /// </summary>
         public string TimeBoxText
         {
             get { return TimeBox.Text; }
             set { TimeBox.Text = value; }
         }
+
 
         // Actions to communicate with the controller and model/BoggleAPI.
         /// <summary>
@@ -155,15 +173,32 @@ namespace Boggle
         /// </summary>
         public event Action<int> JoinGame;
 
+        /// <summary>
+        /// Fired to update the game status.
+        /// </summary>
         public event Action UpdateStatus;
 
+        /// <summary>
+        /// Fired to update the players names.
+        /// </summary>
         public event Action UpdateNameLabels;
 
+        /// <summary>
+        /// Fired to update the game Time.
+        /// </summary>
         public event Action UpdateTimeBox;
 
+
+        /// <summary>
+        /// Fired to update the scores in the player scoreboxes
+        /// </summary>
         public event Action UpdateScoreBoxes;
 
+        /// <summary>
+        /// Fired to update the board
+        /// </summary>
         public event Action UpdateLetterBoxes;
+
 
         // Constructor for BoggleGUI.
         /// <summary>
@@ -175,7 +210,8 @@ namespace Boggle
             InitializeComponent();
         }
 
-        // Methods called by the GUI.
+
+        // Methods called by the GUI to fire events tied to the controller.
         /// <summary>
         /// On enter pressed...
         /// If Successful : Prompts player that username has been generated.
