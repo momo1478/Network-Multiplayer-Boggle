@@ -31,12 +31,12 @@ namespace Boggle
         }
 
         /// <summary>
-        /// 
+        /// Using a PUT we send a word to the server, and wait for a response.
         /// </summary>
         /// <param name="playerToken"></param>
         /// <param name="word"></param>
         /// <returns></returns>
-        internal static void Word(string playerToken, string word)
+        internal static int PlayWord(string playerToken, string word)
         {
             using (HttpClient client = CreateClient())
             {
@@ -47,6 +47,11 @@ namespace Boggle
                 String url = String.Format("GameID");
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync(url, content).Result;
+
+                string result = response.Content.ReadAsStringAsync().Result;
+                dynamic expando = JsonConvert.DeserializeObject(result);
+
+                return response.IsSuccessStatusCode ? expando.Score : 0;
             }
         }
 
@@ -70,12 +75,14 @@ namespace Boggle
                 data.UserToken = playerToken;
                 data.TimeLimit = time;
 
-                // Retreives response from the server.
+                // Convert the data expando object into to a json object.
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                // Waits for a response from the server after POSTing.
                 HttpResponseMessage response = client.PostAsync("games", content).Result;
 
-                // Converts response from the server.
+                // Saves the response as a serialized string.
                 string result = response.Content.ReadAsStringAsync().Result;
+                // Converts the response from the server.
                 dynamic expando = JsonConvert.DeserializeObject(result);
 
                 // return the GameID if successfull, otherwise return null
@@ -96,13 +103,15 @@ namespace Boggle
             {
                 // Creates an ExpandoObject
                 dynamic data = new ExpandoObject();
+            
+                // POSTs userToken and Time to the server.
                 data.Nickname = nickname;
 
-                // Retreives response from the server.
+                
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync("users", content).Result;
 
-                // Converts response from the server.
+               
                 string result = response.Content.ReadAsStringAsync().Result;
                 dynamic expando = JsonConvert.DeserializeObject(result);
 

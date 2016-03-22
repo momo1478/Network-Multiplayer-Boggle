@@ -14,7 +14,6 @@ namespace Boggle
     public partial class BoggleGUI : Form
     {
         // Properties to communicate with the controller and model/BoggleAPI.
-        
         /// <summary>
         /// Gets and sets the current time.
         /// </summary>
@@ -112,6 +111,7 @@ namespace Boggle
             }
         }
 
+
         // Actions to communicate with the controller and model/BoggleAPI.
         /// <summary>
         /// Fired when we generate a username.
@@ -131,6 +131,7 @@ namespace Boggle
         /// </summary>
         public event Action<int> JoinGame;
         
+
         // Constructor for BoggleGUI.
         /// <summary>
         /// Initializes a new instance of the <see cref="BoggleGUI"/> class.
@@ -187,12 +188,11 @@ namespace Boggle
             TimeBox.Text = Time.ToString();
 
             int temp;
-            if (JoinGame != null && int.TryParse(JoinTimeBox.Text , out temp) )
+            if (JoinGame != null && int.TryParse(JoinTimeBox.Text , out temp))
             {
                 JoinGame(JoinTimeBoxText);
             }
         }
-
 
         /// <summary>
         /// Activates on timer tick which interval is set to every second.

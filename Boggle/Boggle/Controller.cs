@@ -19,6 +19,11 @@ namespace Boggle
         /// Gets and sets the players GameID
         /// </summary>
         public string GameID { get; set; }
+       
+        /// <summary>
+        /// Gets and sets the Score
+        /// </summary>
+        public int Score { get; set; }
 
 
         /// <summary>
@@ -33,14 +38,24 @@ namespace Boggle
             view.Word += View_Word;
         }
 
+        /// <summary>
+        /// Handles a request to play a word in a game using the Network class.
+        /// Returns the Score if successfull.
+        /// </summary>
+        /// <param name="word"></param>
         private void View_Word(string word)
         {
-            Network.Word(PlayerToken, word);
+            int score = Network.PlayWord(PlayerToken, word);
+            if (score != 0)
+            {
+                Score = score;
+            }
         }
 
 
         /// <summary>
         /// Handles a request to Join a Game using the Network class.
+        /// Returns the Game ID if successfull.
         /// </summary>
         /// <param name="time"></param>
         private void View_JoinGame(int time)
@@ -59,6 +74,7 @@ namespace Boggle
 
         /// <summary>
         /// Handles a request to create a name using the Network class.
+        /// Returns the PlayerToken if successfull.
         /// </summary>
         /// <param name="nickname"></param>
         private void View_CreateName(string nickname)
