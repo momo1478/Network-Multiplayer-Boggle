@@ -31,6 +31,26 @@ namespace Boggle
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerToken"></param>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        internal static void Word(string playerToken, string word)
+        {
+            using (HttpClient client = CreateClient())
+            {
+                dynamic data = new ExpandoObject();
+                data.UserToken = playerToken;
+                data.Word = word;
+
+                String url = String.Format("GameID");
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = client.PostAsync(url, content).Result;
+            }
+        }
+
+        /// <summary>
         /// POSTs time to server.
         /// If successful : returns GameID.
         /// Otherwise : returns null;

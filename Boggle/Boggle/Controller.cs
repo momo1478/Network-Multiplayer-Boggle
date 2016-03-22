@@ -30,6 +30,12 @@ namespace Boggle
 
             view.CreateName += View_CreateName;
             view.JoinGame += View_JoinGame;
+            view.Word += View_Word;
+        }
+
+        private void View_Word(string word)
+        {
+            Network.Word(PlayerToken, word);
         }
 
 

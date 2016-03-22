@@ -68,6 +68,21 @@ namespace Boggle
         }
 
         /// <summary>
+        /// Gets and sets the WordBox
+        /// </summary>
+        public string WordBoxText
+        {
+            get
+            {
+                return WordBox.Text;
+            }
+            set
+            {
+                WordBox.Text = value;
+            }
+        }
+
+        /// <summary>
         /// Gets and sets the Player1ScoreLabelText
         /// </summary>
         public string Player1ScoreLabelText
@@ -105,6 +120,12 @@ namespace Boggle
         public event Action<string> CreateName;
 
         /// <summary>
+        /// Fired when we generate a word.
+        /// The parameter is the word.
+        /// </summary>
+        public event Action<string> Word;
+
+        /// <summary>
         /// Fired when we join a game.
         /// The parameter is the join time.
         /// </summary>
@@ -139,6 +160,22 @@ namespace Boggle
         }
 
         /// <summary>
+        /// On enter pressed...
+        /// If Successful : Adjusts score.
+        /// Otherwise :     Does nothing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WordBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (Word != null)
+                    Word(WordBoxText);
+            }
+        }
+
+        /// <summary>
         /// On JoinButton clicked
         /// Join game 
         /// </summary>
@@ -156,6 +193,7 @@ namespace Boggle
             }
         }
 
+
         /// <summary>
         /// Activates on timer tick which interval is set to every second.
         /// </summary>
@@ -169,6 +207,5 @@ namespace Boggle
                 timer.Stop();
             }
         }
-
     }
 }

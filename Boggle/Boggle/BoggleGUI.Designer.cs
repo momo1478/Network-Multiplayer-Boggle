@@ -377,6 +377,7 @@
             this.WordBox.Name = "WordBox";
             this.WordBox.Size = new System.Drawing.Size(147, 20);
             this.WordBox.TabIndex = 4;
+            this.WordBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WordBox_KeyDown);
             // 
             // Player1ScoreLabel
             // 
