@@ -58,7 +58,10 @@ namespace Boggle
 
             foreach (TextBox box in View.Letters.Controls)
             {
-                box.Text = board[index++].ToString();
+                if (index > 16)
+                    break;
+                box.Text = board[index].ToString().Equals("Q") ? "Qu" : board[index].ToString();
+                index++;
             }
         }
 
