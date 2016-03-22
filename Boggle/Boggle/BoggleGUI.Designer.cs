@@ -61,6 +61,7 @@
             this.CreateNameBox = new System.Windows.Forms.TextBox();
             this.CreateNameLabel = new System.Windows.Forms.Label();
             this.JoinGroup = new System.Windows.Forms.GroupBox();
+            this.CancelButton = new System.Windows.Forms.Button();
             this.JoinStatusBox = new System.Windows.Forms.TextBox();
             this.JoinStatusLabel = new System.Windows.Forms.Label();
             this.JoinButton = new System.Windows.Forms.Button();
@@ -68,7 +69,6 @@
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.WordScoreBox = new System.Windows.Forms.TextBox();
-            this.CancelButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -375,8 +375,10 @@
             // 
             // WordBox
             // 
+            this.WordBox.Enabled = false;
             this.WordBox.Location = new System.Drawing.Point(15, 201);
             this.WordBox.Name = "WordBox";
+            this.WordBox.ReadOnly = true;
             this.WordBox.Size = new System.Drawing.Size(147, 20);
             this.WordBox.TabIndex = 4;
             this.WordBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WordBox_KeyDown);
@@ -477,6 +479,15 @@
             this.JoinGroup.TabStop = false;
             this.JoinGroup.Text = "Join a Game";
             // 
+            // CancelButton
+            // 
+            this.CancelButton.Location = new System.Drawing.Point(85, 31);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(48, 23);
+            this.CancelButton.TabIndex = 12;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = true;
+            // 
             // JoinStatusBox
             // 
             this.JoinStatusBox.Enabled = false;
@@ -536,15 +547,6 @@
             this.WordScoreBox.Size = new System.Drawing.Size(31, 20);
             this.WordScoreBox.TabIndex = 8;
             this.WordScoreBox.Text = "+11";
-            // 
-            // CancelButton
-            // 
-            this.CancelButton.Location = new System.Drawing.Point(85, 31);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(48, 23);
-            this.CancelButton.TabIndex = 12;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
             // 
             // BoggleGUI
             // 

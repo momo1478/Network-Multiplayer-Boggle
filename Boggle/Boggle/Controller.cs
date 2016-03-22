@@ -38,6 +38,25 @@ namespace Boggle
             view.UpdateStatus += View_UpdateStatus;
             
             view.Word += View_Word;
+
+            view.UpdateNameLabels += View_UpdateNameLabels;
+
+            view.UpdateTimeBox += View_UpdateTimeBox;
+        }
+
+        private void View_UpdateTimeBox()
+        {
+            GameStatus = Network.GetStatus(GameID);
+
+            View.TimeBoxText = GameStatus.TimeLeft;
+        }
+
+        private void View_UpdateNameLabels()
+        {
+            GameStatus = Network.GetStatus(GameID);
+
+            View.Player1ScoreLabelText = GameStatus.Player1.Nickname;
+            View.Player2ScoreLabelText = GameStatus.Player2.Nickname;
         }
 
         private void View_UpdateGame()

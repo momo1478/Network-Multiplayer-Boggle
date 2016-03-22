@@ -14,21 +14,6 @@ namespace Boggle
     public partial class BoggleGUI : Form
     {
         // Properties to communicate with the controller and model/BoggleAPI.
-        /// <summary>
-        /// Gets and sets the current time.
-        /// </summary>
-        public int Time
-        {
-            get
-            {
-                int result;
-                return int.TryParse(TimeBox.Text, out result) ? result : 0;
-            }
-            set
-            {
-                TimeBox.Text = value.ToString();
-            }
-        }
 
         /// <summary>
         /// Gets and sets the JoinTimeBox
@@ -127,6 +112,11 @@ namespace Boggle
             }
         }
 
+        public string TimeBoxText
+        {
+            get { return TimeBox.Text; }
+            set { TimeBox.Text = value; }
+        }
 
         // Actions to communicate with the controller and model/BoggleAPI.
         /// <summary>
@@ -148,7 +138,10 @@ namespace Boggle
         public event Action<int> JoinGame;
 
         public event Action UpdateStatus;
-        
+
+        public event Action UpdateNameLabels;
+
+        public event Action UpdateTimeBox;
 
         // Constructor for BoggleGUI.
         /// <summary>
@@ -201,11 +194,9 @@ namespace Boggle
         /// <param name="e"></param>
         private void JoinButton_Click(object sender, EventArgs e)
         {
-            timer.Start();
-            TimeBox.Text = Time.ToString();
 
             int temp;
-            if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text , out temp))
+            if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
             {
                 JoinGame(JoinTimeBoxText);
                 UpdateStatus();
@@ -213,10 +204,22 @@ namespace Boggle
 
             if (JoinStatusBox.Text.Equals("active"))
             {
+                timer.Start();
+
                 JoinTimeBox.ReadOnly = true;
                 CreateNameBox.ReadOnly = true;
                 JoinButton.Enabled = false;
                 CancelButton.Enabled = false;
+
+                WordBox.Enabled = true;
+                WordBox.ReadOnly = false;
+            }
+
+            if (JoinStatusBox.Text.Equals("active"))
+            {
+                if (UpdateNameLabels != null)
+                    UpdateNameLabels();
+
             }
         }
 
@@ -227,10 +230,10 @@ namespace Boggle
         /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
-            TimeBox.Text = Time.ToString();
-            if (Time == 0)
+            if (JoinStatusBox.Text.Equals("active"))
             {
-                timer.Stop();
+                if (UpdateTimeBox != null)
+                    UpdateTimeBox();
             }
         }
     }
