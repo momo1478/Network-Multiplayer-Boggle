@@ -67,6 +67,8 @@
             this.JoinTimeLabel = new System.Windows.Forms.Label();
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.WordScoreBox = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -462,6 +464,7 @@
             // 
             // JoinGroup
             // 
+            this.JoinGroup.Controls.Add(this.button1);
             this.JoinGroup.Controls.Add(this.JoinStatusBox);
             this.JoinGroup.Controls.Add(this.JoinStatusLabel);
             this.JoinGroup.Controls.Add(this.JoinButton);
@@ -496,7 +499,7 @@
             // 
             this.JoinButton.Location = new System.Drawing.Point(44, 31);
             this.JoinButton.Name = "JoinButton";
-            this.JoinButton.Size = new System.Drawing.Size(50, 23);
+            this.JoinButton.Size = new System.Drawing.Size(35, 23);
             this.JoinButton.TabIndex = 9;
             this.JoinButton.Text = "Join";
             this.JoinButton.UseVisualStyleBackColor = true;
@@ -524,11 +527,31 @@
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // WordScoreBox
+            // 
+            this.WordScoreBox.Enabled = false;
+            this.WordScoreBox.Location = new System.Drawing.Point(169, 200);
+            this.WordScoreBox.Name = "WordScoreBox";
+            this.WordScoreBox.ReadOnly = true;
+            this.WordScoreBox.Size = new System.Drawing.Size(31, 20);
+            this.WordScoreBox.TabIndex = 8;
+            this.WordScoreBox.Text = "+11";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(85, 31);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(48, 23);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "Cancel";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // BoggleGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(416, 230);
+            this.Controls.Add(this.WordScoreBox);
             this.Controls.Add(this.JoinGroup);
             this.Controls.Add(this.CreateNameGroup);
             this.Controls.Add(this.TimeBox);
@@ -597,6 +620,8 @@
         private System.Windows.Forms.TextBox JoinStatusBox;
         private System.Windows.Forms.Label JoinStatusLabel;
         private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox WordScoreBox;
     }
 }
 

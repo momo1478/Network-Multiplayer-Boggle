@@ -111,6 +111,22 @@ namespace Boggle
             }
         }
 
+        public int WordScoreBoxText
+        {
+            set
+            {
+                WordScoreBox.Text = value.ToString();
+            }
+        }
+
+        public string JoinStatusBoxText
+        {
+            set
+            {
+                JoinStatusBox.Text = value.ToString();
+            }
+        }
+
 
         // Actions to communicate with the controller and model/BoggleAPI.
         /// <summary>
@@ -130,6 +146,8 @@ namespace Boggle
         /// The parameter is the join time.
         /// </summary>
         public event Action<int> JoinGame;
+
+        public event Action UpdateStatus;
         
 
         // Constructor for BoggleGUI.
@@ -141,7 +159,6 @@ namespace Boggle
             new Controller(this);
             InitializeComponent();
         }
-
 
         // Methods called by the GUI.
         /// <summary>
@@ -188,9 +205,10 @@ namespace Boggle
             TimeBox.Text = Time.ToString();
 
             int temp;
-            if (JoinGame != null && int.TryParse(JoinTimeBox.Text , out temp))
+            if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text , out temp))
             {
                 JoinGame(JoinTimeBoxText);
+                UpdateStatus();
             }
         }
 

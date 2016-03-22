@@ -30,13 +30,26 @@ namespace Boggle
             return client;
         }
 
+        public static dynamic GetStatus(string GID)
+        {
+            using (HttpClient client = CreateClient())
+            {
+                HttpResponseMessage response = client.GetAsync("games/" + GID).Result;
+
+                string result = response.Content.ReadAsStringAsync().Result;
+                dynamic expando = JsonConvert.DeserializeObject(result);
+
+                return expando;
+            }
+        }
+
         /// <summary>
         /// Using a PUT we send a word to the server, and wait for a response.
         /// </summary>
         /// <param name="playerToken"></param>
         /// <param name="word"></param>
         /// <returns></returns>
-        internal static int PlayWord(string playerToken, string word)
+        internal static int PlayWord(string playerToken, string word , string GID)
         {
             using (HttpClient client = CreateClient())
             {
@@ -44,7 +57,7 @@ namespace Boggle
                 data.UserToken = playerToken;
                 data.Word = word;
 
-                String url = String.Format("GameID");
+                String url = String.Format("games/" + GID);
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync(url, content).Result;
 
@@ -71,7 +84,7 @@ namespace Boggle
                 // Creates an ExpandoObject
                 dynamic data = new ExpandoObject();
 
-                // POSTs userToken and Time to the server.
+                //Construct Expando
                 data.UserToken = playerToken;
                 data.TimeLimit = time;
 
@@ -103,8 +116,8 @@ namespace Boggle
             {
                 // Creates an ExpandoObject
                 dynamic data = new ExpandoObject();
-            
-                // POSTs userToken and Time to the server.
+
+                //Construct Expando
                 data.Nickname = nickname;
 
                 

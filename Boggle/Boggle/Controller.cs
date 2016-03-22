@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,12 +20,8 @@ namespace Boggle
         /// Gets and sets the players GameID
         /// </summary>
         public string GameID { get; set; }
-       
-        /// <summary>
-        /// Gets and sets the Score
-        /// </summary>
-        public int Score { get; set; }
 
+        public dynamic GameStatus { get; set; }
 
         /// <summary>
         /// Begins controlling window.
@@ -34,8 +31,23 @@ namespace Boggle
             View = view;
 
             view.CreateName += View_CreateName;
+
             view.JoinGame += View_JoinGame;
+
+            view.UpdateStatus += View_UpdateGame;
+            view.UpdateStatus += View_UpdateStatus;
+            
             view.Word += View_Word;
+        }
+
+        private void View_UpdateGame()
+        {
+            GameStatus = Network.GetStatus(GameID);
+        }
+
+        private void View_UpdateStatus()
+        {
+            View.JoinStatusBoxText = GameStatus.GameState;
         }
 
         /// <summary>
@@ -45,13 +57,10 @@ namespace Boggle
         /// <param name="word"></param>
         private void View_Word(string word)
         {
-            int score = Network.PlayWord(PlayerToken, word);
-            if (score != 0)
-            {
-                Score = score;
-            }
-        }
+            int score = Network.PlayWord(PlayerToken, word , GameID);
 
+            View.WordScoreBoxText = score;
+        }
 
         /// <summary>
         /// Handles a request to Join a Game using the Network class.
