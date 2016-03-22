@@ -107,7 +107,8 @@ namespace Boggle
         {
             int score = Network.PlayWord(PlayerToken, word , GameID);
 
-            View.WordScoreBoxText = score;
+            View.WordScoreBoxText = score > 0 ? "+" + score : score.ToString();
+
         }
 
         /// <summary>

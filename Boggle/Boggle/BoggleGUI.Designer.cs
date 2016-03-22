@@ -435,6 +435,7 @@
             this.TimeBox.ReadOnly = true;
             this.TimeBox.Size = new System.Drawing.Size(27, 20);
             this.TimeBox.TabIndex = 6;
+            this.TimeBox.Text = "0";
             // 
             // CreateNameGroup
             // 

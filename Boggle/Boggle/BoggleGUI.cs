@@ -114,11 +114,11 @@ namespace Boggle
             set { Player2ScoreBox.Text = value; }
         }
 
-        public int WordScoreBoxText
+        public string WordScoreBoxText
         {
             set
             {
-                WordScoreBox.Text = value.ToString();
+                WordScoreBox.Text = value;
             }
         }
 
