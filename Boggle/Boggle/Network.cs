@@ -58,7 +58,7 @@ namespace Boggle
                 data.Word = word;
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync("games/" + GID, content).Result;
+                HttpResponseMessage response = client.PutAsync("games/" + GID, content).Result;
 
                 string result = response.Content.ReadAsStringAsync().Result;
                 dynamic expando = JsonConvert.DeserializeObject(result);
