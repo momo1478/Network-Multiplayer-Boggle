@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace Boggle
 {
     /// <summary>
-    /// Class used to control the 
+    /// Class used to control the model/BoggleAPI
     /// </summary>
     class Controller
     {

@@ -10,7 +10,10 @@ using System.Windows.Forms;
 
 namespace Boggle
 {
-    //View Class
+    /// <summary>
+    /// View class
+    /// Implements the GUI
+    /// </summary>
     public partial class BoggleGUI : Form
     {
         // Properties to communicate with the controller and model/BoggleAPI.
