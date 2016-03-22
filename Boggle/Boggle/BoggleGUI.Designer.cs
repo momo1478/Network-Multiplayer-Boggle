@@ -68,7 +68,7 @@
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.WordScoreBox = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.CancelButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -464,7 +464,7 @@
             // 
             // JoinGroup
             // 
-            this.JoinGroup.Controls.Add(this.button1);
+            this.JoinGroup.Controls.Add(this.CancelButton);
             this.JoinGroup.Controls.Add(this.JoinStatusBox);
             this.JoinGroup.Controls.Add(this.JoinStatusLabel);
             this.JoinGroup.Controls.Add(this.JoinButton);
@@ -537,14 +537,14 @@
             this.WordScoreBox.TabIndex = 8;
             this.WordScoreBox.Text = "+11";
             // 
-            // button1
+            // CancelButton
             // 
-            this.button1.Location = new System.Drawing.Point(85, 31);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(48, 23);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "Cancel";
-            this.button1.UseVisualStyleBackColor = true;
+            this.CancelButton.Location = new System.Drawing.Point(85, 31);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(48, 23);
+            this.CancelButton.TabIndex = 12;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = true;
             // 
             // BoggleGUI
             // 
@@ -620,7 +620,7 @@
         private System.Windows.Forms.TextBox JoinStatusBox;
         private System.Windows.Forms.Label JoinStatusLabel;
         private System.Windows.Forms.Timer timer;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.TextBox WordScoreBox;
     }
 }

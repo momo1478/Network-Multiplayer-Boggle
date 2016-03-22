@@ -210,6 +210,14 @@ namespace Boggle
                 JoinGame(JoinTimeBoxText);
                 UpdateStatus();
             }
+
+            if (JoinStatusBox.Text.Equals("active"))
+            {
+                JoinTimeBox.ReadOnly = true;
+                CreateNameBox.ReadOnly = true;
+                JoinButton.Enabled = false;
+                CancelButton.Enabled = false;
+            }
         }
 
         /// <summary>
