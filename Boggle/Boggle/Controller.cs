@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Boggle
 {
@@ -42,6 +43,31 @@ namespace Boggle
             view.UpdateNameLabels += View_UpdateNameLabels;
 
             view.UpdateTimeBox += View_UpdateTimeBox;
+
+            view.UpdateScoreBoxes += View_UpdateScoreBoxes;
+
+            view.UpdateLetterBoxes += View_UpdateLetterBoxes;
+        }
+
+        private void View_UpdateLetterBoxes()
+        {
+            GameStatus = Network.GetStatus(GameID);
+
+            string board = GameStatus.Board;
+            int index = 0;
+
+            foreach (TextBox box in View.Letters.Controls)
+            {
+                box.Text = board[index++].ToString();
+            }
+        }
+
+        private void View_UpdateScoreBoxes()
+        {
+            GameStatus = Network.GetStatus(GameID);
+
+            View.Player1ScoreBoxText = GameStatus.Player1.Score;
+            View.Player2ScoreBoxText = GameStatus.Player2.Score;
         }
 
         private void View_UpdateTimeBox()

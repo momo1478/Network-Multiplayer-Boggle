@@ -16,6 +16,19 @@ namespace Boggle
         // Properties to communicate with the controller and model/BoggleAPI.
 
         /// <summary>
+        /// Sets the Message for a pop up window.
+        /// </summary>
+        public string Message { set { MessageBox.Show(value); } }
+
+        public GroupBox Letters
+        {
+            get
+            {
+                return LettersGroup;
+            }
+        }
+
+        /// <summary>
         /// Gets and sets the JoinTimeBox
         /// </summary>
         public int JoinTimeBoxText
@@ -30,11 +43,6 @@ namespace Boggle
                 JoinTimeBox.Text = value.ToString();
             }
         }
-
-        /// <summary>
-        /// Sets the Message for a pop up window.
-        /// </summary>
-        public string Message { set { MessageBox.Show(value); } }
 
         /// <summary>
         /// Gets and sets the CreateNameBox
@@ -96,6 +104,16 @@ namespace Boggle
             }
         }
 
+        public string Player1ScoreBoxText
+        {
+            set { Player1ScoreBox.Text = value; }
+        }
+
+        public string Player2ScoreBoxText
+        {
+            set { Player2ScoreBox.Text = value; }
+        }
+
         public int WordScoreBoxText
         {
             set
@@ -143,6 +161,10 @@ namespace Boggle
 
         public event Action UpdateTimeBox;
 
+        public event Action UpdateScoreBoxes;
+
+        public event Action UpdateLetterBoxes;
+
         // Constructor for BoggleGUI.
         /// <summary>
         /// Initializes a new instance of the <see cref="BoggleGUI"/> class.
@@ -182,7 +204,10 @@ namespace Boggle
             if (e.KeyCode == Keys.Enter)
             {
                 if (Word != null)
+                {
                     Word(WordBoxText);
+                    UpdateScoreBoxes();
+                }
             }
         }
 
@@ -217,9 +242,27 @@ namespace Boggle
 
             if (JoinStatusBox.Text.Equals("active"))
             {
-                if (UpdateNameLabels != null)
+                if(UpdateNameLabels != null)
                     UpdateNameLabels();
 
+                if(UpdateScoreBoxes != null)
+                    UpdateScoreBoxes();
+
+                if (UpdateLetterBoxes != null)
+                    UpdateLetterBoxes();
+            }
+
+            if (JoinStatusBox.Text.Equals("completed"))
+            {
+                timer.Start();
+
+                JoinTimeBox.ReadOnly = false;
+                CreateNameBox.ReadOnly = false;
+                JoinButton.Enabled = true;
+                CancelButton.Enabled = true;
+
+                WordBox.Enabled = false;
+                WordBox.ReadOnly = true;
             }
         }
 
