@@ -123,7 +123,8 @@ namespace Boggle
         /// </summary>
         private void View_UpdateGame()
         {
-            GameStatus = Network.GetStatus(GameID);
+            if(GameID != null)
+                GameStatus = Network.GetStatus(GameID);
         }
 
         /// <summary>
@@ -131,7 +132,8 @@ namespace Boggle
         /// </summary>
         private void View_UpdateStatus()
         {
-            View.JoinStatusBoxText = GameStatus.GameState;
+            if (GameStatus != null)
+                View.JoinStatusBoxText = GameStatus.GameState;
         }
 
         /// <summary>
@@ -154,8 +156,18 @@ namespace Boggle
         /// <param name="time"></param>
         private void View_JoinGame(int time)
         {
-            Network.SetBaseAddress(View.JoinDomainBoxText);
-            string GID = Network.JoinGame(PlayerToken, time);
+            string GID;
+
+            if (Network.SetBaseAddress(View.JoinDomainBoxText))
+            {
+                GID = Network.JoinGame(PlayerToken, time);
+            }
+            else
+            {
+                MessageBox.Show("Invalid URL.");
+                GID = null;
+            }
+
             if (GID != null)
             {
                 GameID = GID;
@@ -174,8 +186,17 @@ namespace Boggle
         /// <param name="nickname"></param>
         private void View_CreateName(string nickname)
         {
-            Network.SetBaseAddress(View.JoinDomainBoxText);
-            string token = Network.CreateName(nickname);
+            string token;
+
+            if (Network.SetBaseAddress(View.JoinDomainBoxText))
+            {
+                token = Network.CreateName(nickname);
+            }
+            else
+            {
+                token = null;
+            }
+
             if (token != null)
             {
                 PlayerToken = token;

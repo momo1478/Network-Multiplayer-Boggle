@@ -253,6 +253,7 @@ namespace Boggle
                 {
                     Word(WordBoxText);
                     UpdateScoreBoxes();
+                    WordBox.Text = "";
                 }
             }
         }
@@ -271,7 +272,7 @@ namespace Boggle
             {
                 CreateName(CreateNameBoxText);
             }
-            if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
+            if (CreateName != null && JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
             {
                 JoinGame(JoinTimeBoxText);
                 UpdateStatus();

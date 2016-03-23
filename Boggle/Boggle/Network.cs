@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Windows.Forms;
 
 namespace Boggle
 {
@@ -18,9 +19,20 @@ namespace Boggle
 
         public static string BaseAddress { get; set; }
 
-        public static void SetBaseAddress(string url)
+        public static bool SetBaseAddress(string url)
         {
-            BaseAddress = url;
+            try
+            {
+                new Uri(url);
+                BaseAddress = url;
+                return true;
+            }
+            catch
+            {
+                
+                return false;
+            }
+            
         }
 
         public static HttpClient CreateClient()
