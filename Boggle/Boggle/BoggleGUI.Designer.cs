@@ -426,11 +426,11 @@
             // TimeLabel
             // 
             this.TimeLabel.AutoSize = true;
-            this.TimeLabel.Location = new System.Drawing.Point(190, 134);
+            this.TimeLabel.Location = new System.Drawing.Point(180, 134);
             this.TimeLabel.Name = "TimeLabel";
-            this.TimeLabel.Size = new System.Drawing.Size(30, 13);
+            this.TimeLabel.Size = new System.Drawing.Size(51, 13);
             this.TimeLabel.TabIndex = 3;
-            this.TimeLabel.Text = "Time";
+            this.TimeLabel.Text = "Time Left";
             // 
             // TimeBox
             // 
