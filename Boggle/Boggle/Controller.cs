@@ -174,6 +174,7 @@ namespace Boggle
         /// <param name="nickname"></param>
         private void View_CreateName(string nickname)
         {
+            Network.SetBaseAddress(View.JoinDomainBoxText);
             string token = Network.CreateName(nickname);
             if (token != null)
             {

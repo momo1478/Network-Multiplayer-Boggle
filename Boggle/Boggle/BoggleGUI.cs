@@ -156,6 +156,12 @@ namespace Boggle
             set { TimeBox.Text = value; }
         }
 
+        public string JoinDomainBoxText
+        {
+            get { return JoinDomainBox.Text; }
+            set { JoinDomainBox.Text = value; }
+        }
+
         
 
 
