@@ -94,6 +94,7 @@ namespace Boggle
         /// </summary>
         private void View_UpdateTimeBox()
         {
+
             GameStatus = Network.GetStatus(GameID);
 
             View.TimeBoxText = GameStatus.TimeLeft;
@@ -153,6 +154,7 @@ namespace Boggle
         /// <param name="time"></param>
         private void View_JoinGame(int time)
         {
+            Network.SetBaseAddress(View.JoinDomainBoxText);
             string GID = Network.JoinGame(PlayerToken, time);
             if (GID != null)
             {

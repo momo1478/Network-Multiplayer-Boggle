@@ -156,6 +156,11 @@ namespace Boggle
             set { TimeBox.Text = value; }
         }
 
+        public string JoinDomainBoxText
+        {
+            get { return JoinDomainBox.Text; }
+            set { JoinDomainBox.Text = value; }
+        }
 
         // Actions to communicate with the controller and model/BoggleAPI.
         /// <summary>
@@ -190,7 +195,6 @@ namespace Boggle
         /// Fired to update the game Time.
         /// </summary>
         public event Action UpdateTimeBox;
-
 
         /// <summary>
         /// Fired to update the scores in the player scoreboxes
@@ -246,6 +250,7 @@ namespace Boggle
                 {
                     Word(WordBoxText);
                     UpdateScoreBoxes();
+                    WordBoxText = "";
                 }
             }
         }

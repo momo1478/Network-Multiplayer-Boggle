@@ -15,13 +15,21 @@ namespace Boggle
         /// Initializes Http client for other Network methods.
         /// </summary>
         /// <returns></returns>
+
+        public static string BaseAddress { get; set; }
+
+        public static void SetBaseAddress(string url)
+        {
+            BaseAddress = url;
+        }
+
         public static HttpClient CreateClient()
         {
             //Create Client
             HttpClient client = new HttpClient();
 
             //Attaching Base Address to client.
-            client.BaseAddress = new Uri("http://bogglecs3500s16.azurewebsites.net/BoggleService.svc/");
+            client.BaseAddress = new Uri(BaseAddress ?? "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc/");
 
             //Clear headers, expect json format.
             client.DefaultRequestHeaders.Accept.Clear();
@@ -49,7 +57,7 @@ namespace Boggle
         /// <param name="playerToken"></param>
         /// <param name="word"></param>
         /// <returns></returns>
-        internal static int PlayWord(string playerToken, string word , string GID)
+        public static int PlayWord(string playerToken, string word , string GID)
         {
             using (HttpClient client = CreateClient())
             {
