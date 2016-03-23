@@ -29,7 +29,7 @@ namespace Boggle
             HttpClient client = new HttpClient();
 
             //Attaching Base Address to client.
-            client.BaseAddress = new Uri(BaseAddress ?? "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc/");
+            client.BaseAddress = new Uri(BaseAddress + "/" ?? "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc/");
 
             //Clear headers, expect json format.
             client.DefaultRequestHeaders.Accept.Clear();
@@ -45,9 +45,16 @@ namespace Boggle
                 HttpResponseMessage response = client.GetAsync("games/" + GID).Result;
 
                 string result = response.Content.ReadAsStringAsync().Result;
-                dynamic expando = JsonConvert.DeserializeObject(result);
+                try
+                {
+                    dynamic expando = JsonConvert.DeserializeObject(result);
+                    return expando;
+                }
+                catch
+                {
+                    return null;
+                }
 
-                return expando;
             }
         }
 
@@ -69,9 +76,15 @@ namespace Boggle
                 HttpResponseMessage response = client.PutAsync("games/" + GID, content).Result;
 
                 string result = response.Content.ReadAsStringAsync().Result;
-                dynamic expando = JsonConvert.DeserializeObject(result);
-
-                return response.IsSuccessStatusCode ? expando.Score : 0;
+                try
+                {
+                    dynamic expando = JsonConvert.DeserializeObject(result);
+                    return response.IsSuccessStatusCode ? expando.Score : 0;
+                }
+                catch
+                {
+                    return 0;
+                }
             }
         }
 
@@ -102,11 +115,19 @@ namespace Boggle
 
                 // Saves the response as a serialized string.
                 string result = response.Content.ReadAsStringAsync().Result;
-                // Converts the response from the server.
-                dynamic expando = JsonConvert.DeserializeObject(result);
+                try
+                {
+                    // Converts the response from the server.
+                    dynamic expando = JsonConvert.DeserializeObject(result);
 
-                // return the GameID if successfull, otherwise return null
-                return response.IsSuccessStatusCode ? expando.GameID : null;
+                    // return the GameID if successfull, otherwise return null
+                    return response.IsSuccessStatusCode ? expando.GameID : null;
+                }
+                catch
+                {
+                    return null;
+                }
+                
             }
         }
 
@@ -133,10 +154,16 @@ namespace Boggle
 
                
                 string result = response.Content.ReadAsStringAsync().Result;
-                dynamic expando = JsonConvert.DeserializeObject(result);
 
-                // return the userToken if successfull, otherwise return null
-                return response.IsSuccessStatusCode ? expando.UserToken : null;
+                try
+                {
+                    dynamic expando = JsonConvert.DeserializeObject(result);
+                    return response.IsSuccessStatusCode ? expando.UserToken : null;
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
     }

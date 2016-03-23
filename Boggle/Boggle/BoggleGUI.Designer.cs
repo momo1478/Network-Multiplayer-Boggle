@@ -61,6 +61,8 @@
             this.CreateNameBox = new System.Windows.Forms.TextBox();
             this.CreateNameLabel = new System.Windows.Forms.Label();
             this.JoinGroup = new System.Windows.Forms.GroupBox();
+            this.JoinDomainLabel = new System.Windows.Forms.Label();
+            this.JoinDomainBox = new System.Windows.Forms.TextBox();
             this.CancelButton = new System.Windows.Forms.Button();
             this.JoinStatusBox = new System.Windows.Forms.TextBox();
             this.JoinStatusLabel = new System.Windows.Forms.Label();
@@ -69,8 +71,6 @@
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.WordScoreBox = new System.Windows.Forms.TextBox();
-            this.JoinDomainBox = new System.Windows.Forms.TextBox();
-            this.JoinDomainLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -486,6 +486,23 @@
             this.JoinGroup.TabStop = false;
             this.JoinGroup.Text = "Join a Game";
             // 
+            // JoinDomainLabel
+            // 
+            this.JoinDomainLabel.AutoSize = true;
+            this.JoinDomainLabel.Location = new System.Drawing.Point(11, 16);
+            this.JoinDomainLabel.Name = "JoinDomainLabel";
+            this.JoinDomainLabel.Size = new System.Drawing.Size(43, 13);
+            this.JoinDomainLabel.TabIndex = 14;
+            this.JoinDomainLabel.Text = "Domain";
+            // 
+            // JoinDomainBox
+            // 
+            this.JoinDomainBox.Location = new System.Drawing.Point(11, 35);
+            this.JoinDomainBox.Name = "JoinDomainBox";
+            this.JoinDomainBox.Size = new System.Drawing.Size(231, 20);
+            this.JoinDomainBox.TabIndex = 13;
+            this.JoinDomainBox.Text = "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc";
+            // 
             // CancelButton
             // 
             this.CancelButton.Location = new System.Drawing.Point(194, 72);
@@ -554,23 +571,6 @@
             this.WordScoreBox.Size = new System.Drawing.Size(31, 20);
             this.WordScoreBox.TabIndex = 8;
             this.WordScoreBox.Text = "+11";
-            // 
-            // JoinDomainBox
-            // 
-            this.JoinDomainBox.Location = new System.Drawing.Point(11, 35);
-            this.JoinDomainBox.Name = "JoinDomainBox";
-            this.JoinDomainBox.Size = new System.Drawing.Size(231, 20);
-            this.JoinDomainBox.TabIndex = 13;
-            this.JoinDomainBox.Text = "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc/";
-            // 
-            // JoinDomainLabel
-            // 
-            this.JoinDomainLabel.AutoSize = true;
-            this.JoinDomainLabel.Location = new System.Drawing.Point(11, 16);
-            this.JoinDomainLabel.Name = "JoinDomainLabel";
-            this.JoinDomainLabel.Size = new System.Drawing.Size(43, 13);
-            this.JoinDomainLabel.TabIndex = 14;
-            this.JoinDomainLabel.Text = "Domain";
             // 
             // BoggleGUI
             // 
