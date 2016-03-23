@@ -69,6 +69,8 @@
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.WordScoreBox = new System.Windows.Forms.TextBox();
+            this.JoinDomainBox = new System.Windows.Forms.TextBox();
+            this.JoinDomainLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -82,7 +84,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(416, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(516, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -445,7 +447,7 @@
             this.CreateNameGroup.Controls.Add(this.CreateNameLabel);
             this.CreateNameGroup.Location = new System.Drawing.Point(251, 36);
             this.CreateNameGroup.Name = "CreateNameGroup";
-            this.CreateNameGroup.Size = new System.Drawing.Size(149, 63);
+            this.CreateNameGroup.Size = new System.Drawing.Size(254, 63);
             this.CreateNameGroup.TabIndex = 7;
             this.CreateNameGroup.TabStop = false;
             this.CreateNameGroup.Text = "Create a Username";
@@ -454,7 +456,7 @@
             // 
             this.CreateNameBox.Location = new System.Drawing.Point(10, 33);
             this.CreateNameBox.Name = "CreateNameBox";
-            this.CreateNameBox.Size = new System.Drawing.Size(122, 20);
+            this.CreateNameBox.Size = new System.Drawing.Size(231, 20);
             this.CreateNameBox.TabIndex = 1;
             this.CreateNameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CreateNameBox_KeyDown);
             // 
@@ -469,6 +471,8 @@
             // 
             // JoinGroup
             // 
+            this.JoinGroup.Controls.Add(this.JoinDomainLabel);
+            this.JoinGroup.Controls.Add(this.JoinDomainBox);
             this.JoinGroup.Controls.Add(this.CancelButton);
             this.JoinGroup.Controls.Add(this.JoinStatusBox);
             this.JoinGroup.Controls.Add(this.JoinStatusLabel);
@@ -477,14 +481,14 @@
             this.JoinGroup.Controls.Add(this.JoinTimeBox);
             this.JoinGroup.Location = new System.Drawing.Point(250, 108);
             this.JoinGroup.Name = "JoinGroup";
-            this.JoinGroup.Size = new System.Drawing.Size(150, 113);
+            this.JoinGroup.Size = new System.Drawing.Size(255, 113);
             this.JoinGroup.TabIndex = 7;
             this.JoinGroup.TabStop = false;
             this.JoinGroup.Text = "Join a Game";
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(85, 31);
+            this.CancelButton.Location = new System.Drawing.Point(194, 72);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(48, 23);
             this.CancelButton.TabIndex = 12;
@@ -511,7 +515,7 @@
             // 
             // JoinButton
             // 
-            this.JoinButton.Location = new System.Drawing.Point(44, 31);
+            this.JoinButton.Location = new System.Drawing.Point(153, 72);
             this.JoinButton.Name = "JoinButton";
             this.JoinButton.Size = new System.Drawing.Size(35, 23);
             this.JoinButton.TabIndex = 9;
@@ -522,7 +526,7 @@
             // JoinTimeLabel
             // 
             this.JoinTimeLabel.AutoSize = true;
-            this.JoinTimeLabel.Location = new System.Drawing.Point(8, 17);
+            this.JoinTimeLabel.Location = new System.Drawing.Point(117, 58);
             this.JoinTimeLabel.Name = "JoinTimeLabel";
             this.JoinTimeLabel.Size = new System.Drawing.Size(30, 13);
             this.JoinTimeLabel.TabIndex = 0;
@@ -530,7 +534,7 @@
             // 
             // JoinTimeBox
             // 
-            this.JoinTimeBox.Location = new System.Drawing.Point(11, 33);
+            this.JoinTimeBox.Location = new System.Drawing.Point(120, 74);
             this.JoinTimeBox.Name = "JoinTimeBox";
             this.JoinTimeBox.Size = new System.Drawing.Size(27, 20);
             this.JoinTimeBox.TabIndex = 6;
@@ -551,11 +555,28 @@
             this.WordScoreBox.TabIndex = 8;
             this.WordScoreBox.Text = "+11";
             // 
+            // JoinDomainBox
+            // 
+            this.JoinDomainBox.Location = new System.Drawing.Point(11, 35);
+            this.JoinDomainBox.Name = "JoinDomainBox";
+            this.JoinDomainBox.Size = new System.Drawing.Size(231, 20);
+            this.JoinDomainBox.TabIndex = 13;
+            this.JoinDomainBox.Text = "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc/";
+            // 
+            // JoinDomainLabel
+            // 
+            this.JoinDomainLabel.AutoSize = true;
+            this.JoinDomainLabel.Location = new System.Drawing.Point(11, 16);
+            this.JoinDomainLabel.Name = "JoinDomainLabel";
+            this.JoinDomainLabel.Size = new System.Drawing.Size(43, 13);
+            this.JoinDomainLabel.TabIndex = 14;
+            this.JoinDomainLabel.Text = "Domain";
+            // 
             // BoggleGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 230);
+            this.ClientSize = new System.Drawing.Size(516, 230);
             this.Controls.Add(this.WordScoreBox);
             this.Controls.Add(this.JoinGroup);
             this.Controls.Add(this.CreateNameGroup);
@@ -627,6 +648,8 @@
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.TextBox WordScoreBox;
+        private System.Windows.Forms.Label JoinDomainLabel;
+        private System.Windows.Forms.TextBox JoinDomainBox;
     }
 }
 
