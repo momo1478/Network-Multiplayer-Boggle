@@ -156,11 +156,8 @@ namespace Boggle
             set { TimeBox.Text = value; }
         }
 
-        public string JoinDomainBoxText
-        {
-            get { return JoinDomainBox.Text; }
-            set { JoinDomainBox.Text = value; }
-        }
+        
+
 
         // Actions to communicate with the controller and model/BoggleAPI.
         /// <summary>
@@ -196,6 +193,7 @@ namespace Boggle
         /// </summary>
         public event Action UpdateTimeBox;
 
+
         /// <summary>
         /// Fired to update the scores in the player scoreboxes
         /// </summary>
@@ -230,8 +228,7 @@ namespace Boggle
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (CreateName != null)
-                    CreateName(CreateNameBoxText);
+                JoinButton_Click(sender, e);
             }
         }
 
@@ -250,7 +247,6 @@ namespace Boggle
                 {
                     Word(WordBoxText);
                     UpdateScoreBoxes();
-                    WordBoxText = "";
                 }
             }
         }
@@ -265,38 +261,44 @@ namespace Boggle
         {
 
             int temp;
+            if (CreateName != null)
+            {
+                CreateName(CreateNameBoxText);
+            }
             if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
             {
                 JoinGame(JoinTimeBoxText);
                 UpdateStatus();
             }
 
+
+
             if (JoinStatusBox.Text.Equals("active"))
             {
                 timer.Start();
 
+                // Setting TextBox properties to true or false.
                 JoinTimeBox.ReadOnly = true;
                 CreateNameBox.ReadOnly = true;
+                JoinDomainBox.ReadOnly = true;
+                // Setting Button properties to true or false.
                 JoinButton.Enabled = false;
                 CancelButton.Enabled = false;
 
+                // Setting Wordbox properties to true or false.
                 WordBox.Enabled = true;
                 WordBox.ReadOnly = false;
-            }
 
-            if (JoinStatusBox.Text.Equals("active"))
-            {
-                if(UpdateNameLabels != null)
+                // Firing Events
+                if (UpdateNameLabels != null)
                     UpdateNameLabels();
 
-                if(UpdateScoreBoxes != null)
+                if (UpdateScoreBoxes != null)
                     UpdateScoreBoxes();
 
                 if (UpdateLetterBoxes != null)
                     UpdateLetterBoxes();
             }
-
-            
         }
 
         /// <summary>
@@ -315,11 +317,15 @@ namespace Boggle
                 {
                     timer.Start();
 
+                    // Setting TextBox properties to true or false.
                     JoinTimeBox.ReadOnly = false;
                     CreateNameBox.ReadOnly = false;
+                    JoinDomainBox.ReadOnly = false;
+                    // Setting Button properties to true or false.
                     JoinButton.Enabled = true;
                     CancelButton.Enabled = true;
 
+                    // Setting Wordbox properties to true or false.
                     WordBox.Enabled = false;
                     WordBox.ReadOnly = true;
                 }
