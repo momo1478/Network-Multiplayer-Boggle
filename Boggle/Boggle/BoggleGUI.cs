@@ -355,7 +355,6 @@ namespace Boggle
         /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
-
             if (JoinStatusBox.Text.Equals("pending"))
             {
                 ExitGameToolStrip.Enabled = false;
@@ -367,6 +366,25 @@ namespace Boggle
                     UpdateTimeBox();
                 if (UpdateScoreBoxes != null)
                     UpdateScoreBoxes();
+                if (UpdateNameLabels != null)
+                    UpdateNameLabels();
+
+                if (UpdateScoreBoxes != null)
+                    UpdateScoreBoxes();
+                if (UpdateLetterBoxes != null)
+                    UpdateLetterBoxes();
+
+                // Setting TextBox properties to true or false.
+                JoinTimeBox.ReadOnly = true;
+                CreateNameBox.ReadOnly = true;
+                JoinDomainBox.ReadOnly = true;
+                // Setting Button properties to true or false.
+                JoinButton.Enabled = false;
+                CancelButton.Enabled = false;
+
+                // Setting Wordbox properties to true or false.
+                WordBox.Enabled = true;
+                WordBox.ReadOnly = false;
                 ExitGameToolStrip.Enabled = true;
             }
             if (JoinStatusBox.Text.Equals("completed"))
@@ -411,6 +429,8 @@ namespace Boggle
                 JoinStatusBox.Text = "";
                 TimeBox.Text = "0";
             }
+            if (UpdateStatus != null)
+                UpdateStatus();
         }
 
         private void ExitGameToolStrip_Click(object sender, EventArgs e)
