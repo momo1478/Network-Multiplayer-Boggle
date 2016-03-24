@@ -440,14 +440,19 @@ namespace Boggle
             if (UpdatePlayer2Words != null)
                 UpdatePlayer2Words();
 
+            TimeLeft = 0;
+            JoinStatusBoxText = "completed";
+
             ActiveTimer.Stop();
             TimeLeftTimer.Stop();
         }
 
         private void ExitGameToolStrip_Click(object sender, EventArgs e)
         {
-            JoinStatusBoxText = "completed";
+            JoinStatusBox.Text = "completed";
             TimeLeft = 0;
+            TimeBox.Text = TimeLeft.ToString();
+            CreateNameBox.Focus();
 
             StatusCompleted();
 
