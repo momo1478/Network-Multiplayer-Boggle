@@ -25,6 +25,7 @@ namespace Boggle
             {
                 new Uri(url);
                 BaseAddress = url;
+                // TODO : Fix invalid domain exception.
                 return true;
             }
             catch
@@ -75,7 +76,7 @@ namespace Boggle
         /// <param name="playerToken"></param>
         /// <param name="word"></param>
         /// <returns></returns>
-        public static int PlayWord(string playerToken, string word, string GID)
+        public async static Task<int> PlayWord(string playerToken, string word, string GID)
         {
             using (HttpClient client = CreateClient())
             {
@@ -84,7 +85,7 @@ namespace Boggle
                 data.Word = word;
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PutAsync("games/" + GID, content).Result;
+                HttpResponseMessage response = await client.PutAsync("games/" + GID, content);
 
                 string result = response.Content.ReadAsStringAsync().Result;
                 try
@@ -138,7 +139,7 @@ namespace Boggle
         /// <param name="playerToken"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public static string JoinGame(string playerToken, int time)
+        public async static Task<string> JoinGame(string playerToken, int time)
         {
             // Starts a HTTP client
             using (HttpClient client = CreateClient())
@@ -153,7 +154,7 @@ namespace Boggle
                 // Convert the data expando object into to a json object.
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 // Waits for a response from the server after POSTing.
-                HttpResponseMessage response = client.PostAsync("games", content).Result;
+                HttpResponseMessage response =  await client.PostAsync("games", content);
 
                 // Saves the response as a serialized string.
                 string result = response.Content.ReadAsStringAsync().Result;
@@ -180,7 +181,7 @@ namespace Boggle
         /// </summary>
         /// <param name="nickname"></param>
         /// <returns></returns>
-        public static string CreateName(string nickname)
+        public async static Task<string> CreateName(string nickname)
         {
             using (HttpClient client = CreateClient())
             {
@@ -192,7 +193,7 @@ namespace Boggle
 
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-                HttpResponseMessage response = client.PostAsync("users", content).Result;
+                HttpResponseMessage response = await client.PostAsync("users", content);
 
 
                 string result = response.Content.ReadAsStringAsync().Result;

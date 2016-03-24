@@ -268,34 +268,17 @@ namespace Boggle
         /// <param name="e"></param>
         private void CreateNameBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && !JoinStatusBox.Text.Equals("active"))
+            if (e.KeyCode == Keys.Enter && !JoinStatusBoxText.Equals("active"))
             {
-                JoinButton_Click(sender, e);
+                if (CreateName != null)
+                    CreateName(CreateNameBoxText);
+
+                StatusJoinGame();
+
             }
         }
 
-        /// <summary>
-        /// On enter pressed...
-        /// If Successful : Adjusts score.
-        /// Otherwise :     Does nothing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void WordBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && JoinStatusBox.Text.Equals("active"))
-            {
-                if (Word != null)
-                {
-                    Word(WordBoxText);
 
-                    if(UpdateScoreBoxes != null)
-                        UpdateScoreBoxes();
-
-                    WordBox.Text = "";
-                }
-            }
-        }
 
         /// <summary>
         /// On JoinButton clicked
@@ -305,47 +288,146 @@ namespace Boggle
         /// <param name="e"></param>
         private void JoinButton_Click(object sender, EventArgs e)
         {
-            //StatusTimer.Start();
-            Player1PlayedBoxText = "";
-            Player2PlayedBoxText = "";
+
 
             int temp;
-            if (CreateName != null)
-            {
-                CreateName(CreateNameBoxText);
-            }
             if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
             {
                 JoinGame(JoinTimeBoxText);
-                UpdateStatus();
+                //UpdateStatus();
             }
-
-            if (JoinStatusBox.Text.Equals("pending"))
-            {
-                PendingTimer.Start();
-
-                ExitGameToolStrip.Enabled = false;
-                CancelButton.Enabled = true;
-            }
-
-            if (JoinStatusBox.Text.Equals("active"))
-            {
-                StatusActive();
-            }
+            PendingTimer.Start();
+            //if (JoinStatusBoxText.Equals("pending"))
+            //{
+            //    StatusPending();
+            //}
+            //if (JoinStatusBoxText.Equals("active"))
+            //{
+            //    StatusActive();
+            //}
         }
+
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            if (CancelJoin != null)
+                CancelJoin();
+
+            if (UpdateStatus != null)
+                UpdateStatus();
+
+            StatusCancled();
+        }
+
+        // Helper methods to set property values and Start and stop timers
+        /// <summary>
+        /// Helper method to set gui to a Join Game state.
+        /// </summary>
+        void StatusJoinGame()
+        {
+            ExitGameToolStrip.Enabled = false;
+
+            if (ActiveUpdate != null)
+                ActiveUpdate();
+
+            // Setting TextBox properties values.
+            JoinTimeBox.ReadOnly = false;
+            JoinTimeBox.Enabled = true;
+            CreateNameBox.ReadOnly = true;
+            CreateNameBox.Enabled = false;
+            JoinDomainBox.ReadOnly = true;
+            JoinDomainBox.Enabled = false;
+            WordBox.ReadOnly = true;
+            WordBox.Enabled = false;
+
+            // Setting button properties values.
+            JoinButton.Enabled = true;
+            CancelButton.Enabled = false;
+            ExitGameToolStrip.Enabled = false;
+
+            // Set values to empty
+            Player1PlayedBoxText = "";
+            Player2PlayedBoxText = "";
+            WordBoxText = "";
+            WordScoreBoxText = "";
+            Player1ScoreBoxText = "";
+            Player2ScoreBoxText = "";
+            Player1ScoreLabelText = "Player 1 Score";
+            Player2ScoreLabelText = "Player 2 Score";
+            TimeBoxText = "";
+
+            TimeLeft = 0;
+            JoinStatusBoxText = "Click Join Game";
+        }
+
+        /// <summary>
+        /// Helper method to set gui to a canceled state.
+        /// </summary>
+        void StatusCancled()
+        {
+            // Setting TextBox properties values.
+            JoinTimeBox.ReadOnly = false;
+            JoinTimeBox.Enabled = true;
+            CreateNameBox.ReadOnly = false;
+            CreateNameBox.Enabled = true;
+            JoinDomainBox.ReadOnly = false;
+            JoinDomainBox.Enabled = true;
+            WordBox.ReadOnly = true;
+            WordBox.Enabled = false;
+
+            // Setting button properties values.
+            JoinButton.Enabled = true;
+            CancelButton.Enabled = false;
+            ExitGameToolStrip.Enabled = false;
+
+            JoinStatusBoxText = "canceled";
+            Player1ScoreBoxText = "";
+            Player2ScoreBoxText = "";
+            WordScoreBoxText = "";
+            WordBoxText = "";
+            TimeBoxText = "0";
+            TimeLeft = 0;
+
+            PendingTimer.Stop();
+        }
+
+        /// <summary>
+        /// Helper method to set gui to a pending state.
+        /// </summary>
+        void StatusPending()
+        {
+            PendingTimer.Start();
+
+            CreateNameBox.ReadOnly = true;
+            CreateNameBox.Enabled = false;
+            JoinTimeBox.ReadOnly = true;
+            JoinTimeBox.Enabled = false;
+            JoinDomainBox.ReadOnly = true;
+            JoinDomainBox.Enabled = false;
+
+            JoinButton.Enabled = false;
+            ExitGameToolStrip.Enabled = false;
+            CancelButton.Enabled = true;
+        }
+
+        /// <summary>
+        /// Helper method to set gui to a active state.
+        /// </summary>
         void StatusActive()
         {
             // Setting TextBox properties to true or false.
             JoinTimeBox.ReadOnly = true;
+            JoinTimeBox.Enabled = false;
             CreateNameBox.ReadOnly = true;
+            CreateNameBox.Enabled = false;
             JoinDomainBox.ReadOnly = true;
+            JoinDomainBox.Enabled = false;
+            WordBox.Enabled = true;
+            WordBox.ReadOnly = false;
+
             // Setting Button properties to true or false.
             JoinButton.Enabled = false;
             CancelButton.Enabled = false;
-
-            // Setting Wordbox properties to true or false.
-            WordBox.Enabled = true;
-            WordBox.ReadOnly = false;
             ExitGameToolStrip.Enabled = true;
 
             // Firing Events
@@ -361,61 +443,15 @@ namespace Boggle
             if (UpdateTimeBox != null)
                 UpdateTimeBox();
 
+            // TODO : Restore values
+
             ActiveTimer.Start();
             TimeLeftTimer.Start();
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            if (CancelJoin != null)
-                CancelJoin();
-
-            if (UpdateStatus != null)
-                UpdateStatus();
-
-            // Setting TextBox properties to true or false.
-            JoinTimeBox.ReadOnly = false;
-            CreateNameBox.ReadOnly = false;
-            JoinDomainBox.ReadOnly = false;
-            // Setting Button properties to true or false.
-            JoinButton.Enabled = true;
-            CancelButton.Enabled = false;
-            ExitGameToolStrip.Enabled = false;
-
-            // Setting Wordbox properties to true or false.
-            WordBox.Enabled = false;
-            WordBox.ReadOnly = true;
-
-            JoinStatusBox.Text = "canceled";
-            TimeBox.Text = "0";
-
-            PendingTimer.Stop();
-        }
-
         /// <summary>
-        /// Activates on timer tick which interval is set to every second.
+        /// Helper method to set gui to a completed state.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //private void StatusTimer_Tick(object sender, EventArgs e)
-        //{
-        //    if (JoinStatusBox.Text.Equals("active"))
-        //    {
-        //        if (ActiveUpdate != null)
-        //            ActiveUpdate();
-        //    }
-        //    if (JoinStatusBox.Text.Equals("completed"))
-        //    {
-        //        StatusCompleted();
-        //        StatusTimer.Stop();
-        //    }
-        //    if (JoinStatusBox.Text.Equals("canceled"))
-        //    {
-        //        StatusTimer.Stop();
-        //    }
-        //    if (UpdateStatus != null)
-        //        UpdateStatus();
-        //}
         void StatusCompleted()
         {
             ExitGameToolStrip.Enabled = false;
@@ -423,17 +459,20 @@ namespace Boggle
             if (ActiveUpdate != null)
                 ActiveUpdate();
 
-            // Setting TextBox properties to true or false.
+            // Setting TextBox properties values.
             JoinTimeBox.ReadOnly = false;
+            JoinTimeBox.Enabled = true;
             CreateNameBox.ReadOnly = false;
+            CreateNameBox.Enabled = true;
             JoinDomainBox.ReadOnly = false;
-            // Setting Button properties to true or false.
-            JoinButton.Enabled = true;
-            CancelButton.Enabled = false;
-
-            // Setting Wordbox properties to true or false.
-            WordBox.Enabled = false;
+            JoinDomainBox.Enabled = true;
             WordBox.ReadOnly = true;
+            WordBox.Enabled = false;
+
+            // Setting button properties values.
+            JoinButton.Enabled = false;
+            CancelButton.Enabled = false;
+            ExitGameToolStrip.Enabled = false;
 
             if (UpdatePlayer1Words != null)
                 UpdatePlayer1Words();
@@ -447,11 +486,34 @@ namespace Boggle
             TimeLeftTimer.Stop();
         }
 
+        /// <summary>
+        /// On enter pressed...
+        /// If Successful : Adjusts score.
+        /// Otherwise :     Does nothing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WordBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && JoinStatusBoxText.Equals("active"))
+            {
+                if (Word != null)
+                {
+                    Word(WordBoxText);
+
+                    if (UpdateScoreBoxes != null)
+                        UpdateScoreBoxes();
+
+                    WordBoxText = "";
+                }
+            }
+        }
+
         private void ExitGameToolStrip_Click(object sender, EventArgs e)
         {
-            JoinStatusBox.Text = "completed";
+            JoinStatusBoxText = "completed";
             TimeLeft = 0;
-            TimeBox.Text = TimeLeft.ToString();
+            TimeBoxText = TimeLeft.ToString();
             CreateNameBox.Focus();
 
             StatusCompleted();
@@ -459,6 +521,7 @@ namespace Boggle
             MessageBox.Show("Game Exited, YOU QUITER!");
         }
 
+        // Timers
         private void PendingTimer_Tick(object sender, EventArgs e)
         {
             if (UpdateStatus != null)
@@ -472,6 +535,10 @@ namespace Boggle
                     PendingTimer.Stop();
                     StatusActive();
                 }
+            }
+            if (JoinStatusBoxText.Equals("pending"))
+            {
+                StatusPending();
             }
         }
 
@@ -495,7 +562,6 @@ namespace Boggle
             }
             else
             {
-                JoinStatusBoxText = "completed";
                 StatusCompleted();
             }
         }

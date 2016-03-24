@@ -73,15 +73,18 @@ namespace Boggle
             {
                 GameStatus = Network.GetStatus(GameID);
 
-                //UpdateScore()
-                View.Player1ScoreBoxText = GameStatus.Player1.Score;
-                View.Player2ScoreBoxText = GameStatus.Player2.Score;
+                if (GameStatus != null)
+                {
+                    //UpdateScore()
+                    View.Player1ScoreBoxText = GameStatus.Player1.Score;
+                    View.Player2ScoreBoxText = GameStatus.Player2.Score;
 
-                //UpdateTime()
-                View.TimeBoxText = GameStatus.TimeLeft;
+                    //UpdateTime()
+                    View.TimeBoxText = GameStatus.TimeLeft;
 
-                //UpdateStatus()
-                View.JoinStatusBoxText = GameStatus.GameState;
+                    //UpdateStatus()
+                    View.JoinStatusBoxText = GameStatus.GameState;
+                }
             }
         }
 
@@ -165,9 +168,9 @@ namespace Boggle
         /// Returns the Score if successfull.
         /// </summary>
         /// <param name="word"></param>
-        private void View_Word(string word)
+        private async void View_Word(string word)
         {
-            int score = Network.PlayWord(PlayerToken, word , GameID);
+            int score = await Network.PlayWord(PlayerToken, word , GameID);
 
             View.WordScoreBoxText = score > 0 ? "+" + score : score.ToString();
 
@@ -178,13 +181,13 @@ namespace Boggle
         /// Returns the Game ID if successfull.
         /// </summary>
         /// <param name="time"></param>
-        private void View_JoinGame(int time)
+        private async void View_JoinGame(int time)
         {
             string GID;
 
             if (Network.SetBaseAddress(View.JoinDomainBoxText))
             {
-                GID = Network.JoinGame(PlayerToken, time);
+                GID = await Network.JoinGame(PlayerToken, time);
             }
             else
             {
@@ -196,6 +199,11 @@ namespace Boggle
             {
                 GameID = GID;
                 View.Message = "Game joined!\nID : " + GID;
+                if (GameID != null)
+                    GameStatus = Network.GetStatus(GameID);
+
+                if (GameStatus != null)
+                    View.JoinStatusBoxText = GameStatus.GameState;
             }
             else
             {
@@ -216,13 +224,13 @@ namespace Boggle
         /// Returns the PlayerToken if successfull.
         /// </summary>
         /// <param name="nickname"></param>
-        private void View_CreateName(string nickname)
+        private async void View_CreateName(string nickname)
         {
             string token;
 
             if (Network.SetBaseAddress(View.JoinDomainBoxText))
             {
-                token = Network.CreateName(nickname);
+                token = await Network.CreateName(nickname);
             }
             else
             {

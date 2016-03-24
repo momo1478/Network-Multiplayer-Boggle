@@ -551,6 +551,7 @@
             // 
             // JoinButton
             // 
+            this.JoinButton.Enabled = false;
             this.JoinButton.Location = new System.Drawing.Point(153, 72);
             this.JoinButton.Name = "JoinButton";
             this.JoinButton.Size = new System.Drawing.Size(35, 23);
@@ -570,6 +571,7 @@
             // 
             // JoinTimeBox
             // 
+            this.JoinTimeBox.Enabled = false;
             this.JoinTimeBox.Location = new System.Drawing.Point(120, 74);
             this.JoinTimeBox.Name = "JoinTimeBox";
             this.JoinTimeBox.Size = new System.Drawing.Size(27, 20);
@@ -579,7 +581,6 @@
             // StatusTimer
             // 
             this.StatusTimer.Interval = 1000;
-            //this.StatusTimer.Tick += new System.EventHandler(this.StatusTimer_Tick);
             // 
             // WordScoreBox
             // 
@@ -593,6 +594,8 @@
             // 
             // Player1PlayedBox
             // 
+            this.Player1PlayedBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.Player1PlayedBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.Player1PlayedBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.Player1PlayedBox.Location = new System.Drawing.Point(15, 255);
@@ -604,6 +607,8 @@
             // 
             // Player2PlayedBox
             // 
+            this.Player2PlayedBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.Player2PlayedBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.Player2PlayedBox.Location = new System.Drawing.Point(251, 255);
             this.Player2PlayedBox.Name = "Player2PlayedBox";
