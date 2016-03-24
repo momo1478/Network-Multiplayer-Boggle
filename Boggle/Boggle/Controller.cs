@@ -32,6 +32,7 @@ namespace Boggle
         /// </summary>
         public dynamic GameStatus { get; set; }
 
+
         // Controller Constructor
         /// <summary>
         /// Begins controlling window.
@@ -43,6 +44,8 @@ namespace Boggle
             view.CreateName += View_CreateName;
 
             view.JoinGame += View_JoinGame;
+
+            view.CancelJoin += View_CancelJoin;
 
             view.UpdateStatus += View_UpdateGame;
             view.UpdateStatus += View_UpdateStatus;
@@ -56,7 +59,24 @@ namespace Boggle
             view.UpdateScoreBoxes += View_UpdateScoreBoxes;
 
             view.UpdateLetterBoxes += View_UpdateLetterBoxes;
+
+            view.UpdatePlayer1Words += View_UpdatePlayer1Words;
+
+            view.UpdatePlayer2Words += View_UpdatePlayer2Words;
+
         }
+
+
+        private void View_UpdatePlayer1Words()
+        {
+            View.Player1PlayedBoxText = GameStatus.Player1.WordsPlayed.ToString();
+        }
+
+        private void View_UpdatePlayer2Words()
+        {
+            View.Player2PlayedBoxText = GameStatus.Player2.WordsPlayed.ToString();
+        }
+
 
         // Handler methods 
         /// <summary>
@@ -177,6 +197,14 @@ namespace Boggle
             {
                 View.Message = "Could not join game";
             }
+        }
+
+        /// <summary>
+        /// Handles a request to Cancel Join
+        /// </summary>
+        private void View_CancelJoin()
+        {
+            Network.CancelJoin(PlayerToken);
         }
 
         /// <summary>

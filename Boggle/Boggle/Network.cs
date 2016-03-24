@@ -29,10 +29,10 @@ namespace Boggle
             }
             catch
             {
-                
+
                 return false;
             }
-            
+
         }
 
         public static HttpClient CreateClient()
@@ -76,7 +76,7 @@ namespace Boggle
         /// <param name="playerToken"></param>
         /// <param name="word"></param>
         /// <returns></returns>
-        public static int PlayWord(string playerToken, string word , string GID)
+        public static int PlayWord(string playerToken, string word, string GID)
         {
             using (HttpClient client = CreateClient())
             {
@@ -96,6 +96,37 @@ namespace Boggle
                 catch
                 {
                     return 0;
+                }
+            }
+        }
+
+        public static void CancelJoin(string playerToken)
+        {
+            // Starts a HTTP client
+            using (HttpClient client = CreateClient())
+            {
+                dynamic data = new ExpandoObject();
+                data.UserToken = playerToken;
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                HttpResponseMessage response = client.PutAsync("games", content).Result;
+
+                string result = response.Content.ReadAsStringAsync().Result;
+                try
+                {
+                    dynamic expando = JsonConvert.DeserializeObject(result);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessageBox.Show("Game Canceled.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unable to cancel join game");
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Unable to cancel join game");
                 }
             }
         }
@@ -139,7 +170,7 @@ namespace Boggle
                 {
                     return null;
                 }
-                
+
             }
         }
 
@@ -160,11 +191,11 @@ namespace Boggle
                 //Construct Expando
                 data.Nickname = nickname;
 
-                
+
                 StringContent content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = client.PostAsync("users", content).Result;
 
-               
+
                 string result = response.Content.ReadAsStringAsync().Result;
 
                 try
@@ -178,5 +209,7 @@ namespace Boggle
                 }
             }
         }
+
+
     }
 }

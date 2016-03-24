@@ -71,6 +71,10 @@
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.WordScoreBox = new System.Windows.Forms.TextBox();
+            this.Player1PlayedBox = new System.Windows.Forms.RichTextBox();
+            this.Player2PlayedBox = new System.Windows.Forms.RichTextBox();
+            this.Player1PlayedLabel = new System.Windows.Forms.Label();
+            this.Player2PlayedLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -505,12 +509,14 @@
             // 
             // CancelButton
             // 
+            this.CancelButton.Enabled = false;
             this.CancelButton.Location = new System.Drawing.Point(194, 72);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(48, 23);
             this.CancelButton.TabIndex = 12;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // JoinStatusBox
             // 
@@ -572,11 +578,51 @@
             this.WordScoreBox.TabIndex = 8;
             this.WordScoreBox.Text = "+11";
             // 
+            // Player1PlayedBox
+            // 
+            this.Player1PlayedBox.Location = new System.Drawing.Point(15, 255);
+            this.Player1PlayedBox.Name = "Player1PlayedBox";
+            this.Player1PlayedBox.ReadOnly = true;
+            this.Player1PlayedBox.Size = new System.Drawing.Size(229, 163);
+            this.Player1PlayedBox.TabIndex = 9;
+            this.Player1PlayedBox.Text = "";
+            // 
+            // Player2PlayedBox
+            // 
+            this.Player2PlayedBox.Location = new System.Drawing.Point(251, 255);
+            this.Player2PlayedBox.Name = "Player2PlayedBox";
+            this.Player2PlayedBox.ReadOnly = true;
+            this.Player2PlayedBox.Size = new System.Drawing.Size(253, 163);
+            this.Player2PlayedBox.TabIndex = 10;
+            this.Player2PlayedBox.Text = "";
+            // 
+            // Player1PlayedLabel
+            // 
+            this.Player1PlayedLabel.AutoSize = true;
+            this.Player1PlayedLabel.Location = new System.Drawing.Point(12, 239);
+            this.Player1PlayedLabel.Name = "Player1PlayedLabel";
+            this.Player1PlayedLabel.Size = new System.Drawing.Size(76, 13);
+            this.Player1PlayedLabel.TabIndex = 11;
+            this.Player1PlayedLabel.Text = "Player1 Words";
+            // 
+            // Player2PlayedLabel
+            // 
+            this.Player2PlayedLabel.AutoSize = true;
+            this.Player2PlayedLabel.Location = new System.Drawing.Point(258, 239);
+            this.Player2PlayedLabel.Name = "Player2PlayedLabel";
+            this.Player2PlayedLabel.Size = new System.Drawing.Size(79, 13);
+            this.Player2PlayedLabel.TabIndex = 12;
+            this.Player2PlayedLabel.Text = "Player 2 Words";
+            // 
             // BoggleGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(516, 230);
+            this.ClientSize = new System.Drawing.Size(516, 430);
+            this.Controls.Add(this.Player2PlayedLabel);
+            this.Controls.Add(this.Player1PlayedLabel);
+            this.Controls.Add(this.Player2PlayedBox);
+            this.Controls.Add(this.Player1PlayedBox);
             this.Controls.Add(this.WordScoreBox);
             this.Controls.Add(this.JoinGroup);
             this.Controls.Add(this.CreateNameGroup);
@@ -650,6 +696,10 @@
         private System.Windows.Forms.TextBox WordScoreBox;
         private System.Windows.Forms.Label JoinDomainLabel;
         private System.Windows.Forms.TextBox JoinDomainBox;
+        private System.Windows.Forms.RichTextBox Player1PlayedBox;
+        private System.Windows.Forms.RichTextBox Player2PlayedBox;
+        private System.Windows.Forms.Label Player2PlayedLabel;
+        private System.Windows.Forms.Label Player1PlayedLabel;
     }
 }
 

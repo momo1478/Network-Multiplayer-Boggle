@@ -124,7 +124,7 @@ namespace Boggle
         {
             set { Player2ScoreBox.Text = value; }
         }
-
+        
         /// <summary>
         /// Sets the WordScoreBox.Text
         /// </summary>
@@ -135,6 +135,7 @@ namespace Boggle
                 WordScoreBox.Text = value;
             }
         }
+
 
         /// <summary>
         /// Sets JoinStatusBox.Text
@@ -162,7 +163,29 @@ namespace Boggle
             set { JoinDomainBox.Text = value; }
         }
 
-        
+        public string Player1PlayedBoxText
+        {
+            get
+            {
+                return Player1PlayedBox.Text;
+            }
+            set
+            {
+                Player1PlayedBox.Text = value;
+            }
+        }
+
+        public string Player2PlayedBoxText
+        {
+            get
+            {
+                return Player2PlayedBox.Text;
+            }
+            set
+            {
+                Player2PlayedBox.Text = value;
+            }
+        }
 
 
         // Actions to communicate with the controller and model/BoggleAPI.
@@ -183,6 +206,8 @@ namespace Boggle
         /// The parameter is the join time.
         /// </summary>
         public event Action<int> JoinGame;
+
+        public event Action CancelJoin;
 
         /// <summary>
         /// Fired to update the game status.
@@ -210,6 +235,10 @@ namespace Boggle
         /// </summary>
         public event Action UpdateLetterBoxes;
 
+        public event Action UpdatePlayer1Words;
+
+        public event Action UpdatePlayer2Words;
+
 
         // Constructor for BoggleGUI.
         /// <summary>
@@ -232,7 +261,7 @@ namespace Boggle
         /// <param name="e"></param>
         private void CreateNameBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter && !JoinStatusBox.Text.Equals("active"))
             {
                 JoinButton_Click(sender, e);
             }
@@ -247,7 +276,7 @@ namespace Boggle
         /// <param name="e"></param>
         private void WordBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter && JoinStatusBox.Text.Equals("active"))
             {
                 if (Word != null)
                 {
@@ -266,7 +295,7 @@ namespace Boggle
         /// <param name="e"></param>
         private void JoinButton_Click(object sender, EventArgs e)
         {
-
+            timer.Start();
             int temp;
             if (CreateName != null)
             {
@@ -278,12 +307,8 @@ namespace Boggle
                 UpdateStatus();
             }
 
-
-
             if (JoinStatusBox.Text.Equals("active"))
             {
-                timer.Start();
-
                 // Setting TextBox properties to true or false.
                 JoinTimeBox.ReadOnly = true;
                 CreateNameBox.ReadOnly = true;
@@ -308,6 +333,18 @@ namespace Boggle
             }
         }
 
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            if (CancelJoin != null)
+                CancelJoin();
+
+            if (UpdateStatus != null)
+                UpdateStatus();
+
+            JoinStatusBox.Text = "canceled";
+
+        }
+
         /// <summary>
         /// Activates on timer tick which interval is set to every second.
         /// </summary>
@@ -315,28 +352,53 @@ namespace Boggle
         /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
+            if (JoinStatusBox.Text.Equals("pending"))
+            {
+                CancelButton.Enabled = true;
+            }
             if (JoinStatusBox.Text.Equals("active"))
             {
                 if (UpdateTimeBox != null)
                     UpdateTimeBox();
+            }
+            if (JoinStatusBox.Text.Equals("completed"))
+            {
+                // Setting TextBox properties to true or false.
+                JoinTimeBox.ReadOnly = false;
+                CreateNameBox.ReadOnly = false;
+                JoinDomainBox.ReadOnly = false;
+                // Setting Button properties to true or false.
+                JoinButton.Enabled = true;
+                CancelButton.Enabled = false;
 
-                if (JoinStatusBox.Text.Equals("completed"))
-                {
-                    timer.Start();
+                // Setting Wordbox properties to true or false.
+                WordBox.Enabled = false;
+                WordBox.ReadOnly = true;
 
-                    // Setting TextBox properties to true or false.
-                    JoinTimeBox.ReadOnly = false;
-                    CreateNameBox.ReadOnly = false;
-                    JoinDomainBox.ReadOnly = false;
-                    // Setting Button properties to true or false.
-                    JoinButton.Enabled = true;
-                    CancelButton.Enabled = true;
+                // Firing events
+                if (UpdateStatus != null)
+                    UpdateStatus();
+                if (UpdatePlayer1Words != null)
+                    UpdatePlayer1Words();
+                if (UpdatePlayer2Words != null)
+                    UpdatePlayer2Words();
+            }
+            if (JoinStatusBox.Text.Equals("canceled"))
+            {
+                // Setting TextBox properties to true or false.
+                JoinTimeBox.ReadOnly = false;
+                CreateNameBox.ReadOnly = false;
+                JoinDomainBox.ReadOnly = false;
+                // Setting Button properties to true or false.
+                JoinButton.Enabled = true;
+                CancelButton.Enabled = false;
 
-                    // Setting Wordbox properties to true or false.
-                    WordBox.Enabled = false;
-                    WordBox.ReadOnly = true;
-                }
+                // Setting Wordbox properties to true or false.
+                WordBox.Enabled = false;
+                WordBox.ReadOnly = true;
+                JoinStatusBox.Text = "";
             }
         }
+
     }
 }
