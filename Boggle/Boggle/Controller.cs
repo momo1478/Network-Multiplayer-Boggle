@@ -47,7 +47,6 @@ namespace Boggle
 
             view.CancelJoin += View_CancelJoin;
 
-            view.UpdateStatus += View_UpdateGame;
             view.UpdateStatus += View_UpdateStatus;
             
             view.Word += View_Word;
@@ -64,8 +63,27 @@ namespace Boggle
 
             view.UpdatePlayer2Words += View_UpdatePlayer2Words;
 
+            view.ActiveUpdate += View_ActiveUpdate;
+
         }
 
+        private void View_ActiveUpdate()
+        {
+            if (GameID != null)
+            {
+                GameStatus = Network.GetStatus(GameID);
+
+                //UpdateScore()
+                View.Player1ScoreBoxText = GameStatus.Player1.Score;
+                View.Player2ScoreBoxText = GameStatus.Player2.Score;
+
+                //UpdateTime()
+                View.TimeBoxText = GameStatus.TimeLeft;
+
+                //UpdateStatus()
+                View.JoinStatusBoxText = GameStatus.GameState;
+            }
+        }
 
         private void View_UpdatePlayer1Words()
         {
@@ -137,21 +155,14 @@ namespace Boggle
             View.Player2ScoreLabelText = GameStatus.Player2.Nickname;
         }
 
-
-        /// <summary>
-        /// Handles a request to sets our dynamic property to the updated GameStatus.
-        /// </summary>
-        private void View_UpdateGame()
-        {
-            if(GameID != null)
-                GameStatus = Network.GetStatus(GameID);
-        }
-
         /// <summary>
         /// Handles a request to update the JoinStatusBox with the Game State
         /// </summary>
         private void View_UpdateStatus()
         {
+            if (GameID != null)
+                GameStatus = Network.GetStatus(GameID);
+
             if (GameStatus != null)
                 View.JoinStatusBoxText = GameStatus.GameState;
         }

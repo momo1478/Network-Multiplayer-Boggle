@@ -239,6 +239,8 @@ namespace Boggle
 
         public event Action UpdatePlayer2Words;
 
+        public event Action ActiveUpdate;
+
 
         // Constructor for BoggleGUI.
         /// <summary>
@@ -312,28 +314,33 @@ namespace Boggle
 
             if (JoinStatusBox.Text.Equals("active"))
             {
-                // Setting TextBox properties to true or false.
-                JoinTimeBox.ReadOnly = true;
-                CreateNameBox.ReadOnly = true;
-                JoinDomainBox.ReadOnly = true;
-                // Setting Button properties to true or false.
-                JoinButton.Enabled = false;
-                CancelButton.Enabled = false;
-
-                // Setting Wordbox properties to true or false.
-                WordBox.Enabled = true;
-                WordBox.ReadOnly = false;
-
-                // Firing Events
-                if (UpdateNameLabels != null)
-                    UpdateNameLabels();
-
-                if (UpdateScoreBoxes != null)
-                    UpdateScoreBoxes();
-
-                if (UpdateLetterBoxes != null)
-                    UpdateLetterBoxes();
+                StatusActive();
             }
+        }
+        void StatusActive()
+        {
+            // Setting TextBox properties to true or false.
+            JoinTimeBox.ReadOnly = true;
+            CreateNameBox.ReadOnly = true;
+            JoinDomainBox.ReadOnly = true;
+            // Setting Button properties to true or false.
+            JoinButton.Enabled = false;
+            CancelButton.Enabled = false;
+
+            // Setting Wordbox properties to true or false.
+            WordBox.Enabled = true;
+            WordBox.ReadOnly = false;
+            ExitGameToolStrip.Enabled = true;
+
+            // Firing Events
+            if (UpdateNameLabels != null)
+                UpdateNameLabels();
+
+            if (UpdateScoreBoxes != null)
+                UpdateScoreBoxes();
+
+            if (UpdateLetterBoxes != null)
+                UpdateLetterBoxes();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -362,36 +369,16 @@ namespace Boggle
             }
             if (JoinStatusBox.Text.Equals("active"))
             {
-                if (UpdateTimeBox != null)
-                    UpdateTimeBox();
-                if (UpdateScoreBoxes != null)
-                    UpdateScoreBoxes();
-                if (UpdateNameLabels != null)
-                    UpdateNameLabels();
-
-                if (UpdateScoreBoxes != null)
-                    UpdateScoreBoxes();
-                if (UpdateLetterBoxes != null)
-                    UpdateLetterBoxes();
-
-                // Setting TextBox properties to true or false.
-                JoinTimeBox.ReadOnly = true;
-                CreateNameBox.ReadOnly = true;
-                JoinDomainBox.ReadOnly = true;
-                // Setting Button properties to true or false.
-                JoinButton.Enabled = false;
-                CancelButton.Enabled = false;
-
-                // Setting Wordbox properties to true or false.
-                WordBox.Enabled = true;
-                WordBox.ReadOnly = false;
-                ExitGameToolStrip.Enabled = true;
+                if (ActiveUpdate != null)
+                    ActiveUpdate();
             }
             if (JoinStatusBox.Text.Equals("completed"))
             {
                 ExitGameToolStrip.Enabled = false;
-                if (UpdateScoreBoxes != null)
-                    UpdateScoreBoxes();
+
+                if (ActiveUpdate != null)
+                    ActiveUpdate();
+
                 // Setting TextBox properties to true or false.
                 JoinTimeBox.ReadOnly = false;
                 CreateNameBox.ReadOnly = false;
