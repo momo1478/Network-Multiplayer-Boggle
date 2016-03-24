@@ -281,7 +281,10 @@ namespace Boggle
                 if (Word != null)
                 {
                     Word(WordBoxText);
-                    UpdateScoreBoxes();
+
+                    if(UpdateScoreBoxes != null)
+                        UpdateScoreBoxes();
+
                     WordBox.Text = "";
                 }
             }
@@ -352,17 +355,25 @@ namespace Boggle
         /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
+
             if (JoinStatusBox.Text.Equals("pending"))
             {
+                ExitGameToolStrip.Enabled = false;
                 CancelButton.Enabled = true;
             }
             if (JoinStatusBox.Text.Equals("active"))
             {
                 if (UpdateTimeBox != null)
                     UpdateTimeBox();
+                if (UpdateScoreBoxes != null)
+                    UpdateScoreBoxes();
+                ExitGameToolStrip.Enabled = true;
             }
             if (JoinStatusBox.Text.Equals("completed"))
             {
+                ExitGameToolStrip.Enabled = false;
+                if (UpdateScoreBoxes != null)
+                    UpdateScoreBoxes();
                 // Setting TextBox properties to true or false.
                 JoinTimeBox.ReadOnly = false;
                 CreateNameBox.ReadOnly = false;
@@ -385,6 +396,7 @@ namespace Boggle
             }
             if (JoinStatusBox.Text.Equals("canceled"))
             {
+                ExitGameToolStrip.Enabled = false;
                 // Setting TextBox properties to true or false.
                 JoinTimeBox.ReadOnly = false;
                 CreateNameBox.ReadOnly = false;
@@ -397,8 +409,14 @@ namespace Boggle
                 WordBox.Enabled = false;
                 WordBox.ReadOnly = true;
                 JoinStatusBox.Text = "";
+                TimeBox.Text = "0";
             }
         }
 
+        private void ExitGameToolStrip_Click(object sender, EventArgs e)
+        {
+            JoinStatusBox.Text = "canceled";
+            MessageBox.Show("Game Exited, YOU QUITER!");
+        }
     }
 }

@@ -75,6 +75,7 @@
             this.Player2PlayedBox = new System.Windows.Forms.RichTextBox();
             this.Player1PlayedLabel = new System.Windows.Forms.Label();
             this.Player2PlayedLabel = new System.Windows.Forms.Label();
+            this.ExitGameToolStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -85,7 +86,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.ExitGameToolStrip});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(516, 24);
@@ -580,6 +582,8 @@
             // 
             // Player1PlayedBox
             // 
+            this.Player1PlayedBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.Player1PlayedBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.Player1PlayedBox.Location = new System.Drawing.Point(15, 255);
             this.Player1PlayedBox.Name = "Player1PlayedBox";
             this.Player1PlayedBox.ReadOnly = true;
@@ -589,6 +593,7 @@
             // 
             // Player2PlayedBox
             // 
+            this.Player2PlayedBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.Player2PlayedBox.Location = new System.Drawing.Point(251, 255);
             this.Player2PlayedBox.Name = "Player2PlayedBox";
             this.Player2PlayedBox.ReadOnly = true;
@@ -613,6 +618,14 @@
             this.Player2PlayedLabel.Size = new System.Drawing.Size(79, 13);
             this.Player2PlayedLabel.TabIndex = 12;
             this.Player2PlayedLabel.Text = "Player 2 Words";
+            // 
+            // ExitGameToolStrip
+            // 
+            this.ExitGameToolStrip.Enabled = false;
+            this.ExitGameToolStrip.Name = "ExitGameToolStrip";
+            this.ExitGameToolStrip.Size = new System.Drawing.Size(71, 20);
+            this.ExitGameToolStrip.Text = "Exit Game";
+            this.ExitGameToolStrip.Click += new System.EventHandler(this.ExitGameToolStrip_Click);
             // 
             // BoggleGUI
             // 
@@ -700,6 +713,7 @@
         private System.Windows.Forms.RichTextBox Player2PlayedBox;
         private System.Windows.Forms.Label Player2PlayedLabel;
         private System.Windows.Forms.Label Player1PlayedLabel;
+        private System.Windows.Forms.ToolStripMenuItem ExitGameToolStrip;
     }
 }
 
