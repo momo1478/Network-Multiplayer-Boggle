@@ -28,9 +28,8 @@ namespace Boggle
 
                 using (HttpClient client = CreateClient())
                 {
-                    return client.GetAsync("games/0").Result.IsSuccessStatusCode;
+                    return client.GetAsync("/games/0").Result.StatusCode.ToString().Equals("NotFound");
                 }
-                    // TODO : Fix invalid domain exception.
             }
             catch
             {
