@@ -25,11 +25,16 @@ namespace Boggle
             {
                 new Uri(url);
                 BaseAddress = url;
-                // TODO : Fix invalid domain exception.
-                return true;
+
+                using (HttpClient client = CreateClient())
+                {
+                    return client.GetAsync("games/0").Result.IsSuccessStatusCode;
+                }
+                    // TODO : Fix invalid domain exception.
             }
             catch
             {
+                BaseAddress = null;
                 return false;
             }
 
