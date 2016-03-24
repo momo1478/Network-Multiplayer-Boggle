@@ -87,12 +87,12 @@ namespace Boggle
 
         private void View_UpdatePlayer1Words()
         {
-            View.Player1PlayedBoxText = GameStatus.Player1.WordsPlayed.ToString();
+            View.Player1PlayedBoxText = GameStatus.Player1.WordsPlayed?.ToString() ?? "";
         }
 
         private void View_UpdatePlayer2Words()
         {
-            View.Player2PlayedBoxText = GameStatus.Player2.WordsPlayed.ToString();
+            View.Player2PlayedBoxText = GameStatus.Player2.WordsPlayed?.ToString() ?? "";
         }
 
 
@@ -132,16 +132,9 @@ namespace Boggle
         /// </summary>
         private void View_UpdateTimeBox()
         {
-
             GameStatus = Network.GetStatus(GameID);
-
             View.TimeBoxText = GameStatus.TimeLeft;
-
-            if (GameStatus.TimeLeft == 0)
-            {
-                GameStatus = Network.GetStatus(GameID);
-                View.JoinStatusBoxText = "completed";
-            }
+            View.TimeLeft = GameStatus.TimeLeft;
         }
 
         /// <summary>

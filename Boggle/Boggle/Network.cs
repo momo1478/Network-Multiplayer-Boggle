@@ -29,7 +29,6 @@ namespace Boggle
             }
             catch
             {
-
                 return false;
             }
 

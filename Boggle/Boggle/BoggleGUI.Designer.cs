@@ -32,6 +32,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExitGameToolStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.LetterD = new System.Windows.Forms.TextBox();
             this.LetterL = new System.Windows.Forms.TextBox();
             this.LetterN = new System.Windows.Forms.TextBox();
@@ -69,13 +70,15 @@
             this.JoinButton = new System.Windows.Forms.Button();
             this.JoinTimeLabel = new System.Windows.Forms.Label();
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
-            this.timer = new System.Windows.Forms.Timer(this.components);
+            this.StatusTimer = new System.Windows.Forms.Timer(this.components);
             this.WordScoreBox = new System.Windows.Forms.TextBox();
             this.Player1PlayedBox = new System.Windows.Forms.RichTextBox();
             this.Player2PlayedBox = new System.Windows.Forms.RichTextBox();
             this.Player1PlayedLabel = new System.Windows.Forms.Label();
             this.Player2PlayedLabel = new System.Windows.Forms.Label();
-            this.ExitGameToolStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.PendingTimer = new System.Windows.Forms.Timer(this.components);
+            this.ActiveTimer = new System.Windows.Forms.Timer(this.components);
+            this.TimeLeftTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -105,6 +108,14 @@
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // ExitGameToolStrip
+            // 
+            this.ExitGameToolStrip.Enabled = false;
+            this.ExitGameToolStrip.Name = "ExitGameToolStrip";
+            this.ExitGameToolStrip.Size = new System.Drawing.Size(71, 20);
+            this.ExitGameToolStrip.Text = "Exit Game";
+            this.ExitGameToolStrip.Click += new System.EventHandler(this.ExitGameToolStrip_Click);
             // 
             // LetterD
             // 
@@ -565,10 +576,10 @@
             this.JoinTimeBox.TabIndex = 6;
             this.JoinTimeBox.Text = "120";
             // 
-            // timer
+            // StatusTimer
             // 
-            this.timer.Interval = 1000;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            this.StatusTimer.Interval = 1000;
+            //this.StatusTimer.Tick += new System.EventHandler(this.StatusTimer_Tick);
             // 
             // WordScoreBox
             // 
@@ -578,7 +589,7 @@
             this.WordScoreBox.ReadOnly = true;
             this.WordScoreBox.Size = new System.Drawing.Size(31, 20);
             this.WordScoreBox.TabIndex = 8;
-            this.WordScoreBox.Text = "+11";
+            this.WordScoreBox.Text = "0";
             // 
             // Player1PlayedBox
             // 
@@ -619,13 +630,20 @@
             this.Player2PlayedLabel.TabIndex = 12;
             this.Player2PlayedLabel.Text = "Player 2 Words";
             // 
-            // ExitGameToolStrip
+            // PendingTimer
             // 
-            this.ExitGameToolStrip.Enabled = false;
-            this.ExitGameToolStrip.Name = "ExitGameToolStrip";
-            this.ExitGameToolStrip.Size = new System.Drawing.Size(71, 20);
-            this.ExitGameToolStrip.Text = "Exit Game";
-            this.ExitGameToolStrip.Click += new System.EventHandler(this.ExitGameToolStrip_Click);
+            this.PendingTimer.Interval = 1000;
+            this.PendingTimer.Tick += new System.EventHandler(this.PendingTimer_Tick);
+            // 
+            // ActiveTimer
+            // 
+            this.ActiveTimer.Interval = 1000;
+            this.ActiveTimer.Tick += new System.EventHandler(this.ActiveTimer_Tick);
+            // 
+            // TimeLeftTimer
+            // 
+            this.TimeLeftTimer.Interval = 1000;
+            this.TimeLeftTimer.Tick += new System.EventHandler(this.TimeLeftTimer_Tick);
             // 
             // BoggleGUI
             // 
@@ -704,7 +722,7 @@
         private System.Windows.Forms.Button JoinButton;
         private System.Windows.Forms.TextBox JoinStatusBox;
         private System.Windows.Forms.Label JoinStatusLabel;
-        private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.Timer StatusTimer;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.TextBox WordScoreBox;
         private System.Windows.Forms.Label JoinDomainLabel;
@@ -714,6 +732,9 @@
         private System.Windows.Forms.Label Player2PlayedLabel;
         private System.Windows.Forms.Label Player1PlayedLabel;
         private System.Windows.Forms.ToolStripMenuItem ExitGameToolStrip;
+        private System.Windows.Forms.Timer PendingTimer;
+        private System.Windows.Forms.Timer ActiveTimer;
+        private System.Windows.Forms.Timer TimeLeftTimer;
     }
 }
 
