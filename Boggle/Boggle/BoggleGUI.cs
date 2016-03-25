@@ -199,6 +199,8 @@ namespace Boggle
 
         public bool CanEnter = true;
 
+        public bool CanJoin = true;
+
 
 
         // Actions to communicate with the controller and model/BoggleAPI.
@@ -291,8 +293,9 @@ namespace Boggle
 
         private void JoinTimeBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter && CanJoin)
             {
+                CanJoin = false;
                 JoinButton_Click(sender, e);
             }
         }
@@ -602,7 +605,11 @@ To submit words while playing the game press
 
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            JoinGame(JoinTimeBoxText);
+            JoinButton.Invoke((MethodInvoker)(() =>
+            {
+                JoinGame(JoinTimeBoxText);
+            }));
+            CanJoin = true;
         }
 
         private void BackgroundWorkerName_DoWork(object sender, DoWorkEventArgs e)
