@@ -271,8 +271,6 @@ namespace Boggle
             if (e.KeyCode == Keys.Enter && !JoinStatusBoxText.Equals("active"))
             {
                 BackgroundWorkerName.RunWorkerAsync();
-
-                StatusJoinGame();
             }
         }
 
@@ -285,8 +283,6 @@ namespace Boggle
         /// <param name="e"></param>
         private void JoinButton_Click(object sender, EventArgs e)
         {
-
-
             int temp;
             if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
             {
@@ -328,33 +324,37 @@ namespace Boggle
                 ActiveUpdate();
 
             // Setting TextBox properties values.
-            JoinTimeBox.ReadOnly = false;
-            JoinTimeBox.Enabled = true;
-            CreateNameBox.ReadOnly = true;
-            CreateNameBox.Enabled = false;
-            JoinDomainBox.ReadOnly = true;
-            JoinDomainBox.Enabled = false;
-            WordBox.ReadOnly = true;
-            WordBox.Enabled = false;
+            
+            JoinTimeBox.Invoke((MethodInvoker)(() =>
+            {
+                JoinTimeBox.ReadOnly = false;
+                JoinTimeBox.Enabled = true;
+                CreateNameBox.ReadOnly = true;
+                CreateNameBox.Enabled = false;
+                JoinDomainBox.ReadOnly = true;
+                JoinDomainBox.Enabled = false;
+                WordBox.ReadOnly = true;
+                WordBox.Enabled = false;
 
-            // Setting button properties values.
-            JoinButton.Enabled = true;
-            CancelButton.Enabled = false;
-            ExitGameToolStrip.Enabled = false;
+                // Setting button properties values.
+                JoinButton.Enabled = true;
+                CancelButton.Enabled = false;
+                ExitGameToolStrip.Enabled = false;
+                // Set values to empty
+                Player1PlayedBoxText = "";
+                Player2PlayedBoxText = "";
+                WordBoxText = "";
+                WordScoreBoxText = "";
+                Player1ScoreBoxText = "";
+                Player2ScoreBoxText = "";
+                Player1ScoreLabelText = "Player 1 Score";
+                Player2ScoreLabelText = "Player 2 Score";
+                TimeBoxText = "";
 
-            // Set values to empty
-            Player1PlayedBoxText = "";
-            Player2PlayedBoxText = "";
-            WordBoxText = "";
-            WordScoreBoxText = "";
-            Player1ScoreBoxText = "";
-            Player2ScoreBoxText = "";
-            Player1ScoreLabelText = "Player 1 Score";
-            Player2ScoreLabelText = "Player 2 Score";
-            TimeBoxText = "";
+                TimeLeft = 0;
+                JoinStatusBoxText = "Click Join";
+            }));
 
-            TimeLeft = 0;
-            JoinStatusBoxText = "Click Join";
         }
 
         /// <summary>
@@ -570,7 +570,11 @@ namespace Boggle
 
         private void BackgroundWorkerName_DoWork(object sender, DoWorkEventArgs e)
         {
+            JoinButton.Enabled = false;
+
             CreateName(CreateNameBoxText);
+
+            StatusJoinGame();
         }
     }
 }
