@@ -276,7 +276,6 @@ namespace Boggle
             if (e.KeyCode == Keys.Enter && !JoinStatusBoxText.Equals("active"))
             {
                 BackgroundWorkerName.RunWorkerAsync();
-
             }
         }
 
@@ -470,8 +469,8 @@ namespace Boggle
                 ActiveUpdate();
 
             // Setting TextBox properties values.
-            JoinTimeBox.ReadOnly = false;
-            JoinTimeBox.Enabled = true;
+            JoinTimeBox.ReadOnly = true;
+            JoinTimeBox.Enabled = false;
             CreateNameBox.ReadOnly = false;
             CreateNameBox.Enabled = true;
             JoinDomainBox.ReadOnly = false;
@@ -530,6 +529,7 @@ namespace Boggle
             StatusCompleted();
 
             MessageBox.Show("Game Exited, YOU QUITER!");
+            JoinStatusBoxText = "Quit";
         }
 
         // Timers
