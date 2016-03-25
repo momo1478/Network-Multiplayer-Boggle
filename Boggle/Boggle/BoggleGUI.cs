@@ -197,6 +197,8 @@ namespace Boggle
 
         public int TimeLeft { get; set; }
 
+        public bool CanEnter = true;
+
 
 
         // Actions to communicate with the controller and model/BoggleAPI.
@@ -273,8 +275,9 @@ namespace Boggle
         /// <param name="e"></param>
         private void CreateNameBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && !JoinStatusBoxText.Equals("active"))
+            if (e.KeyCode == Keys.Enter && !JoinStatusBoxText.Equals("active") && CanEnter)
             {
+                CanEnter = false;
                 BackgroundWorkerName.RunWorkerAsync();
             }
         }
@@ -328,13 +331,14 @@ namespace Boggle
         /// </summary>
         void StatusJoinGame()
         {
-            if (ActiveUpdate != null)
+            JoinTimeBox.Invoke((MethodInvoker)(() =>
+            {
+                if (ActiveUpdate != null)
                 ActiveUpdate();
 
             // Setting TextBox properties values.
             
-            JoinTimeBox.Invoke((MethodInvoker)(() =>
-            {
+            
             JoinTimeBox.ReadOnly = false;
             JoinTimeBox.Enabled = true;
             CreateNameBox.ReadOnly = true;
@@ -613,6 +617,7 @@ To submit words while playing the game press
             if (Network.SetBaseAddress(JoinDomainBoxText))
             {
                 StatusJoinGame();
+                CanEnter = true;
             }
         }
     }
