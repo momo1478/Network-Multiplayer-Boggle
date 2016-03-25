@@ -49,6 +49,11 @@ namespace Boggle
             }
         }
 
+        public TextBox JoinTime
+        {
+            get { return JoinTimeBox; }
+        }
+
         /// <summary>
         /// Gets and sets the CreateNameBox
         /// </summary>
@@ -298,8 +303,6 @@ namespace Boggle
         /// <param name="e"></param>
         private void JoinButton_Click(object sender, EventArgs e)
         {
-
-
             int temp;
             if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
             {
@@ -330,6 +333,9 @@ namespace Boggle
                 ActiveUpdate();
 
             // Setting TextBox properties values.
+            
+            JoinTimeBox.Invoke((MethodInvoker)(() =>
+            {
             JoinTimeBox.ReadOnly = false;
             JoinTimeBox.Enabled = true;
             CreateNameBox.ReadOnly = true;
@@ -357,7 +363,9 @@ namespace Boggle
             TimeBoxText = "";
 
             TimeLeft = 0;
-            JoinStatusBoxText = "Set Time & Join";
+                JoinStatusBoxText = "Set Time & Join";
+            }));
+
         }
 
         /// <summary>
@@ -596,6 +604,11 @@ To submit words while playing the game press
 
         private void BackgroundWorkerName_DoWork(object sender, DoWorkEventArgs e)
         {
+            JoinButton.Invoke((MethodInvoker)(() =>
+            {
+                JoinButton.Enabled = false;
+            }));
+
             CreateName(CreateNameBoxText);
             if (Network.SetBaseAddress(JoinDomainBoxText))
             {

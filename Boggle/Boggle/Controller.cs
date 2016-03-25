@@ -202,8 +202,11 @@ namespace Boggle
                 if (GameID != null)
                     GameStatus = Network.GetStatus(GameID);
 
-                if (GameStatus != null)
-                    View.JoinStatusBoxText = GameStatus.GameState;
+                View.JoinTime.Invoke((MethodInvoker)(() =>
+                 {
+                     if (GameStatus != null)
+                         View.JoinStatusBoxText = GameStatus.GameState;
+                 }));
             }
             else
             {
