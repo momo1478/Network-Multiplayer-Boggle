@@ -309,7 +309,7 @@ namespace Boggle
         private void JoinButton_Click(object sender, EventArgs e)
         {
             int temp;
-            if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
+            if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp) && temp >= 5 && temp <= 120)
             {
                 BackgroundWorker.RunWorkerAsync();
             }
