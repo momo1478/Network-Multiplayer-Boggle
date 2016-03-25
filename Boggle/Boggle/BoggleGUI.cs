@@ -272,13 +272,28 @@ namespace Boggle
             {
                 if (CreateName != null)
                     CreateName(CreateNameBoxText);
-
-                StatusJoinGame();
+                if (Network.SetBaseAddress(JoinDomainBoxText))
+                {
+                    StatusJoinGame();
+                }
 
             }
         }
 
 
+        private void CreateButton_Click(object sender, EventArgs e)
+        {
+            CreateNameBox_KeyDown(sender, new KeyEventArgs(Keys.Enter));
+        }
+
+
+        private void JoinTimeBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                JoinButton_Click(sender, e);
+            }
+        }
 
         /// <summary>
         /// On JoinButton clicked
@@ -344,6 +359,7 @@ namespace Boggle
             JoinButton.Enabled = true;
             CancelButton.Enabled = false;
             ExitGameToolStrip.Enabled = false;
+            CreateButton.Enabled = false;
 
             // Set values to empty
             Player1PlayedBoxText = "";
@@ -357,7 +373,7 @@ namespace Boggle
             TimeBoxText = "";
 
             TimeLeft = 0;
-            JoinStatusBoxText = "Click Join Game";
+            JoinStatusBoxText = "Set Time & Join";
         }
 
         /// <summary>
@@ -379,7 +395,7 @@ namespace Boggle
             JoinButton.Enabled = true;
             CancelButton.Enabled = false;
             ExitGameToolStrip.Enabled = false;
-
+            CreateButton.Enabled = true;
             JoinStatusBoxText = "canceled";
             Player1ScoreBoxText = "";
             Player2ScoreBoxText = "";
@@ -408,6 +424,7 @@ namespace Boggle
             JoinButton.Enabled = false;
             ExitGameToolStrip.Enabled = false;
             CancelButton.Enabled = true;
+            CreateButton.Enabled = false;
         }
 
         /// <summary>
@@ -429,6 +446,7 @@ namespace Boggle
             JoinButton.Enabled = false;
             CancelButton.Enabled = false;
             ExitGameToolStrip.Enabled = true;
+            CreateButton.Enabled = false;
 
             // Firing Events
             if (UpdateNameLabels != null)
@@ -473,6 +491,7 @@ namespace Boggle
             JoinButton.Enabled = false;
             CancelButton.Enabled = false;
             ExitGameToolStrip.Enabled = false;
+            CreateButton.Enabled = true;
 
             if (UpdatePlayer1Words != null)
                 UpdatePlayer1Words();
@@ -565,5 +584,6 @@ namespace Boggle
                 StatusCompleted();
             }
         }
+
     }
 }
