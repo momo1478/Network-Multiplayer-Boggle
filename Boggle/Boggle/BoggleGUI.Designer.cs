@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitGameToolStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LetterD = new System.Windows.Forms.TextBox();
             this.LetterL = new System.Windows.Forms.TextBox();
             this.LetterN = new System.Windows.Forms.TextBox();
@@ -58,18 +58,18 @@
             this.TimeLabel = new System.Windows.Forms.Label();
             this.TimeBox = new System.Windows.Forms.TextBox();
             this.CreateNameGroup = new System.Windows.Forms.GroupBox();
+            this.JoinDomainLabel = new System.Windows.Forms.Label();
+            this.CreateButton = new System.Windows.Forms.Button();
+            this.JoinDomainBox = new System.Windows.Forms.TextBox();
             this.CreateNameBox = new System.Windows.Forms.TextBox();
             this.CreateNameLabel = new System.Windows.Forms.Label();
             this.JoinGroup = new System.Windows.Forms.GroupBox();
-            this.JoinDomainLabel = new System.Windows.Forms.Label();
-            this.JoinDomainBox = new System.Windows.Forms.TextBox();
             this.CancelButton = new System.Windows.Forms.Button();
             this.JoinStatusBox = new System.Windows.Forms.TextBox();
             this.JoinStatusLabel = new System.Windows.Forms.Label();
             this.JoinButton = new System.Windows.Forms.Button();
             this.JoinTimeLabel = new System.Windows.Forms.Label();
             this.JoinTimeBox = new System.Windows.Forms.TextBox();
-            this.StatusTimer = new System.Windows.Forms.Timer(this.components);
             this.WordScoreBox = new System.Windows.Forms.TextBox();
             this.Player1PlayedBox = new System.Windows.Forms.RichTextBox();
             this.Player2PlayedBox = new System.Windows.Forms.RichTextBox();
@@ -78,7 +78,8 @@
             this.PendingTimer = new System.Windows.Forms.Timer(this.components);
             this.ActiveTimer = new System.Windows.Forms.Timer(this.components);
             this.TimeLeftTimer = new System.Windows.Forms.Timer(this.components);
-            this.CreateButton = new System.Windows.Forms.Button();
+            this.BackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.BackgroundWorkerName = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -96,13 +97,6 @@
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
-            // 
             // ExitGameToolStrip
             // 
             this.ExitGameToolStrip.Enabled = false;
@@ -110,6 +104,13 @@
             this.ExitGameToolStrip.Size = new System.Drawing.Size(71, 20);
             this.ExitGameToolStrip.Text = "Exit Game";
             this.ExitGameToolStrip.Click += new System.EventHandler(this.ExitGameToolStrip_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
             // LetterD
             // 
@@ -461,16 +462,43 @@
             this.CreateNameGroup.Controls.Add(this.CreateNameLabel);
             this.CreateNameGroup.Location = new System.Drawing.Point(282, 36);
             this.CreateNameGroup.Name = "CreateNameGroup";
-            this.CreateNameGroup.Size = new System.Drawing.Size(321, 109);
+            this.CreateNameGroup.Size = new System.Drawing.Size(324, 109);
             this.CreateNameGroup.TabIndex = 7;
             this.CreateNameGroup.TabStop = false;
             this.CreateNameGroup.Text = "Create a Username";
+            // 
+            // JoinDomainLabel
+            // 
+            this.JoinDomainLabel.AutoSize = true;
+            this.JoinDomainLabel.Location = new System.Drawing.Point(8, 56);
+            this.JoinDomainLabel.Name = "JoinDomainLabel";
+            this.JoinDomainLabel.Size = new System.Drawing.Size(43, 13);
+            this.JoinDomainLabel.TabIndex = 14;
+            this.JoinDomainLabel.Text = "Domain";
+            // 
+            // CreateButton
+            // 
+            this.CreateButton.Location = new System.Drawing.Point(240, 31);
+            this.CreateButton.Name = "CreateButton";
+            this.CreateButton.Size = new System.Drawing.Size(75, 23);
+            this.CreateButton.TabIndex = 2;
+            this.CreateButton.Text = "Create";
+            this.CreateButton.UseVisualStyleBackColor = true;
+            this.CreateButton.Click += new System.EventHandler(this.CreateButton_Click);
+            // 
+            // JoinDomainBox
+            // 
+            this.JoinDomainBox.Location = new System.Drawing.Point(11, 72);
+            this.JoinDomainBox.Name = "JoinDomainBox";
+            this.JoinDomainBox.Size = new System.Drawing.Size(304, 20);
+            this.JoinDomainBox.TabIndex = 13;
+            this.JoinDomainBox.Text = "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc";
             // 
             // CreateNameBox
             // 
             this.CreateNameBox.Location = new System.Drawing.Point(10, 33);
             this.CreateNameBox.Name = "CreateNameBox";
-            this.CreateNameBox.Size = new System.Drawing.Size(191, 20);
+            this.CreateNameBox.Size = new System.Drawing.Size(224, 20);
             this.CreateNameBox.TabIndex = 1;
             this.CreateNameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CreateNameBox_KeyDown);
             // 
@@ -497,23 +525,6 @@
             this.JoinGroup.TabIndex = 7;
             this.JoinGroup.TabStop = false;
             this.JoinGroup.Text = "Join a Game";
-            // 
-            // JoinDomainLabel
-            // 
-            this.JoinDomainLabel.AutoSize = true;
-            this.JoinDomainLabel.Location = new System.Drawing.Point(8, 56);
-            this.JoinDomainLabel.Name = "JoinDomainLabel";
-            this.JoinDomainLabel.Size = new System.Drawing.Size(43, 13);
-            this.JoinDomainLabel.TabIndex = 14;
-            this.JoinDomainLabel.Text = "Domain";
-            // 
-            // JoinDomainBox
-            // 
-            this.JoinDomainBox.Location = new System.Drawing.Point(11, 72);
-            this.JoinDomainBox.Name = "JoinDomainBox";
-            this.JoinDomainBox.Size = new System.Drawing.Size(304, 20);
-            this.JoinDomainBox.TabIndex = 13;
-            this.JoinDomainBox.Text = "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc";
             // 
             // CancelButton
             // 
@@ -573,10 +584,6 @@
             this.JoinTimeBox.TabIndex = 6;
             this.JoinTimeBox.Text = "120";
             this.JoinTimeBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.JoinTimeBox_KeyDown);
-            // 
-            // StatusTimer
-            // 
-            this.StatusTimer.Interval = 1000;
             // 
             // WordScoreBox
             // 
@@ -646,15 +653,13 @@
             this.TimeLeftTimer.Interval = 1000;
             this.TimeLeftTimer.Tick += new System.EventHandler(this.TimeLeftTimer_Tick);
             // 
-            // CreateButton
+            // BackgroundWorker
             // 
-            this.CreateButton.Location = new System.Drawing.Point(207, 31);
-            this.CreateButton.Name = "CreateButton";
-            this.CreateButton.Size = new System.Drawing.Size(75, 23);
-            this.CreateButton.TabIndex = 2;
-            this.CreateButton.Text = "Create";
-            this.CreateButton.UseVisualStyleBackColor = true;
-            this.CreateButton.Click += new System.EventHandler(this.CreateButton_Click);
+            this.BackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            // 
+            // BackgroundWorkerName
+            // 
+            this.BackgroundWorkerName.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerName_DoWork);
             // 
             // BoggleGUI
             // 
@@ -732,7 +737,6 @@
         private System.Windows.Forms.Button JoinButton;
         private System.Windows.Forms.TextBox JoinStatusBox;
         private System.Windows.Forms.Label JoinStatusLabel;
-        private System.Windows.Forms.Timer StatusTimer;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.TextBox WordScoreBox;
         private System.Windows.Forms.Label JoinDomainLabel;
@@ -745,6 +749,8 @@
         private System.Windows.Forms.Timer PendingTimer;
         private System.Windows.Forms.Timer ActiveTimer;
         private System.Windows.Forms.Timer TimeLeftTimer;
+        private System.ComponentModel.BackgroundWorker BackgroundWorker;
+        private System.ComponentModel.BackgroundWorker BackgroundWorkerName;
         private System.Windows.Forms.Button CreateButton;
     }
 }

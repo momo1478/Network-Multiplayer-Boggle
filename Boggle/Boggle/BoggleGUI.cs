@@ -270,12 +270,7 @@ namespace Boggle
         {
             if (e.KeyCode == Keys.Enter && !JoinStatusBoxText.Equals("active"))
             {
-                if (CreateName != null)
-                    CreateName(CreateNameBoxText);
-                if (Network.SetBaseAddress(JoinDomainBoxText))
-                {
-                    StatusJoinGame();
-                }
+                BackgroundWorkerName.RunWorkerAsync();
 
             }
         }
@@ -308,18 +303,9 @@ namespace Boggle
             int temp;
             if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
             {
-                JoinGame(JoinTimeBoxText);
-                //UpdateStatus();
+                BackgroundWorker.RunWorkerAsync();
             }
             PendingTimer.Start();
-            //if (JoinStatusBoxText.Equals("pending"))
-            //{
-            //    StatusPending();
-            //}
-            //if (JoinStatusBoxText.Equals("active"))
-            //{
-            //    StatusActive();
-            //}
         }
 
 
@@ -340,8 +326,6 @@ namespace Boggle
         /// </summary>
         void StatusJoinGame()
         {
-            ExitGameToolStrip.Enabled = false;
-
             if (ActiveUpdate != null)
                 ActiveUpdate();
 
@@ -603,6 +587,20 @@ To submit words while playing the game press
 
 "
 );
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            JoinGame(JoinTimeBoxText);
+        }
+
+        private void BackgroundWorkerName_DoWork(object sender, DoWorkEventArgs e)
+        {
+            CreateName(CreateNameBoxText);
+            if (Network.SetBaseAddress(JoinDomainBoxText))
+            {
+                StatusJoinGame();
+            }
         }
     }
 }
