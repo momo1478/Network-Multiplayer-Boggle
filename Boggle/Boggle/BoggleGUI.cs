@@ -585,5 +585,24 @@ namespace Boggle
             }
         }
 
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.MessageBox.Show(@"
+                            Welcome to Boggle!
+To start a game create a username with a valid 
+domain to connect to an API. After creating a user 
+name you can join a game by entering a time and 
+then pressing join.
+
+To cancel a pending game.
+    click the cancel button.
+To exit an ongoing game.
+    click the Exit Game in the file menu.
+To submit words while playing the game press 
+    enter while in the words text field.
+
+"
+);
+        }
     }
 }

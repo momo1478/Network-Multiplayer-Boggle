@@ -92,7 +92,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(516, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(618, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -101,6 +101,7 @@
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
             // ExitGameToolStrip
             // 
@@ -397,9 +398,8 @@
             // 
             // Player1ScoreLabel
             // 
-            this.Player1ScoreLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Player1ScoreLabel.AutoSize = true;
-            this.Player1ScoreLabel.Location = new System.Drawing.Point(168, 36);
+            this.Player1ScoreLabel.Location = new System.Drawing.Point(180, 36);
             this.Player1ScoreLabel.Name = "Player1ScoreLabel";
             this.Player1ScoreLabel.Size = new System.Drawing.Size(76, 13);
             this.Player1ScoreLabel.TabIndex = 3;
@@ -408,9 +408,8 @@
             // 
             // Player2ScoreLabel
             // 
-            this.Player2ScoreLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Player2ScoreLabel.AutoSize = true;
-            this.Player2ScoreLabel.Location = new System.Drawing.Point(168, 79);
+            this.Player2ScoreLabel.Location = new System.Drawing.Point(180, 79);
             this.Player2ScoreLabel.Name = "Player2ScoreLabel";
             this.Player2ScoreLabel.Size = new System.Drawing.Size(76, 13);
             this.Player2ScoreLabel.TabIndex = 3;
@@ -419,9 +418,8 @@
             // 
             // Player1ScoreBox
             // 
-            this.Player1ScoreBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Player1ScoreBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.Player1ScoreBox.Location = new System.Drawing.Point(171, 52);
+            this.Player1ScoreBox.Location = new System.Drawing.Point(183, 52);
             this.Player1ScoreBox.Name = "Player1ScoreBox";
             this.Player1ScoreBox.ReadOnly = true;
             this.Player1ScoreBox.Size = new System.Drawing.Size(73, 20);
@@ -429,9 +427,8 @@
             // 
             // Player2ScoreBox
             // 
-            this.Player2ScoreBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.Player2ScoreBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.Player2ScoreBox.Location = new System.Drawing.Point(171, 95);
+            this.Player2ScoreBox.Location = new System.Drawing.Point(183, 95);
             this.Player2ScoreBox.Name = "Player2ScoreBox";
             this.Player2ScoreBox.ReadOnly = true;
             this.Player2ScoreBox.Size = new System.Drawing.Size(73, 20);
@@ -439,7 +436,6 @@
             // 
             // TimeLabel
             // 
-            this.TimeLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.TimeLabel.AutoSize = true;
             this.TimeLabel.Location = new System.Drawing.Point(180, 134);
             this.TimeLabel.Name = "TimeLabel";
@@ -449,7 +445,6 @@
             // 
             // TimeBox
             // 
-            this.TimeBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.TimeBox.Location = new System.Drawing.Point(193, 151);
             this.TimeBox.Name = "TimeBox";
             this.TimeBox.ReadOnly = true;
@@ -459,25 +454,23 @@
             // 
             // CreateNameGroup
             // 
-            this.CreateNameGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CreateNameGroup.Controls.Add(this.JoinDomainLabel);
             this.CreateNameGroup.Controls.Add(this.CreateButton);
             this.CreateNameGroup.Controls.Add(this.JoinDomainBox);
             this.CreateNameGroup.Controls.Add(this.CreateNameBox);
             this.CreateNameGroup.Controls.Add(this.CreateNameLabel);
-            this.CreateNameGroup.Location = new System.Drawing.Point(251, 36);
+            this.CreateNameGroup.Location = new System.Drawing.Point(282, 36);
             this.CreateNameGroup.Name = "CreateNameGroup";
-            this.CreateNameGroup.Size = new System.Drawing.Size(254, 109);
+            this.CreateNameGroup.Size = new System.Drawing.Size(321, 109);
             this.CreateNameGroup.TabIndex = 7;
             this.CreateNameGroup.TabStop = false;
             this.CreateNameGroup.Text = "Create a Username";
             // 
             // CreateNameBox
             // 
-            this.CreateNameBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CreateNameBox.Location = new System.Drawing.Point(10, 33);
             this.CreateNameBox.Name = "CreateNameBox";
-            this.CreateNameBox.Size = new System.Drawing.Size(136, 20);
+            this.CreateNameBox.Size = new System.Drawing.Size(191, 20);
             this.CreateNameBox.TabIndex = 1;
             this.CreateNameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CreateNameBox_KeyDown);
             // 
@@ -492,16 +485,15 @@
             // 
             // JoinGroup
             // 
-            this.JoinGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.JoinGroup.Controls.Add(this.CancelButton);
             this.JoinGroup.Controls.Add(this.JoinStatusBox);
             this.JoinGroup.Controls.Add(this.JoinStatusLabel);
             this.JoinGroup.Controls.Add(this.JoinButton);
             this.JoinGroup.Controls.Add(this.JoinTimeLabel);
             this.JoinGroup.Controls.Add(this.JoinTimeBox);
-            this.JoinGroup.Location = new System.Drawing.Point(250, 151);
+            this.JoinGroup.Location = new System.Drawing.Point(282, 151);
             this.JoinGroup.Name = "JoinGroup";
-            this.JoinGroup.Size = new System.Drawing.Size(255, 70);
+            this.JoinGroup.Size = new System.Drawing.Size(321, 70);
             this.JoinGroup.TabIndex = 7;
             this.JoinGroup.TabStop = false;
             this.JoinGroup.Text = "Join a Game";
@@ -517,18 +509,16 @@
             // 
             // JoinDomainBox
             // 
-            this.JoinDomainBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.JoinDomainBox.Location = new System.Drawing.Point(11, 72);
             this.JoinDomainBox.Name = "JoinDomainBox";
-            this.JoinDomainBox.Size = new System.Drawing.Size(231, 20);
+            this.JoinDomainBox.Size = new System.Drawing.Size(304, 20);
             this.JoinDomainBox.TabIndex = 13;
             this.JoinDomainBox.Text = "http://bogglecs3500s16.azurewebsites.net/BoggleService.svc";
             // 
             // CancelButton
             // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.Enabled = false;
-            this.CancelButton.Location = new System.Drawing.Point(195, 31);
+            this.CancelButton.Location = new System.Drawing.Point(267, 31);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(48, 23);
             this.CancelButton.TabIndex = 12;
@@ -538,18 +528,17 @@
             // 
             // JoinStatusBox
             // 
-            this.JoinStatusBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.JoinStatusBox.Enabled = false;
             this.JoinStatusBox.Location = new System.Drawing.Point(11, 33);
             this.JoinStatusBox.Name = "JoinStatusBox";
             this.JoinStatusBox.ReadOnly = true;
-            this.JoinStatusBox.Size = new System.Drawing.Size(100, 20);
+            this.JoinStatusBox.Size = new System.Drawing.Size(167, 20);
             this.JoinStatusBox.TabIndex = 11;
             // 
             // JoinStatusLabel
             // 
             this.JoinStatusLabel.AutoSize = true;
-            this.JoinStatusLabel.Location = new System.Drawing.Point(9, 17);
+            this.JoinStatusLabel.Location = new System.Drawing.Point(8, 16);
             this.JoinStatusLabel.Name = "JoinStatusLabel";
             this.JoinStatusLabel.Size = new System.Drawing.Size(37, 13);
             this.JoinStatusLabel.TabIndex = 10;
@@ -557,9 +546,8 @@
             // 
             // JoinButton
             // 
-            this.JoinButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.JoinButton.Enabled = false;
-            this.JoinButton.Location = new System.Drawing.Point(154, 31);
+            this.JoinButton.Location = new System.Drawing.Point(226, 31);
             this.JoinButton.Name = "JoinButton";
             this.JoinButton.Size = new System.Drawing.Size(35, 23);
             this.JoinButton.TabIndex = 9;
@@ -569,9 +557,8 @@
             // 
             // JoinTimeLabel
             // 
-            this.JoinTimeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.JoinTimeLabel.AutoSize = true;
-            this.JoinTimeLabel.Location = new System.Drawing.Point(117, 16);
+            this.JoinTimeLabel.Location = new System.Drawing.Point(181, 16);
             this.JoinTimeLabel.Name = "JoinTimeLabel";
             this.JoinTimeLabel.Size = new System.Drawing.Size(30, 13);
             this.JoinTimeLabel.TabIndex = 0;
@@ -579,9 +566,8 @@
             // 
             // JoinTimeBox
             // 
-            this.JoinTimeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.JoinTimeBox.Enabled = false;
-            this.JoinTimeBox.Location = new System.Drawing.Point(120, 33);
+            this.JoinTimeBox.Location = new System.Drawing.Point(184, 34);
             this.JoinTimeBox.Name = "JoinTimeBox";
             this.JoinTimeBox.Size = new System.Drawing.Size(27, 20);
             this.JoinTimeBox.TabIndex = 6;
@@ -607,10 +593,10 @@
             this.Player1PlayedBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.Player1PlayedBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.Player1PlayedBox.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.Player1PlayedBox.Location = new System.Drawing.Point(15, 255);
+            this.Player1PlayedBox.Location = new System.Drawing.Point(66, 255);
             this.Player1PlayedBox.Name = "Player1PlayedBox";
             this.Player1PlayedBox.ReadOnly = true;
-            this.Player1PlayedBox.Size = new System.Drawing.Size(229, 163);
+            this.Player1PlayedBox.Size = new System.Drawing.Size(229, 86);
             this.Player1PlayedBox.TabIndex = 9;
             this.Player1PlayedBox.Text = "";
             // 
@@ -618,10 +604,10 @@
             // 
             this.Player2PlayedBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.Player2PlayedBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.Player2PlayedBox.Location = new System.Drawing.Point(251, 255);
+            this.Player2PlayedBox.Location = new System.Drawing.Point(302, 255);
             this.Player2PlayedBox.Name = "Player2PlayedBox";
             this.Player2PlayedBox.ReadOnly = true;
-            this.Player2PlayedBox.Size = new System.Drawing.Size(253, 163);
+            this.Player2PlayedBox.Size = new System.Drawing.Size(253, 86);
             this.Player2PlayedBox.TabIndex = 10;
             this.Player2PlayedBox.Text = "";
             // 
@@ -629,7 +615,7 @@
             // 
             this.Player1PlayedLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.Player1PlayedLabel.AutoSize = true;
-            this.Player1PlayedLabel.Location = new System.Drawing.Point(12, 239);
+            this.Player1PlayedLabel.Location = new System.Drawing.Point(63, 239);
             this.Player1PlayedLabel.Name = "Player1PlayedLabel";
             this.Player1PlayedLabel.Size = new System.Drawing.Size(76, 13);
             this.Player1PlayedLabel.TabIndex = 11;
@@ -639,7 +625,7 @@
             // 
             this.Player2PlayedLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.Player2PlayedLabel.AutoSize = true;
-            this.Player2PlayedLabel.Location = new System.Drawing.Point(258, 239);
+            this.Player2PlayedLabel.Location = new System.Drawing.Point(309, 239);
             this.Player2PlayedLabel.Name = "Player2PlayedLabel";
             this.Player2PlayedLabel.Size = new System.Drawing.Size(79, 13);
             this.Player2PlayedLabel.TabIndex = 12;
@@ -662,8 +648,7 @@
             // 
             // CreateButton
             // 
-            this.CreateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CreateButton.Location = new System.Drawing.Point(153, 32);
+            this.CreateButton.Location = new System.Drawing.Point(207, 31);
             this.CreateButton.Name = "CreateButton";
             this.CreateButton.Size = new System.Drawing.Size(75, 23);
             this.CreateButton.TabIndex = 2;
@@ -675,7 +660,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(516, 430);
+            this.ClientSize = new System.Drawing.Size(618, 353);
             this.Controls.Add(this.Player2PlayedLabel);
             this.Controls.Add(this.Player1PlayedLabel);
             this.Controls.Add(this.Player2PlayedBox);
