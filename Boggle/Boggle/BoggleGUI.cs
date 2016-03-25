@@ -270,14 +270,11 @@ namespace Boggle
         {
             if (e.KeyCode == Keys.Enter && !JoinStatusBoxText.Equals("active"))
             {
-                if (CreateName != null)
-                    CreateName(CreateNameBoxText);
+                BackgroundWorkerName.RunWorkerAsync();
 
                 StatusJoinGame();
-
             }
         }
-
 
 
         /// <summary>
@@ -293,7 +290,7 @@ namespace Boggle
             int temp;
             if (JoinGame != null && UpdateStatus != null && int.TryParse(JoinTimeBox.Text, out temp))
             {
-                JoinGame(JoinTimeBoxText);
+                BackgroundWorker.RunWorkerAsync();
                 //UpdateStatus();
             }
             PendingTimer.Start();
@@ -357,7 +354,7 @@ namespace Boggle
             TimeBoxText = "";
 
             TimeLeft = 0;
-            JoinStatusBoxText = "Click Join Game";
+            JoinStatusBoxText = "Click Join";
         }
 
         /// <summary>
@@ -564,6 +561,16 @@ namespace Boggle
             {
                 StatusCompleted();
             }
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            JoinGame(JoinTimeBoxText);
+        }
+
+        private void BackgroundWorkerName_DoWork(object sender, DoWorkEventArgs e)
+        {
+            CreateName(CreateNameBoxText);
         }
     }
 }

@@ -79,6 +79,8 @@
             this.PendingTimer = new System.Windows.Forms.Timer(this.components);
             this.ActiveTimer = new System.Windows.Forms.Timer(this.components);
             this.TimeLeftTimer = new System.Windows.Forms.Timer(this.components);
+            this.BackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.BackgroundWorkerName = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             this.LettersGroup.SuspendLayout();
             this.CreateNameGroup.SuspendLayout();
@@ -650,6 +652,14 @@
             this.TimeLeftTimer.Interval = 1000;
             this.TimeLeftTimer.Tick += new System.EventHandler(this.TimeLeftTimer_Tick);
             // 
+            // BackgroundWorker
+            // 
+            this.BackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            // 
+            // BackgroundWorkerName
+            // 
+            this.BackgroundWorkerName.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerName_DoWork);
+            // 
             // BoggleGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -740,6 +750,8 @@
         private System.Windows.Forms.Timer PendingTimer;
         private System.Windows.Forms.Timer ActiveTimer;
         private System.Windows.Forms.Timer TimeLeftTimer;
+        private System.ComponentModel.BackgroundWorker BackgroundWorker;
+        private System.ComponentModel.BackgroundWorker BackgroundWorkerName;
     }
 }
 
