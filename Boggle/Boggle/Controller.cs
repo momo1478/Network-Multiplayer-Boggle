@@ -248,6 +248,7 @@ namespace Boggle
             else
             {
                 View.Message = "Unable to create username";
+                View.CanEnter = true;
             }
         }
 

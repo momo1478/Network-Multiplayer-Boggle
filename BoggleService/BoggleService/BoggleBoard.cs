@@ -49,7 +49,7 @@ namespace Boggle
             }
 
             // Make a string by choosing one character at random
-            // frome each cube.
+            // from each cube.
             string letters = "";
             for (int i = 0; i < cubes.Length; i++)
             {
@@ -62,8 +62,8 @@ namespace Boggle
 
         /// <summary>
         /// Creates a BoggleBoard from the provided 16-letter string.  The
-        /// method is case-insensitive.  If there aren't exactly 16 letters
-        /// in the string, throws an ArgumentException.  The string consists
+        /// method is case-insensitive. If there aren't exactly 16 letters
+        /// in the string, throws an ArgumentException. The string consists
         /// of the first row, then the second row, then the third, then the fourth.
         /// </summary>
         public BoggleBoard(string letters)
