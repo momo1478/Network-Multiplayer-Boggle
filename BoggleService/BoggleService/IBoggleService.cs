@@ -22,17 +22,25 @@ namespace Boggle
         CreateUserReturn CreateUser(UserInfo nickname);
 
         /// <summary>
-        /// Demo.  You can delete this.
+        /// Join Game for Boggle API
         /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        [WebGet(UriTemplate = "/numbers?length={n}")]
-        IList<int> Numbers(string n);
+        [WebInvoke(Method = "POST", UriTemplate = "/games")]
+        JoinGameReturn JoinGame(string userToken, int timeLimit);
 
-        /// <summary>
-        /// Demo.  You can delete this.
-        /// </summary>
-        [WebInvoke(Method = "POST", UriTemplate = "/first")]
-        int GetFirst(IList<int> list);
+
+        //    /// <summary>
+        //    /// Demo.  You can delete this.
+        //    /// </summary>
+        //    /// <param name="n"></param>
+        //    /// <returns></returns>
+        //    [WebGet(UriTemplate = "/numbers?length={n}")]
+        //    IList<int> Numbers(string n);
+
+        //    /// <summary>
+        //    /// Demo.  You can delete this.
+        //    /// </summary>
+        //    [WebInvoke(Method = "POST", UriTemplate = "/first")]
+        //    int GetFirst(IList<int> list);
+        //}
     }
 }
