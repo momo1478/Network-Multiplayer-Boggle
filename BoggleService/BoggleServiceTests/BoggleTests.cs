@@ -9,7 +9,7 @@ namespace Boggle
 {
     /// <summary>
     /// Provides a way to start and stop the IIS web server from within the test
-    /// cases.  If something prevents the test cases from stopping the web server,
+    /// cases. If something prevents the test cases from stopping the web server,
     /// subsequent tests may not work properly until the stray process is killed
     /// manually.
     /// </summary>
@@ -43,6 +43,7 @@ namespace Boggle
             }
         }
     }
+
     [TestClass]
     public class BoggleTests
     {
@@ -64,7 +65,8 @@ namespace Boggle
             IISAgent.Stop();
         }
 
-        private RestTestClient client = new RestTestClient("http://localhost:60000/");
+        //private RestTestClient client = new RestTestClient("http://localhost:60000/");
+        private RestTestClient client = new RestTestClient("http://bogglecs3500s16.azurewebsites.net/");
 
         [TestMethod]
         public void TestMethod1()
