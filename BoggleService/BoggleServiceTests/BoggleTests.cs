@@ -68,24 +68,62 @@ namespace Boggle
         //private RestTestClient client = new RestTestClient("http://localhost:60000/");
         private RestTestClient client = new RestTestClient("http://bogglecs3500s16.azurewebsites.net/");
 
+        /// <summary>
+        /// Create User POST test for response status on valid Nickname.
+        /// </summary>
         [TestMethod]
-        public void TestMethod1()
+        public void CreateUserTest()
         {
-            Response r = client.DoGetAsync("/numbers?length={0}", "5").Result;
-            Assert.AreEqual(OK, r.Status);
-            Assert.AreEqual(5, r.Data.Count);
-            r = client.DoGetAsync("/numbers?length={0}", "-5").Result;
+            dynamic expando = new ExpandoObject();
+            expando.Nickname = "lol";
+            Response r = client.DoPostAsync("Users",expando).Result;
+            Assert.AreEqual(Created, r.Status);
+        }
+        /// <summary>
+        /// Create User POST test for response status on null.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserTestNull()
+        {
+            dynamic expando = new ExpandoObject();
+            expando.Nickname = "";
+            Response r = client.DoPostAsync("Users", expando).Result;
             Assert.AreEqual(Forbidden, r.Status);
         }
 
+        /// <summary>
+        /// Join game POST test for response status on valid UserToken and Time Limit.
+        /// </summary>
         [TestMethod]
-        public void TestMethod2()
+        public void JoinGame()
         {
-            List<int> list = new List<int>();
-            list.Add(15);
-            Response r = client.DoPostAsync("/first", list).Result;
-            Assert.AreEqual(OK, r.Status);
-            Assert.AreEqual(15, r.Data);
+            bool success = false;
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+            expandoUser.Nickname = "Player2";
+            Response r_player2 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player2.Status);
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = r_player1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 25;
+            Response r_JoinGame1 = client.DoPostAsync("Users", expandoJoinGame).Result;
+            if(r_JoinGame1.Status.)
+            Assert.IsTrue(Created, r_JoinGame1.Status);
+        }
+        /// <summary>
+        /// Join game POST test for response status on null.
+        /// </summary>
+        [TestMethod]
+        public void JoinGameNull()
+        {
+            dynamic expando = new ExpandoObject();
+            expando.Nickname = "";
+            Response r = client.DoPostAsync("Users", expando).Result;
+            Assert.AreEqual(Forbidden, r.Status);
         }
     }
+    
 }
