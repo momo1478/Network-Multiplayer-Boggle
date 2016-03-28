@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.ServiceModel.Web;
@@ -10,8 +12,10 @@ namespace Boggle
     public class BoggleService : IBoggleService
     {
         private static readonly Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
-        private static readonly Dictionary<String, BoggleGame> games = new Dictionary<string, BoggleGame>();
+        private static readonly Dictionary<int, BoggleGame> games = new Dictionary<int, BoggleGame>();
         private static readonly object sync = new object();
+
+        private static int GameIDCounter = 1;
 
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when
@@ -34,7 +38,7 @@ namespace Boggle
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
 
-        public string CreateUser(UserInfo user)
+        public CreateUserReturn CreateUser(UserInfo user)
         {
             lock (sync)
             {
@@ -47,43 +51,90 @@ namespace Boggle
                 {
                     string userID = Guid.NewGuid().ToString();
                     users.Add(userID, user);
-                    return userID;
+
+                    return new CreateUserReturn() { UserToken = userID };
                 }
             }
-            
         }
-
-        /// <summary>
-        /// Demo.  You can delete this.
-        /// </summary>
-        public int GetFirst(IList<int> list)
+        public JoinGameReturn JoinGame(string userToken, int timeLimit)
         {
-            SetStatus(OK);
-            return list[0];
-        }
-
-        /// <summary>
-        /// Demo.  You can delete this.
-        /// </summary>
-        /// <returns></returns>
-        public IList<int> Numbers(string n)
-        {
-            int index;
-            if (!Int32.TryParse(n, out index) || index < 0)
+            Guid outR;
+            if (!games.ContainsKey(GameIDCounter))
             {
-                SetStatus(Forbidden);
-                return null;
+                //create pending game.
+                BoggleGame createdGame = new BoggleGame();
+                createdGame.GameState = "pending";
+                createdGame.GameID = GameIDCounter;
+                createdGame.TimeLimit = timeLimit;
+                createdGame.TimeLeft = timeLimit;
+
+                games.Add(GameIDCounter, createdGame);
             }
-            else
+
+
+            //See if the userToken is Valid and timeLimit is within bounds
+            if (Guid.TryParseExact(userToken, "D", out outR) && timeLimit >= 5 && timeLimit <= 120)
             {
-                List<int> list = new List<int>();
-                for (int i = 0; i < index; i++)
+                //If game exists and Player 1 is in. 
+                if (games.ContainsKey(GameIDCounter) && games[GameIDCounter]?.Player1 != null)
                 {
-                    list.Add(i);
+                    //If UserToken is identical to one that is in the game we have CONFLICT.
+                    if (games[GameIDCounter].Player1.UserToken.Equals(userToken))
+                    {
+                        SetStatus(Conflict);
+                        return null;
+                    }
+                    //If UserToken is not identical to the one in the game we have CREATED the game.
+                    else
+                    {
+
+                    }
                 }
-                SetStatus(OK);
-                return list;
+                else
+                {
+                    //If Player 1 is null then the user trying to join becomes Player 1
+                    
+
+                    SetStatus(Accepted);
+
+                    GameIDCounter++;
+                }
             }
         }
+
+        ///// <summary>
+        ///// Demo.  You can delete this.
+        ///// </summary>
+        //public int GetFirst(IList<int> list)
+        //{
+        //    SetStatus(OK);
+        //    return list[0];
+        //}
+
+        ///// <summary>
+        ///// Demo.  You can delete this.
+        ///// </summary>
+        ///// <returns></returns>
+        //public IList<int> Numbers(string n)
+        //{
+        //    int index;
+        //    if (!Int32.TryParse(n, out index) || index < 0)
+        //    {
+        //        SetStatus(Forbidden);
+        //        return null;
+        //    }
+        //    else
+        //    {
+        //        List<int> list = new List<int>();
+        //        for (int i = 0; i < index; i++)
+        //        {
+        //            list.Add(i);
+        //        }
+        //        SetStatus(OK);
+        //        return list;
+        //    }
+        //}
+
+
     }
 }
