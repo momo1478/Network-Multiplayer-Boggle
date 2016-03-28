@@ -34,10 +34,25 @@ namespace Boggle
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
 
-        public string CreateUser(string nickname)
+        public string CreateUser(UserInfo user)
         {
-            throw new NotImplementedException();
+            lock (sync)
+            {
+                if (user.Nickname == null || user.Nickname.Trim().Length == 0)
+                {
+                    SetStatus(Forbidden);
+                    return null;
+                }
+                else
+                {
+                    string userID = Guid.NewGuid().ToString();
+                    users.Add(userID, user);
+                    return userID;
+                }
+            }
+            
         }
+
         /// <summary>
         /// Demo.  You can delete this.
         /// </summary>
