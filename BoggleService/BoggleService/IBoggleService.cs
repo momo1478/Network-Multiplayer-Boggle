@@ -17,6 +17,12 @@ namespace Boggle
         /// <summary>
         /// Demo.  You can delete this.
         /// </summary>
+        [WebInvoke(Method = "POST", UriTemplate = "/users")]
+        string CreateUser(string nickname);
+
+        /// <summary>
+        /// Demo.  You can delete this.
+        /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
         [WebGet(UriTemplate = "/numbers?length={n}")]
@@ -27,5 +33,7 @@ namespace Boggle
         /// </summary>
         [WebInvoke(Method = "POST", UriTemplate = "/first")]
         int GetFirst(IList<int> list);
+
+
     }
 }

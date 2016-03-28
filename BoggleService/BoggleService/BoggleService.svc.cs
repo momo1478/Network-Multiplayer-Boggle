@@ -9,6 +9,10 @@ namespace Boggle
 {
     public class BoggleService : IBoggleService
     {
+        private static readonly Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
+        private static readonly Dictionary<String, BoggleGame> games = new Dictionary<string, BoggleGame>();
+        private static readonly object sync = new object();
+
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when
         /// an http response is sent.
@@ -30,6 +34,10 @@ namespace Boggle
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
 
+        public string CreateUser(string nickname)
+        {
+            throw new NotImplementedException();
+        }
         /// <summary>
         /// Demo.  You can delete this.
         /// </summary>
