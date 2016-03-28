@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.ServiceModel.Web;
@@ -34,7 +36,7 @@ namespace Boggle
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
 
-        public string CreateUser(UserInfo user)
+        public CreateUserReturn CreateUser(UserInfo user)
         {
             lock (sync)
             {
@@ -47,10 +49,10 @@ namespace Boggle
                 {
                     string userID = Guid.NewGuid().ToString();
                     users.Add(userID, user);
-                    return userID;
+
+                    return new CreateUserReturn() { UserToken = userID };
                 }
             }
-            
         }
 
         /// <summary>
@@ -84,6 +86,11 @@ namespace Boggle
                 SetStatus(OK);
                 return list;
             }
+        }
+
+        public string CreateUser(string nickname)
+        {
+            throw new NotImplementedException();
         }
     }
 }

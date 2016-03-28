@@ -2,6 +2,7 @@
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Timers;
 
 namespace Boggle
 {
@@ -15,10 +16,10 @@ namespace Boggle
         Stream API();
 
         /// <summary>
-        /// Demo.  You can delete this.
+        /// Create User for Boggle API
         /// </summary>
         [WebInvoke(Method = "POST", UriTemplate = "/users")]
-        string CreateUser(UserInfo nickname);
+        CreateUserReturn CreateUser(UserInfo nickname);
 
         /// <summary>
         /// Demo.  You can delete this.
