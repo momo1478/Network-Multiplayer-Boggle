@@ -16,6 +16,7 @@ namespace Boggle
         private static readonly object sync = new object();
 
         private static int GameIDCounter = 1;
+        private static int ActiveGameID = 1;
 
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when
@@ -95,7 +96,7 @@ namespace Boggle
                             games[GameIDCounter].TimeLimit = (games[GameIDCounter].TimeLimit + args.TimeLimit) / 2;
                             games[GameIDCounter].GameState = "active";
 
-                            games[GameIDCounter].GameTimer.Start();
+                            games[ActiveGameID].GameTimer.Start();
 
                             return new JoinGameReturn() { GameID = GameIDCounter++.ToString() };
                         }
@@ -122,12 +123,56 @@ namespace Boggle
 
         }
 
-        public PlayWordReturn PlayWord(PlayWordArgs args)
+        public void CancelJoinRequest(JoinGameArgs args)
         {
+            lock(sync)
+            {
+                Guid outR;
+                if (Guid.TryParseExact(args.UserToken, "D", out outR) && users.ContainsKey(args.UserToken))
+                {
+                    if (games.ContainsKey(GameIDCounter) && games[GameIDCounter].GameState.Equals("pending") && games[GameIDCounter].Player1.UserToken.Equals(args.UserToken))
+                    {
+                        games[GameIDCounter].Player1 = null;
+                        SetStatus(OK);
+
+                        return;
+                    }
+                }
+                SetStatus(Forbidden);
+                return;
+            }
+        }
+
+        public PlayWordReturn PlayWord(PlayWordArgs args , string GameID)
+        {
+            int outR;
+
             lock (sync)
             {
-                SetStatus(OK);
+
+                if (args.Word.Trim().Length != 0 && int.TryParse(GameID, out outR) && (games[outR].Player1.UserToken.Equals(args.UserToken) || games[outR].Player2.UserToken.Equals(args.UserToken)))
+                {
+                    int player = games[outR].Player1.UserToken.Equals(args.UserToken) ? 1 : 2;
+
+                    if (games[ActiveGameID].GameState.Equals("active"))
+                    {
+                        if (games[ActiveGameID].Board.CanBeFormed(args.Word) && )
+                        {
+                            SetStatus(OK);
+
+                            if (player == 1)
+                            {
+                                games[GameID].Player1.WordsPlayed
+                            }
+                            
+                        }
+                    }
+                    else
+                    {
+                        SetStatus(Conflict);
                 return null;
+            }
+        }
             }
         }
 
