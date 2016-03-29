@@ -11,7 +11,21 @@ namespace Boggle
     [DataContract]
     public class BoggleGame
     {
-        public Timer GameTimer = new Timer();
+        public BoggleGame()
+        {
+            GameTimer.Elapsed += GameTimer_Tick;
+        }
+
+        private void GameTimer_Tick(object sender, ElapsedEventArgs e)
+        {
+            if (TimeLeft-- <= 0)
+            {
+                GameTimer.Stop();
+                GameState = "completed";
+            }
+        }
+
+        public Timer GameTimer = new Timer() { Interval = 1000 };
 
         [DataMember(EmitDefaultValue = true)]
         public string GameState { get; set; }
@@ -44,7 +58,7 @@ namespace Boggle
         public string Nickname { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public int Score { get; set; }
+        public int? Score { get; set; } = 0;
 
         [DataMember(EmitDefaultValue = false)]
         public List<Words> WordsPlayed { get; set; }
@@ -53,14 +67,17 @@ namespace Boggle
     [DataContract]
     public class Words
     {
+        [DataMember(EmitDefaultValue = false)]
         public string Word { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public int? Score { get; set; }
     }
 
     [DataContract]
     public class UserInfo
     {
+        [DataMember(EmitDefaultValue = false)]
         public string Nickname { get; set; }
     }
 

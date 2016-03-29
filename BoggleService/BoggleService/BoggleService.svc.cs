@@ -49,6 +49,7 @@ namespace Boggle
                 }
                 else
                 {
+                    SetStatus(Created);
                     string userID = Guid.NewGuid().ToString();
                     users.Add(userID, user);
 
@@ -56,24 +57,23 @@ namespace Boggle
                 }
             }
         }
+
         public JoinGameReturn JoinGame(string userToken, int timeLimit)
         {
-            Guid outR;
+
             if (!games.ContainsKey(GameIDCounter))
             {
                 //create pending game.
                 BoggleGame createdGame = new BoggleGame();
                 createdGame.GameState = "pending";
                 createdGame.GameID = GameIDCounter;
-                createdGame.TimeLimit = timeLimit;
-                createdGame.TimeLeft = timeLimit;
 
                 games.Add(GameIDCounter, createdGame);
             }
 
-
+            Guid outR;
             //See if the userToken is Valid and timeLimit is within bounds
-            if (Guid.TryParseExact(userToken, "D", out outR) && timeLimit >= 5 && timeLimit <= 120)
+            if (Guid.TryParseExact(userToken, "D", out outR) && users.ContainsKey(userToken) && timeLimit >= 5 && timeLimit <= 120)
             {
                 //If game exists and Player 1 is in. 
                 if (games.ContainsKey(GameIDCounter) && games[GameIDCounter]?.Player1 != null)
@@ -87,20 +87,35 @@ namespace Boggle
                     //If UserToken is not identical to the one in the game we have CREATED the game.
                     else
                     {
+                        SetStatus(Created);
 
+                        games[GameIDCounter].Player2 = new Player() { UserToken = userToken, Nickname = users[userToken].Nickname };
+                        games[GameIDCounter].TimeLimit = (games[GameIDCounter].TimeLimit + timeLimit) / 2;
+                        games[GameIDCounter].GameState = "active";
+
+                        games[GameIDCounter].GameTimer.Start();
+
+                        return new JoinGameReturn() { GameID = GameIDCounter++.ToString() };
                     }
                 }
                 else
                 {
-                    //If Player 1 is null then the user trying to join becomes Player 1
-                    
-
+                    //If there are no players in the game. We ACCEPTED him as the first player.
                     SetStatus(Accepted);
 
-                    GameIDCounter++;
+                    games[GameIDCounter].Player1 = new Player() { UserToken = userToken, Nickname = users[userToken].Nickname };
+                    games[GameIDCounter].TimeLimit = timeLimit;
+
+                    return new JoinGameReturn() { GameID = GameIDCounter.ToString() };
                 }
             }
-            return null;
+            else
+            {
+                //If the userToken is invalid or the timelimit is out of bounds, this request is FORBIDDEN.
+                SetStatus(Forbidden);
+                return null;
+            } 
+            
         }
 
         ///// <summary>
