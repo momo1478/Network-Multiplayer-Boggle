@@ -20,18 +20,17 @@ namespace Boggle
         {
             if (TimeLeft-- <= 0)
             {
-                GameTimer.Stop();
                 GameState = "completed";
             }
         }
 
         public Timer GameTimer = new Timer() { Interval = 1000 };
 
+        [DataMember(EmitDefaultValue = false)]
+        public BoggleBoard Board { get; } = new BoggleBoard();
+
         [DataMember(EmitDefaultValue = true)]
         public string GameState { get; set; }
-
-        [DataMember(EmitDefaultValue = false)]
-        public BoggleBoard Board { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public int? TimeLeft { get; set; }
@@ -62,16 +61,36 @@ namespace Boggle
 
         [DataMember(EmitDefaultValue = false)]
         public List<Words> WordsPlayed { get; set; }
+
+        public int WordScore(string word)
+        {
+            foreach (Words werd in WordsPlayed)
+            {
+                if (werd.Word.Equals(word))
+                    return 0;
+            }
+
+            if (word.Length < 3) return 0;
+            else if (word.Length == 3 || word.Length == 4) return 1;
+            else if (word.Length == 5) return 2;
+            else if (word.Length == 6) return 3;
+            else if (word.Length == 7) return 5;
+            else if (word.Length > 7) return 11;
+            else
+            {
+                return 0;
+            }
     }
 
     [DataContract]
-    public class Words
+    public class Words 
     {
         [DataMember(EmitDefaultValue = false)]
         public string Word { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public int? Score { get; set; }
+
     }
 
     [DataContract]

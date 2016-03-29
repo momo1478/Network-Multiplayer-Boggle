@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Web.Http;
 
 namespace Boggle
 {
@@ -33,7 +34,7 @@ namespace Boggle
 
 
         [WebInvoke(Method = "PUT", UriTemplate = "/games/{GameID}")]
-        PlayWordReturn PlayWord(PlayWordArgs args);
+        PlayWordReturn PlayWord( PlayWordArgs args, [FromUri]string GameID);
 
         //    /// <summary>
         //    /// Demo.  You can delete this.
