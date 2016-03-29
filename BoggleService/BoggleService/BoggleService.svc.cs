@@ -100,6 +100,7 @@ namespace Boggle
                     GameIDCounter++;
                 }
             }
+            return null;
         }
 
         ///// <summary>
