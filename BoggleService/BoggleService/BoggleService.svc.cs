@@ -126,6 +126,7 @@ namespace Boggle
         {
             lock (sync)
             {
+                SetStatus(OK);
                 return null;
             }
         }
