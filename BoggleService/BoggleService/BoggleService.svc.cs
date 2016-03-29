@@ -142,6 +142,14 @@ namespace Boggle
             }
         }
 
+        public PlayWordReturn PlayWord(PlayWordArgs args)
+        {
+            lock (sync)
+            {
+                return null;
+            }
+        }
+
         ///// <summary>
         ///// Demo.  You can delete this.
         ///// </summary>
