@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using System.Timers;
 
 namespace Boggle
 {
@@ -25,7 +23,7 @@ namespace Boggle
         /// Join Game for Boggle API
         /// </summary>
         [WebInvoke(Method = "POST", UriTemplate = "/games")]
-        JoinGameReturn JoinGame(string userToken, int timeLimit);
+        JoinGameReturn JoinGame(JoinGameArgs args);
 
 
         //    /// <summary>

@@ -65,8 +65,8 @@ namespace Boggle
             IISAgent.Stop();
         }
 
-        //private RestTestClient client = new RestTestClient("http://localhost:60000/");
-        private RestTestClient client = new RestTestClient("http://bogglecs3500s16.azurewebsites.net/");
+        private RestTestClient client = new RestTestClient("http://localhost:60000/");
+        //private RestTestClient client = new RestTestClient("http://bogglecs3500s16.azurewebsites.net/");
 
         /// <summary>
         /// Create User POST test for response status on valid Nickname.

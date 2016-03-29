@@ -94,5 +94,12 @@ namespace Boggle
         [DataMember(EmitDefaultValue = false)]
         public string GameID { get; set; }
     }
+
+    public class JoinGameArgs
+    {
+        public string UserToken { get; set; }
+
+        public int TimeLimit { get; set; }
+    }
 }
 
