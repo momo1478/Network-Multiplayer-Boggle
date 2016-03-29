@@ -122,6 +122,26 @@ namespace Boggle
 
         }
 
+        public void CancelJoinRequest(JoinGameArgs args)
+        {
+            lock(sync)
+            {
+                Guid outR;
+                if (Guid.TryParseExact(args.UserToken, "D", out outR) && users.ContainsKey(args.UserToken))
+                {
+                    if (games.ContainsKey(GameIDCounter) && games[GameIDCounter].GameState.Equals("pending") && games[GameIDCounter].Player1.UserToken.Equals(args.UserToken))
+                    {
+                        games[GameIDCounter].Player1 = null;
+                        SetStatus(OK);
+
+                        return;
+                    }
+                }
+                SetStatus(Forbidden);
+                return;
+            }
+        }
+
         ///// <summary>
         ///// Demo.  You can delete this.
         ///// </summary>

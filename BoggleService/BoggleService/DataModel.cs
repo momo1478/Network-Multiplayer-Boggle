@@ -101,5 +101,10 @@ namespace Boggle
 
         public int TimeLimit { get; set; }
     }
+
+    public class CancelGameArgs
+    {
+        public string UserToken { get; set; }
+    }
 }
 
