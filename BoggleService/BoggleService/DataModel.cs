@@ -94,12 +94,23 @@ namespace Boggle
         [DataMember(EmitDefaultValue = false)]
         public string GameID { get; set; }
     }
+    [DataContract]
+    public class PlayWordReturn
+    {
+        [DataMember(EmitDefaultValue = false)]
+        public int Score { get; set; }
+    }
 
     public class JoinGameArgs
     {
         public string UserToken { get; set; }
 
         public int TimeLimit { get; set; }
+    }
+    public class PlayWordArgs
+    {
+        public string UserToken { get; set; }
+        public string Word { get; set; }
     }
 }
 

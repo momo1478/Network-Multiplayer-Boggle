@@ -26,6 +26,9 @@ namespace Boggle
         JoinGameReturn JoinGame(JoinGameArgs args);
 
 
+        [WebInvoke(Method = "PUT", UriTemplate = "/games/{GameID}")]
+        PlayWordReturn PlayWord(PlayWordArgs args);
+
         //    /// <summary>
         //    /// Demo.  You can delete this.
         //    /// </summary>
