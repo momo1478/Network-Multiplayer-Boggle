@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using static System.Net.HttpStatusCode;
 using System.Diagnostics;
+using Boggle;
+using System.IO;
 
 namespace Boggle
 {
@@ -444,7 +446,6 @@ namespace Boggle
             Response r_GameStatus = client.DoGetAsync("games/" + "invalidID").Result;
             Assert.AreEqual(Forbidden, r_GameStatus.Status);
         }
-
 
     }
 

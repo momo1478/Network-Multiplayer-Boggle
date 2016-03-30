@@ -150,33 +150,44 @@ namespace Boggle
 
             lock (sync)
             {
-
-                if (args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && games.ContainsKey(intID) && (games[intID].Player1.UserToken.Equals(args.UserToken) || games[intID].Player2.UserToken.Equals(args.UserToken)))
+                // checks for forbidden
+                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && games.ContainsKey(intID) && (games[intID].Player1.UserToken.Equals(args.UserToken) || games[intID].Player2.UserToken.Equals(args.UserToken)))
                 {
+                    //who is submiting player 1 or 2
                     int player = games[intID].Player1.UserToken.Equals(args.UserToken) ? 1 : 2;
 
                     if (games[intID].GameState.Equals("active"))
                     {
                         int wordScore;
-
-                        if (isWord(args.Word) && games[intID].Board.CanBeFormed(args.Word))
+                        // can be formed and in dictionary
+                        if (games[intID].Board.CanBeFormed(args.Word) && isWord(args.Word))
                         {
                             SetStatus(OK);
-
-
                             if (player == 1)
                             {
+                                if (games[intID].Player1.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                {
+                                    wordScore = 0;
+                                }
+                                else
+                                {
                                 wordScore = games[intID].Player1.WordScore(args.Word);
-
-                                if (wordScore != 0)
+                                    games[intID].Player1.Score += wordScore;
+                                }
                                     games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
+                            else //player 2
+                            {
+                                if (games[intID].Player2.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                {
+                                    wordScore = 0;
+                                }
                             else
                             {
-                                wordScore = games[intID].Player2.WordScore(args.Word);
-
-                                if (wordScore != 0)
-                                    games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                    wordScore = games[intID].Player1.WordScore(args.Word);
+                                    games[intID].Player1.Score += wordScore;
+                                }
+                                games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word , Score = wordScore });
                             }
 
                             return new PlayWordReturn() { Score = wordScore };
@@ -188,17 +199,31 @@ namespace Boggle
 
                             if (player == 1)
                             {
-                                wordScore = games[intID].Player1.WordScore(args.Word) == 0 ? 0 : -1;
+                                if (games[intID].Player1.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                {
+                                    wordScore = 0;
+                                }
+                                else
+                                {
+                                    wordScore = -1;
+                                    games[intID].Player1.Score += wordScore;
+                                }
+                                games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                            }
+                            else // Player 2
+                            {
 
-                                if (wordScore != 0)
-                                    games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                if (games[intID].Player2.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                {
+                                    wordScore = 0;
                             }
                             else
                             {
-                                wordScore = games[intID].Player1.WordScore(args.Word) == 0 ? 0 : -1;
 
-                                if (wordScore != 0)
-                                    games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                    wordScore = -1;
+                                    games[intID].Player1.Score += wordScore;
+                                }
+                                games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore});
                             }
                             
                             return new PlayWordReturn() { Score = wordScore };
@@ -224,7 +249,7 @@ namespace Boggle
                 {
                     if (reader.ReadLine().Equals(word.ToUpper()))
                         return true;
-                }
+        }
                 return false;
             }
         }
@@ -271,7 +296,7 @@ namespace Boggle
             SetStatus(Forbidden);
             return null;  
         }
-
+        
         public GetStatusReturn GetStatus(DumbClass body, string GameID, string brief)
         {
             int intID;
