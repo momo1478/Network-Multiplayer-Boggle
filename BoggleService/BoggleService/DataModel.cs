@@ -97,7 +97,7 @@ namespace Boggle
         public int? Score { get; set; } = 0;
 
         [DataMember(EmitDefaultValue = false)]
-        public List<Words> WordsPlayed { get; set; }
+        public HashSet<Words> WordsPlayed { get; set; } = new HashSet<Words>();
 
         public int WordScore(string word)
         {

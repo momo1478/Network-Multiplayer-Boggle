@@ -18,6 +18,7 @@ namespace Boggle
         // Reference to the running process
         private static Process process = null;
 
+
         /// <summary>
         /// Starts IIS
         /// </summary>
@@ -76,7 +77,7 @@ namespace Boggle
         {
             dynamic expando = new ExpandoObject();
             expando.Nickname = "nickName";
-            Response r = client.DoPostAsync("Users",expando).Result;
+            Response r = client.DoPostAsync("Users", expando).Result;
             Assert.AreEqual(Created, r.Status);
         }
         /// <summary>
@@ -153,7 +154,7 @@ namespace Boggle
             Response r_JoinGame1 = client.DoPostAsync("games", expandoJoinGame).Result;
             Response r_JoinGame2 = client.DoPostAsync("games", expandoJoinGame).Result;
             Response r_JoinGame3 = client.DoPostAsync("games", expandoJoinGame).Result;
-            if (r_JoinGame1.Status == Conflict || r_JoinGame2.Status == Conflict || r_JoinGame3.Status == Conflict ) success = true;
+            if (r_JoinGame1.Status == Conflict || r_JoinGame2.Status == Conflict || r_JoinGame3.Status == Conflict) success = true;
             Assert.IsTrue(success);
         }
 
@@ -204,15 +205,20 @@ namespace Boggle
         [TestMethod]
         public void CancelJoinRequestInvalidPlayerTest()
         {
-            dynamic expandoUser = new ExpandoObject();
-            expandoUser.Nickname = "Player1";
-            Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
-            Assert.AreEqual(Created, r_player1.Status);
+            object sync = new object();
+            lock (sync)
+            {
+                dynamic expandoUser = new ExpandoObject();
+                expandoUser.Nickname = "Player1";
+                Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
+                Assert.AreEqual(Created, r_player1.Status);
 
-            dynamic expandoCancelJoin = new ExpandoObject();
-            expandoCancelJoin.UserToken = r_player1.Data.UserToken;
-            Response r_CancelGame = client.DoPutAsync(expandoCancelJoin, "games").Result;
-            Assert.AreEqual(Forbidden, r_CancelGame.Status);
+                dynamic expandoCancelJoin = new ExpandoObject();
+                expandoCancelJoin.UserToken = r_player1.Data.UserToken;
+                Response r_CancelGame = client.DoPutAsync(expandoCancelJoin, "games").Result;
+                Assert.AreEqual(Forbidden, r_CancelGame.Status);
+            }
+
         }
         /// <summary>
         /// Play word PUT test.
@@ -236,13 +242,13 @@ namespace Boggle
             expandoJoinGame.TimeLimit = 5;
             //Join first player
             Response r_JoinGame1 = client.DoPostAsync("games", expandoJoinGame).Result;
-            if(r_JoinGame1.Status == Created)
+            if (r_JoinGame1.Status == Created)
             {
                 dynamic expandoPlayWord = new ExpandoObject();
                 expandoPlayWord.UserToken = r_player1.Data.UserToken;
                 expandoPlayWord.Word = "Hi";
-                Response r_PlayWord = client.DoPutAsync(expandoPlayWord,"games/" + r_JoinGame1.Data.GameID).Result;
-                if(r_PlayWord.Status == OK) success = true;
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                if (r_PlayWord.Status == OK) success = true;
             }
 
             //Join second player
@@ -395,13 +401,13 @@ namespace Boggle
             }
             Assert.IsTrue(success);
         }
-        
+
         /// <summary>
         /// Game Status Get test.
         /// </summary>
         [TestMethod]
         public void GameStatusTest()
-        { 
+        {
             dynamic expandoUser = new ExpandoObject();
             expandoUser.Nickname = "Player1";
             Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
