@@ -11,20 +11,8 @@ namespace Boggle
     [DataContract]
     public class BoggleGame
     {
-        public BoggleGame()
-        {
-            GameTimer.Elapsed += GameTimer_Tick;
-        }
 
-        private void GameTimer_Tick(object sender, ElapsedEventArgs e)
-        {
-            if (TimeLeft-- <= 0)
-            {
-                GameState = "completed";
-            }
-        }
 
-        public Timer GameTimer = new Timer() { Interval = 1000 };
 
         [DataMember(EmitDefaultValue = false)]
         public BoggleBoard Board { get; } = new BoggleBoard();
@@ -32,11 +20,60 @@ namespace Boggle
         [DataMember(EmitDefaultValue = true)]
         public string GameState { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public int? TimeLeft { get; set; }
+        /// <summary>
+        /// Gets the DateTime.Now
+        /// </summary>
+        public int TimeNow
+        {
+            get
+            {
+                return Convert.ToInt32(DateTime.Now.Millisecond);
+            }
+        }
 
+        /// <summary>
+        /// Set to DateTime.Now when we set the TimeLimit.
+        /// </summary>
+        private int TimeStart { get; set; }
+
+        /// <summary>
+        /// gets and sets the timeLimit.
+        /// Sets the TimeStart property to DateTime.Now.
+        /// </summary>
+        int timeLimit;
         [DataMember(EmitDefaultValue = false)]
-        public int TimeLimit { get; set; }
+        public int TimeLimit
+        {
+            get
+            {
+                return timeLimit;
+            }
+            set
+            {
+                TimeStart = Convert.ToInt32(DateTime.Now.Millisecond);
+                timeLimit = value;
+            }
+        }
+
+        /// <summary>
+        /// Calculates the time left based on TimeStart, TimeNow and TimeLimit.
+        /// </summary>
+        [DataMember(EmitDefaultValue = false)]
+        public int? TimeLeft
+        {
+            get
+            {
+                int timePast = TimeNow - TimeStart;
+                TimeStart = TimeNow;
+                int timeLeft = TimeLimit - timePast;
+                if(timeLeft < 0)
+                {
+                    timeLeft = 0;
+                }
+                return timeLeft/1000;
+            }
+        }
+
 
         [DataMember(EmitDefaultValue = false)]
         public int GameID { get; set; }

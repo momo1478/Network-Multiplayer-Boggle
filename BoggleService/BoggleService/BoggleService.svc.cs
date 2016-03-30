@@ -95,7 +95,8 @@ namespace Boggle
                             games[GameIDCounter].TimeLimit = (games[GameIDCounter].TimeLimit + args.TimeLimit) / 2;
                             games[GameIDCounter].GameState = "active";
 
-                            games[GameIDCounter].GameTimer.Start();
+                            //games[ActiveGameID].GameTimer.Start();
+                            // TODO: Set the timelimit.
 
                             return new JoinGameReturn() { GameID = GameIDCounter++.ToString() };
                         }
@@ -194,7 +195,7 @@ namespace Boggle
 
                                 games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
-
+                            
                             return new PlayWordReturn() { Score = wordScore };
                         }
                         
@@ -202,7 +203,7 @@ namespace Boggle
                     else
                     {
                         SetStatus(Conflict);
-                        return null;
+                return null;
                     }
                 }
                 SetStatus(Forbidden);
@@ -218,7 +219,7 @@ namespace Boggle
                 {
                     if (reader.ReadLine().Equals(word.ToUpper()))
                         return true;
-                }
+        }
                 return false;
             }
         }
