@@ -167,13 +167,15 @@ namespace Boggle
                             {
                                 wordScore = games[intID].Player1.WordScore(args.Word);
 
-                                games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                if (wordScore != 0)
+                                    games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
                             else
                             {
                                 wordScore = games[intID].Player2.WordScore(args.Word);
 
-                                games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                if (wordScore != 0)
+                                    games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
 
                             return new PlayWordReturn() { Score = wordScore };
@@ -185,15 +187,17 @@ namespace Boggle
 
                             if (player == 1)
                             {
-                                wordScore = -1;
+                                wordScore = games[intID].Player1.WordScore(args.Word) == 0 ? 0 : -1;
 
-                                games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                if (wordScore != 0)
+                                    games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
                             else
                             {
-                                wordScore = -1;
+                                wordScore = games[intID].Player1.WordScore(args.Word) == 0 ? 0 : -1;
 
-                                games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                if (wordScore != 0)
+                                    games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
                             
                             return new PlayWordReturn() { Score = wordScore };
@@ -211,7 +215,7 @@ namespace Boggle
             }
 
         }
-        private bool isWord(string word)
+        private static bool isWord(string word)
         {
             using (TextReader reader = new StreamReader(File.OpenRead(@"C:\Users\monishg\Source\Repos\x1008121\BoggleService\BoggleService\dictionary.txt")))
             {

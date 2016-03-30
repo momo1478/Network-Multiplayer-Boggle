@@ -12,8 +12,6 @@ namespace Boggle
     public class BoggleGame
     {
 
-
-
         [DataMember(EmitDefaultValue = false)]
         public BoggleBoard Board { get; } = new BoggleBoard();
 
@@ -120,7 +118,7 @@ namespace Boggle
         }
     }
         [DataContract]
-        public class Words
+        public class Words : IEqualityComparer<Words>
         {
             [DataMember(EmitDefaultValue = false)]
             public string Word { get; set; }
@@ -128,7 +126,16 @@ namespace Boggle
             [DataMember(EmitDefaultValue = false)]
             public int? Score { get; set; }
 
+        public bool Equals(Words x, Words y)
+        {
+            return x.Word.Equals(y.Word);
         }
+
+        public int GetHashCode(Words obj)
+        {
+            return base.GetHashCode();
+        }
+    }
         [DataContract]
         public class UserInfo
         {
@@ -151,7 +158,7 @@ namespace Boggle
         public class PlayWordReturn
         {
             [DataMember(EmitDefaultValue = false)]
-            public int Score { get; set; }
+            public int? Score { get; set; }
         }
 
         public class JoinGameArgs
