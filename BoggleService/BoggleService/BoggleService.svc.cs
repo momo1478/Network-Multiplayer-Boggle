@@ -161,6 +161,7 @@ namespace Boggle
                         {
                             SetStatus(OK);
 
+
                             if (player == 1)
                             {
                                 wordScore = games[intID].Player1.WordScore(args.Word);
@@ -183,13 +184,13 @@ namespace Boggle
 
                             if (player == 1)
                             {
-                                wordScore = games[intID].Player1.WordScore(args.Word);
+                                wordScore = -1;
 
                                 games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
                             else
                             {
-                                wordScore = games[intID].Player2.WordScore(args.Word);
+                                wordScore = -1;
 
                                 games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
@@ -211,49 +212,18 @@ namespace Boggle
         }
         private bool isWord(string word)
         {
-            using (TextReader reader = new StreamReader(File.OpenRead("dictionary.txt")))
+            using (TextReader reader = new StreamReader(File.OpenRead(@"C:\Users\monishg\Source\Repos\x1008121\BoggleService\BoggleService\dictionary.txt")))
             {
-                while (reader.ReadLine() != null)
+                while (!((StreamReader)reader).EndOfStream)
                 {
-                    if (reader.ReadLine().Equals(word))
+                    if (reader.ReadLine().Equals(word.ToUpper()))
                         return true;
                 }
                 return false;
             }
         }
 
-        ///// <summary>
-        ///// Demo.  You can delete this.
-        ///// </summary>
-        //public int GetFirst(IList<int> list)
-        //{
-        //    SetStatus(OK);
-        //    return list[0];
-        //}
-
-        ///// <summary>
-        ///// Demo.  You can delete this.
-        ///// </summary>
-        ///// <returns></returns>
-        //public IList<int> Numbers(string n)
-        //{
-        //    int index;
-        //    if (!Int32.TryParse(n, out index) || index < 0)
-        //    {
-        //        SetStatus(Forbidden);
-        //        return null;
-        //    }
-        //    else
-        //    {
-        //        List<int> list = new List<int>();
-        //        for (int i = 0; i < index; i++)
-        //        {
-        //            list.Add(i);
-        //        }
-        //        SetStatus(OK);
-        //        return list;
-        //    }
-        //}
+        
 
 
     }
