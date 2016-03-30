@@ -21,7 +21,7 @@ namespace Boggle
         /// <summary>
         /// Gets the DateTime.Now
         /// </summary>
-        public int TimeNow
+        private int TimeNow
         {
             get
             {
@@ -95,7 +95,7 @@ namespace Boggle
         public int? Score { get; set; } = 0;
 
         [DataMember(EmitDefaultValue = false)]
-        public HashSet<Words> WordsPlayed { get; set; } = new HashSet<Words>();
+        public List<Words> WordsPlayed { get; set; } = new List<Words>();
 
         public int WordScore(string word)
         {

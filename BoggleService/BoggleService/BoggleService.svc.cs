@@ -149,33 +149,44 @@ namespace Boggle
 
             lock (sync)
             {
-
-                if (args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && games.ContainsKey(intID) && (games[intID].Player1.UserToken.Equals(args.UserToken) || games[intID].Player2.UserToken.Equals(args.UserToken)))
+                // checks for forbidden
+                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && games.ContainsKey(intID) && (games[intID].Player1.UserToken.Equals(args.UserToken) || games[intID].Player2.UserToken.Equals(args.UserToken)))
                 {
+                    //who is submiting player 1 or 2
                     int player = games[intID].Player1.UserToken.Equals(args.UserToken) ? 1 : 2;
 
                     if (games[intID].GameState.Equals("active"))
                     {
                         int wordScore;
-
+                        // can be formed and in dictionary
                         if (games[intID].Board.CanBeFormed(args.Word) && isWord(args.Word))
                         {
                             SetStatus(OK);
-
-
                             if (player == 1)
                             {
-                                wordScore = games[intID].Player1.WordScore(args.Word);
-
-                                if (wordScore != 0)
-                                    games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                if (games[intID].Player1.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                {
+                                    wordScore = 0;
+                                }
+                                else
+                                {
+                                    wordScore = games[intID].Player1.WordScore(args.Word);
+                                    games[intID].Player1.Score += wordScore;
+                                }
+                                games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
-                            else
+                            else //player 2
                             {
-                                wordScore = games[intID].Player2.WordScore(args.Word);
-
-                                if (wordScore != 0)
-                                    games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                if (games[intID].Player2.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                {
+                                    wordScore = 0;
+                                }
+                                else
+                                {
+                                    wordScore = games[intID].Player1.WordScore(args.Word);
+                                    games[intID].Player1.Score += wordScore;
+                                }
+                                games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word , Score = wordScore });
                             }
 
                             return new PlayWordReturn() { Score = wordScore };
@@ -187,27 +198,41 @@ namespace Boggle
 
                             if (player == 1)
                             {
-                                wordScore = games[intID].Player1.WordScore(args.Word) == 0 ? 0 : -1;
-
-                                if (wordScore != 0)
-                                    games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                if (games[intID].Player1.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                {
+                                    wordScore = 0;
+                                }
+                                else
+                                {
+                                    wordScore = -1;
+                                    games[intID].Player1.Score += wordScore;
+                                }
+                                games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
-                            else
+                            else // Player 2
                             {
-                                wordScore = games[intID].Player1.WordScore(args.Word) == 0 ? 0 : -1;
+                               
+                                if (games[intID].Player2.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                {
+                                    wordScore = 0;
+                                }
+                                else
+                                {
 
-                                if (wordScore != 0)
-                                    games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
+                                    wordScore = -1;
+                                    games[intID].Player1.Score += wordScore;
+                                }
+                                games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore});
                             }
-                            
+
                             return new PlayWordReturn() { Score = wordScore };
                         }
-                        
+
                     }
                     else
                     {
                         SetStatus(Conflict);
-                return null;
+                        return null;
                     }
                 }
                 SetStatus(Forbidden);
@@ -217,18 +242,20 @@ namespace Boggle
         }
         private static bool isWord(string word)
         {
-            using (TextReader reader = new StreamReader(File.OpenRead(@"C:\Users\monishg\Source\Repos\x1008121\BoggleService\BoggleService\dictionary.txt")))
+            // TODO: Fix local file path to dictionary. 
+            string dictionaryFilePath = System.IO.Path.GetFullPath("dictionary.txt");
+            using (TextReader reader = new StreamReader(File.OpenRead(dictionaryFilePath)))
             {
                 while (!((StreamReader)reader).EndOfStream)
                 {
                     if (reader.ReadLine().Equals(word.ToUpper()))
                         return true;
-        }
+                }
                 return false;
             }
         }
 
-        
+
 
 
     }
