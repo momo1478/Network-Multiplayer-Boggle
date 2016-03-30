@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Web.Http;
@@ -34,7 +35,15 @@ namespace Boggle
 
 
         [WebInvoke(Method = "PUT", UriTemplate = "/games/{GameID}")]
-        PlayWordReturn PlayWord( PlayWordArgs args, string GameID);
+        PlayWordReturn PlayWord(PlayWordArgs args, string GameID);
+
+
+        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
+        GetStatusReturn GetStatus(DumbClass body, [FromUri]string GameID);
+
+        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}?brief={brief}")]
+        GetStatusReturn GetStatus(DumbClass body, [FromUri]string GameID, [FromUri]string brief);
+
 
 
 

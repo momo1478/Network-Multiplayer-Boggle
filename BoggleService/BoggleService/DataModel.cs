@@ -21,7 +21,7 @@ namespace Boggle
         /// <summary>
         /// Gets the DateTime.Now
         /// </summary>
-        public int TimeNow
+        private int TimeNow
         {
             get
             {
@@ -64,14 +64,14 @@ namespace Boggle
                 int timePast = TimeNow - TimeStart;
                 TimeStart = TimeNow;
                 int timeLeft = TimeLimit - timePast;
-                if(timeLeft < 0)
+                if (timeLeft < 0)
                 {
                     timeLeft = 0;
+                    this.GameState = "completed";
                 }
-                return timeLeft/1000;
+                return timeLeft / 1000;
             }
         }
-
 
         [DataMember(EmitDefaultValue = false)]
         public int GameID { get; set; }
@@ -117,14 +117,14 @@ namespace Boggle
             }
         }
     }
-        [DataContract]
-        public class Words : IEqualityComparer<Words>
-        {
-            [DataMember(EmitDefaultValue = false)]
-            public string Word { get; set; }
+    [DataContract]
+    public class Words : IEqualityComparer<Words>
+    {
+        [DataMember(EmitDefaultValue = false)]
+        public string Word { get; set; }
 
-            [DataMember(EmitDefaultValue = false)]
-            public int? Score { get; set; }
+        [DataMember(EmitDefaultValue = false)]
+        public int? Score { get; set; }
 
         public bool Equals(Words x, Words y)
         {
@@ -136,44 +136,101 @@ namespace Boggle
             return base.GetHashCode();
         }
     }
-        [DataContract]
-        public class UserInfo
-        {
-            [DataMember(EmitDefaultValue = false)]
-            public string Nickname { get; set; }
-        }
-        [DataContract]
-        public class CreateUserReturn
-        {
-            [DataMember(EmitDefaultValue = false)]
-            public string UserToken { get; set; }
-        }
-        [DataContract]
-        public class JoinGameReturn
-        {
-            [DataMember(EmitDefaultValue = false)]
-            public string GameID { get; set; }
-        }
-        [DataContract]
-        public class PlayWordReturn
-        {
-            [DataMember(EmitDefaultValue = false)]
-            public int? Score { get; set; }
-        }
 
-        public class JoinGameArgs
-        {
-            public string UserToken { get; set; }
+    [DataContract]
+    public class UserInfo
+    {
+        [DataMember(EmitDefaultValue = false)]
+        public string Nickname { get; set; }
+    }
 
-            public int TimeLimit { get; set; }
-        }
-        public class CancelGameArgs
-        {
-            public string UserToken { get; set; }
-        }
-        public class PlayWordArgs
-        {
-            public string UserToken { get; set; }
-            public string Word { get; set; }
-        }
+    [DataContract]
+    public class CreateUserReturn
+    {
+        [DataMember(EmitDefaultValue = false)]
+        public string UserToken { get; set; }
+    }
+
+    [DataContract]
+    public class JoinGameReturn
+    {
+        [DataMember(EmitDefaultValue = false)]
+        public string GameID { get; set; }
+    }
+
+    [DataContract]
+    public class PlayWordReturn
+    {
+        [DataMember(EmitDefaultValue = false)]
+        public int? Score { get; set; }
+    }
+
+    public class JoinGameArgs
+    {
+        public string UserToken { get; set; }
+
+        public int TimeLimit { get; set; }
+    }
+
+    public class CancelGameArgs
+    {
+        public string UserToken { get; set; }
+    }
+
+    public class PlayWordArgs
+    {
+        public string UserToken { get; set; }
+        public string Word { get; set; }
+    }
+
+    [DataContract]
+    public class GetStatusReturn
+    {
+        [DataMember]
+        public string GameStatus { get; set; }
+    }
+
+    [DataContract]
+    public class BriefGetStatus : GetStatusReturn
+    {
+        [DataMember]
+        public int? TimeLeft { get; set; }
+
+        [DataMember(Name = "Player1")]
+        public PlayerDump Player1 { get; set; }
+
+        [DataMember(Name = "Player2")]
+        public PlayerDump Player2 { get; set; }
+    }
+
+    public class NotBriefGetStatus : GetStatusReturn
+    {
+        public string Board { get; set; }
+
+        public int? TimeLimit { get; set; }
+
+        public int? TimeLeft { get; set; }
+
+        public PlayerDump Player1 { get; set; }
+
+        public PlayerDump Player2 { get; set; }
+    }
+
+    public class PlayerDump
+    { 
+
+        [DataMember(Name = "Nickname" , EmitDefaultValue = false)]
+        public string Nickname { get; set; }
+
+        [DataMember(Name = "Score", EmitDefaultValue = false)]
+        public int? Score { get; set; }
+
+        [DataMember(Name = "WordsPlayed", EmitDefaultValue = false)]
+        public HashSet<Words> WordsPlayed { get; set; }
+    }
+
+    public class DumbClass
+    {
+
+    }
 }
