@@ -39,10 +39,10 @@ namespace Boggle
 
 
         [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
-        GetStatusReturn GetStatus(DumbClass body, [FromUri]string GameID);
+        GetStatusReturn GetStatus(string GameID);
 
-        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}?brief={brief}")]
-        GetStatusReturn GetStatus(DumbClass body, [FromUri]string GameID, [FromUri]string brief);
+        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}/?brief={brief}")]
+        GetStatusReturn GetStatusBrief(string GameID, string brief);
 
 
 

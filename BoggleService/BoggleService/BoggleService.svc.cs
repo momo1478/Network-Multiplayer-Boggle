@@ -254,7 +254,7 @@ namespace Boggle
             }
         }
 
-        public GetStatusReturn GetStatus(DumbClass body, string GameID)
+        public GetStatusReturn GetStatus(string GameID)
         {
             int intID;
             if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
@@ -278,7 +278,7 @@ namespace Boggle
                         Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
                     };
                 }
-                else if(games[intID].GameState.Equals("completed"))
+                else if (games[intID].GameState.Equals("completed"))
                 {
                     SetStatus(OK);
                     return new NotBriefGetStatus()
@@ -288,16 +288,16 @@ namespace Boggle
                         TimeLeft = games[intID].TimeLeft,
 
                         GameStatus = games[intID].GameState,
-                        Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score , WordsPlayed = games[intID].Player1.WordsPlayed },
-                        Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score , WordsPlayed = games[intID].Player2.WordsPlayed }
+                        Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
+                        Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
                     };
                 }
             }
             SetStatus(Forbidden);
-            return null;  
+            return null;
         }
-        
-        public GetStatusReturn GetStatus(DumbClass body, string GameID, string brief)
+
+        public GetStatusReturn GetStatusBrief(string GameID, string brief)
         {
             int intID;
             if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))

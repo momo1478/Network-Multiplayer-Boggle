@@ -226,7 +226,7 @@ namespace Boggle
         public int? Score { get; set; }
 
         [DataMember(Name = "WordsPlayed", EmitDefaultValue = false)]
-        public HashSet<Words> WordsPlayed { get; set; }
+        public List<Words> WordsPlayed { get; set; }
     }
 
     public class DumbClass
