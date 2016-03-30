@@ -34,7 +34,8 @@ namespace Boggle
 
 
         [WebInvoke(Method = "PUT", UriTemplate = "/games/{GameID}")]
-        PlayWordReturn PlayWord( PlayWordArgs args, [FromUri]string GameID);
+        PlayWordReturn PlayWord( PlayWordArgs args, string GameID);
+
 
         //    /// <summary>
         //    /// Demo.  You can delete this.
