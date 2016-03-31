@@ -94,6 +94,7 @@ namespace Boggle
 
                             games[GameIDCounter].Player2 = new Player() { UserToken = args.UserToken, Nickname = users[args.UserToken].Nickname };
                             games[GameIDCounter].TimeLimit = (games[GameIDCounter].TimeLimit + args.TimeLimit) / 2;
+                            
                             games[GameIDCounter].GameState = "active";
 
                             //games[ActiveGameID].GameTimer.Start();
@@ -262,7 +263,7 @@ namespace Boggle
                 if (games[intID].GameState.Equals("pending"))
                 {
                     SetStatus(OK);
-                    return new GetStatusReturn() { GameStatus = games[intID].GameState };
+                    return new GetStatusReturn() { GameStatus = games[intID].GameState } as GetStatusReturn;
                 }
                 else if (games[intID].GameState.Equals("active"))
                 {
@@ -276,7 +277,7 @@ namespace Boggle
                         GameStatus = games[intID].GameState,
                         Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
                         Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
-                    };
+                    } as GetStatusReturn;
                 }
                 else if (games[intID].GameState.Equals("completed"))
                 {
@@ -290,7 +291,7 @@ namespace Boggle
                         GameStatus = games[intID].GameState,
                         Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
                         Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
-                    };
+                    } as GetStatusReturn;
                 }
             }
             SetStatus(Forbidden);
@@ -317,7 +318,7 @@ namespace Boggle
                             TimeLeft = games[intID].TimeLeft,
                             Player1 = new PlayerDump() { Score = games[intID].Player1.Score },
                             Player2 = new PlayerDump() { Score = games[intID].Player2.Score }
-                        };
+                        } as GetStatusReturn;
                     }
                 }
                 else if (games[intID].GameState.Equals("active"))
@@ -332,7 +333,7 @@ namespace Boggle
                         GameStatus = games[intID].GameState,
                         Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
                         Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
-                    };
+                    } as GetStatusReturn;
                 }
                 else if (games[intID].GameState.Equals("completed"))
                 {
@@ -346,7 +347,7 @@ namespace Boggle
                         GameStatus = games[intID].GameState,
                         Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
                         Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
-                    };
+                    } as GetStatusReturn;
                 }
             }
             SetStatus(Forbidden);

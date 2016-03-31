@@ -25,7 +25,10 @@ namespace Boggle
         {
             get
             {
-                return Convert.ToInt32(DateTime.Now.Millisecond);
+                unchecked
+                {
+                    return Convert.ToInt32( (DateTime.Now.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond) ;
+                }
             }
         }
 
@@ -48,11 +51,13 @@ namespace Boggle
             }
             set
             {
-                TimeStart = Convert.ToInt32(DateTime.Now.Millisecond);
+                TimeStart = TimeNow;
+                timeLeft = value;
                 timeLimit = value;
             }
         }
 
+        private int timeLeft;
         /// <summary>
         /// Calculates the time left based on TimeStart, TimeNow and TimeLimit.
         /// </summary>
@@ -63,13 +68,15 @@ namespace Boggle
             {
                 int timePast = TimeNow - TimeStart;
                 TimeStart = TimeNow;
-                int timeLeft = TimeLimit - timePast;
+
+                timeLeft -= timePast;
+
                 if (timeLeft < 0)
                 {
                     timeLeft = 0;
                     this.GameState = "completed";
                 }
-                return timeLeft / 1000;
+                return timeLeft;
             }
         }
 
