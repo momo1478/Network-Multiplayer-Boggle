@@ -136,7 +136,6 @@ namespace Boggle
                     {
                         games[GameIDCounter].Player1 = null;
                         SetStatus(OK);
-
                         return;
                     }
                 }
@@ -186,8 +185,8 @@ namespace Boggle
                                 }
                                 else
                                 {
-                                    wordScore = games[intID].Player1.WordScore(args.Word);
-                                    games[intID].Player1.Score += wordScore;
+                                    wordScore = games[intID].Player2.WordScore(args.Word);
+                                    games[intID].Player2.Score += wordScore;
                                 }
                                 games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
@@ -223,7 +222,7 @@ namespace Boggle
                                 {
 
                                     wordScore = -1;
-                                    games[intID].Player1.Score += wordScore;
+                                    games[intID].Player2.Score += wordScore;
                                 }
                                 games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
@@ -317,7 +316,7 @@ namespace Boggle
                         SetStatus(OK);
                         return new GetStatusReturn() { GameState = games[intID].GameState };
                     }
-                    else if (brief != null && brief.Equals("yes"))
+                    else if (brief != null && brief.ToLower().Equals("yes"))
                     {
                         if (games[intID].GameState.Equals("active") || games[intID].GameState.Equals("completed"))
                         {
