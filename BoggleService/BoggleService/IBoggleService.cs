@@ -38,11 +38,12 @@ namespace Boggle
         PlayWordReturn PlayWord(PlayWordArgs args, string GameID);
 
 
-        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
-        GetStatusReturn GetStatus(string GameID);
+        [WebGet(UriTemplate = "/games/{GameID}")]
+        GetStatusReturn Status(string GameID);
 
-        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}?brief={brief}")]
-        GetStatusReturn GetStatusBrief(string GameID, string brief);
+
+        [WebGet(UriTemplate = "/games/{ID}?brief={B}")]
+        GetStatusReturn StatusBrief(string ID, string B);
 
 
 

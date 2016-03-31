@@ -71,7 +71,7 @@ namespace Boggle
 
                 timeLeft -= timePast;
 
-                if (timeLeft < 0)
+                if (timeLeft <= 0)
                 {
                     timeLeft = 0;
                     this.GameState = "completed";
@@ -195,49 +195,36 @@ namespace Boggle
     {
         [DataMember]
         public string GameStatus { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public int? TimeLeft { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public PlayerDump Player1 { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public PlayerDump Player2 { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public string Board { get; set; }
+
+        [DataMember(EmitDefaultValue = false)]
+        public int? TimeLimit { get; set; }
+
     }
 
     [DataContract]
-    public class BriefGetStatus : GetStatusReturn
-    {
-        [DataMember]
-        public int? TimeLeft { get; set; }
-
-        [DataMember(Name = "Player1")]
-        public PlayerDump Player1 { get; set; }
-
-        [DataMember(Name = "Player2")]
-        public PlayerDump Player2 { get; set; }
-    }
-
-    public class NotBriefGetStatus : GetStatusReturn
-    {
-        public string Board { get; set; }
-
-        public int? TimeLimit { get; set; }
-
-        public int? TimeLeft { get; set; }
-
-        public PlayerDump Player1 { get; set; }
-
-        public PlayerDump Player2 { get; set; }
-    }
-
     public class PlayerDump
     { 
 
-        [DataMember(Name = "Nickname" , EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false)]
         public string Nickname { get; set; }
 
-        [DataMember(Name = "Score", EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false)]
         public int? Score { get; set; }
 
-        [DataMember(Name = "WordsPlayed", EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false)]
         public List<Words> WordsPlayed { get; set; }
     }
 
-    public class DumbClass
-    {
-
-    }
 }
