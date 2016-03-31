@@ -194,7 +194,7 @@ namespace Boggle
     public class GetStatusReturn
     {
         [DataMember]
-        public string GameStatus { get; set; }
+        public string GameState { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public int? TimeLeft { get; set; }

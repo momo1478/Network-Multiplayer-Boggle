@@ -148,9 +148,10 @@ namespace Boggle
         public PlayWordReturn PlayWord(PlayWordArgs args, string GameID)
         {
             int intID;
-
             lock (sync)
             {
+                args.Word = args.Word?.ToUpper() ?? "";
+
                 // checks for forbidden
                 if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && games.ContainsKey(intID) && (games[intID].Player1.UserToken.Equals(args.UserToken) || games[intID].Player2.UserToken.Equals(args.UserToken)))
                 {
@@ -249,7 +250,7 @@ namespace Boggle
                 while (!((StreamReader)reader).EndOfStream)
                 {
                     if (reader.ReadLine().Equals(word.ToUpper()))
-                        return true;
+                        return true;               
                 }
                 return false;
             }
@@ -260,12 +261,13 @@ namespace Boggle
             lock (sync)
             {
             int intID;
+
             if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
             {
                 if (games[intID].GameState.Equals("pending"))
                 {
                     SetStatus(OK);
-                        return new GetStatusReturn() { GameStatus = games[intID].GameState };
+                        return new GetStatusReturn() { GameState = games[intID].GameState };
                 }
                 else if (games[intID].GameState.Equals("active"))
                 {
@@ -276,7 +278,7 @@ namespace Boggle
                             TimeLimit = games[intID].TimeLimit,
                             TimeLeft = games[intID].TimeLeft,
 
-                            GameStatus = games[intID].GameState,
+                            GameState = games[intID].GameState,
                             Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
                             Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
                         };
@@ -290,7 +292,7 @@ namespace Boggle
                             TimeLimit = games[intID].TimeLimit,
                             TimeLeft = games[intID].TimeLeft,
 
-                            GameStatus = games[intID].GameState,
+                            GameState = games[intID].GameState,
                             Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
                             Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
                         };
@@ -313,7 +315,7 @@ namespace Boggle
                     if (games[intID].GameState.Equals("pending"))
                     {
                         SetStatus(OK);
-                        return new GetStatusReturn() { GameStatus = games[intID].GameState };
+                        return new GetStatusReturn() { GameState = games[intID].GameState };
                     }
                     else if (brief != null && brief.Equals("yes"))
                     {
@@ -337,7 +339,7 @@ namespace Boggle
                             TimeLimit = games[intID].TimeLimit,
                             TimeLeft = games[intID].TimeLeft,
 
-                            GameStatus = games[intID].GameState,
+                            GameState = games[intID].GameState,
                             Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
                             Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
                         };
@@ -351,7 +353,7 @@ namespace Boggle
                             TimeLimit = games[intID].TimeLimit,
                             TimeLeft = games[intID].TimeLeft,
 
-                            GameStatus = games[intID].GameState,
+                            GameState = games[intID].GameState,
                             Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
                             Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
                         };
