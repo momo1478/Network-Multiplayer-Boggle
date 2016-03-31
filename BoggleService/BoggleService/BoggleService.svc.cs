@@ -94,7 +94,7 @@ namespace Boggle
 
                             games[GameIDCounter].Player2 = new Player() { UserToken = args.UserToken, Nickname = users[args.UserToken].Nickname };
                             games[GameIDCounter].TimeLimit = (games[GameIDCounter].TimeLimit + args.TimeLimit) / 2;
-                            
+
                             games[GameIDCounter].GameState = "active";
 
                             //games[ActiveGameID].GameTimer.Start();
@@ -257,6 +257,8 @@ namespace Boggle
 
         public GetStatusReturn GetStatus(string GameID)
         {
+            lock (sync)
+            {
             int intID;
             if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
             {
@@ -296,62 +298,69 @@ namespace Boggle
             }
             SetStatus(Forbidden);
             return null;
-        }
-
-        public GetStatusReturn GetStatusBrief(string GameID, string brief)
-        {
-            int intID;
-            if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
-            {
-                if (games[intID].GameState.Equals("pending"))
-                {
-                    SetStatus(OK);
-                    return new GetStatusReturn() { GameStatus = games[intID].GameState };
-                }
-                else if (brief != null && brief.Equals("yes"))
-                {
-                    if (games[intID].GameState.Equals("active") || games[intID].GameState.Equals("completed"))
-                    {
-                        SetStatus(OK);
-                        return new BriefGetStatus()
-                        {
-                            TimeLeft = games[intID].TimeLeft,
-                            Player1 = new PlayerDump() { Score = games[intID].Player1.Score },
-                            Player2 = new PlayerDump() { Score = games[intID].Player2.Score }
-                        } as GetStatusReturn;
-                    }
-                }
-                else if (games[intID].GameState.Equals("active"))
-                {
-                    SetStatus(OK);
-                    return new NotBriefGetStatus()
-                    {
-                        Board = games[intID].Board.ToString(),
-                        TimeLimit = games[intID].TimeLimit,
-                        TimeLeft = games[intID].TimeLeft,
-
-                        GameStatus = games[intID].GameState,
-                        Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
-                        Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
-                    } as GetStatusReturn;
-                }
-                else if (games[intID].GameState.Equals("completed"))
-                {
-                    SetStatus(OK);
-                    return new NotBriefGetStatus()
-                    {
-                        Board = games[intID].Board.ToString(),
-                        TimeLimit = games[intID].TimeLimit,
-                        TimeLeft = games[intID].TimeLeft,
-
-                        GameStatus = games[intID].GameState,
-                        Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
-                        Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
-                    } as GetStatusReturn;
-                }
             }
-            SetStatus(Forbidden);
-            return null;
         }
+
+
+
+        //public GetStatusReturn GetStatusBrief(string ID, string B)
+        //{
+        //    lock(sync)
+        //    {
+        //        int intID;
+        //        if (int.TryParse(ID, out intID) && games.ContainsKey(intID))
+        //        {
+        //            if (games[intID].GameState.Equals("pending"))
+        //            {
+        //                SetStatus(OK);
+        //                return new GetStatusReturn() { GameStatus = games[intID].GameState };
+        //            }
+        //            else if (B != null && B.Equals("yes"))
+        //            {
+        //                if (games[intID].GameState.Equals("active") || games[intID].GameState.Equals("completed"))
+        //                {
+        //                    SetStatus(OK);
+        //                    return new BriefGetStatus()
+        //                    {
+        //                        TimeLeft = games[intID].TimeLeft,
+        //                        Player1 = new PlayerDump() { Score = games[intID].Player1.Score },
+        //                        Player2 = new PlayerDump() { Score = games[intID].Player2.Score }
+        //                    } as GetStatusReturn;
+        //                }
+        //            }
+        //            else if (games[intID].GameState.Equals("active"))
+        //            {
+        //                SetStatus(OK);
+        //                return new NotBriefGetStatus()
+        //                {
+        //                    Board = games[intID].Board.ToString(),
+        //                    TimeLimit = games[intID].TimeLimit,
+        //                    TimeLeft = games[intID].TimeLeft,
+
+        //                    GameStatus = games[intID].GameState,
+        //                    Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
+        //                    Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
+        //                } as GetStatusReturn;
+        //            }
+        //            else if (games[intID].GameState.Equals("completed"))
+        //            {
+        //                SetStatus(OK);
+        //                return new NotBriefGetStatus()
+        //                {
+        //                    Board = games[intID].Board.ToString(),
+        //                    TimeLimit = games[intID].TimeLimit,
+        //                    TimeLeft = games[intID].TimeLeft,
+
+        //                    GameStatus = games[intID].GameState,
+        //                    Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
+        //                    Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
+        //                } as GetStatusReturn;
+        //            }
+        //        }
+        //        SetStatus(Forbidden);
+        //        return null;
+        //    }
+        //}
+
     }
 }

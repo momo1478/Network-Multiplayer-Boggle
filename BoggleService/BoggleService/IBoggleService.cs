@@ -9,6 +9,8 @@ namespace Boggle
     [ServiceContract]
     public interface IBoggleService
     {
+        //TODO: return Type for GETSTATUS SCREWED UP.
+
         /// <summary>
         /// Sends back index.html as the response body.
         /// </summary>
@@ -38,11 +40,11 @@ namespace Boggle
         PlayWordReturn PlayWord(PlayWordArgs args, string GameID);
 
 
-        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}")]
+        [WebGet(UriTemplate = "/games/{GameID}")]
         GetStatusReturn GetStatus(string GameID);
 
-        [WebInvoke(Method = "GET", UriTemplate = "/games/{GameID}/?brief={brief}")]
-        GetStatusReturn GetStatusBrief(string GameID, string brief);
+        //[WebGet(UriTemplate = "/games/{ID}?brief={B}")]
+        //GetStatusReturn GetStatusBrief(string ID, string B);
 
 
 

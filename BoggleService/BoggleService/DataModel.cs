@@ -203,36 +203,43 @@ namespace Boggle
         [DataMember]
         public int? TimeLeft { get; set; }
 
-        [DataMember(Name = "Player1")]
+        [DataMember]
         public PlayerDump Player1 { get; set; }
 
-        [DataMember(Name = "Player2")]
+        [DataMember]
         public PlayerDump Player2 { get; set; }
     }
 
+    [DataContract]
     public class NotBriefGetStatus : GetStatusReturn
     {
+        [DataMember(EmitDefaultValue = false)]
         public string Board { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public int? TimeLimit { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public int? TimeLeft { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public PlayerDump Player1 { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
         public PlayerDump Player2 { get; set; }
     }
 
+    [DataContract]
     public class PlayerDump
     { 
 
-        [DataMember(Name = "Nickname" , EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false)]
         public string Nickname { get; set; }
 
-        [DataMember(Name = "Score", EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false)]
         public int? Score { get; set; }
 
-        [DataMember(Name = "WordsPlayed", EmitDefaultValue = false)]
+        [DataMember(EmitDefaultValue = false)]
         public List<Words> WordsPlayed { get; set; }
     }
 
