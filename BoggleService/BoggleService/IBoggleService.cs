@@ -9,8 +9,6 @@ namespace Boggle
     [ServiceContract]
     public interface IBoggleService
     {
-        //TODO: return Type for GETSTATUS SCREWED UP.
-
         /// <summary>
         /// Sends back index.html as the response body.
         /// </summary>
