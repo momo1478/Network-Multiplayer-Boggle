@@ -41,10 +41,11 @@ namespace Boggle
 
 
         [WebGet(UriTemplate = "/games/{GameID}")]
-        GetStatusReturn GetStatus(string GameID);
+        GetStatusReturn Status(string GameID);
 
-        //[WebGet(UriTemplate = "/games/{ID}?brief={B}")]
-        //GetStatusReturn GetStatusBrief(string ID, string B);
+
+        [WebGet(UriTemplate = "/games/{ID}?brief={B}")]
+        GetStatusReturn StatusBrief(string ID, string B);
 
 
 

@@ -71,7 +71,7 @@ namespace Boggle
 
                 timeLeft -= timePast;
 
-                if (timeLeft < 0)
+                if (timeLeft <= 0)
                 {
                     timeLeft = 0;
                     this.GameState = "completed";
@@ -195,38 +195,22 @@ namespace Boggle
     {
         [DataMember]
         public string GameStatus { get; set; }
-    }
 
-    [DataContract]
-    public class BriefGetStatus : GetStatusReturn
-    {
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public int? TimeLeft { get; set; }
 
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public PlayerDump Player1 { get; set; }
 
-        [DataMember]
+        [DataMember(EmitDefaultValue = false)]
         public PlayerDump Player2 { get; set; }
-    }
 
-    [DataContract]
-    public class NotBriefGetStatus : GetStatusReturn
-    {
         [DataMember(EmitDefaultValue = false)]
         public string Board { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public int? TimeLimit { get; set; }
 
-        [DataMember(EmitDefaultValue = false)]
-        public int? TimeLeft { get; set; }
-
-        [DataMember(EmitDefaultValue = false)]
-        public PlayerDump Player1 { get; set; }
-
-        [DataMember(EmitDefaultValue = false)]
-        public PlayerDump Player2 { get; set; }
     }
 
     [DataContract]
@@ -243,8 +227,4 @@ namespace Boggle
         public List<Words> WordsPlayed { get; set; }
     }
 
-    public class DumbClass
-    {
-
-    }
 }
