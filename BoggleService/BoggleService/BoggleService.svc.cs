@@ -325,6 +325,7 @@ namespace Boggle
                             return new GetStatusReturn()
                             {
                                 TimeLeft = games[intID].TimeLeft,
+                                GameStatus = games[intID].GameState,
                                 Player1 = new PlayerDump() { Score = games[intID].Player1.Score },
                                 Player2 = new PlayerDump() { Score = games[intID].Player2.Score }
                             };
