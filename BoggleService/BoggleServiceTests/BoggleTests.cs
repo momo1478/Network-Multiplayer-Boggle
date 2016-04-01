@@ -886,6 +886,16 @@ namespace Boggle
         }
 
         [TestMethod]
+        public void BriefBadGetStatusForbidden()
+        {
+            int GID = client.CreateGameWithPlayers();
+
+            Response getr = client.DoGetAsync("games/" + 99 + "?brief=blah").Result;
+
+            Assert.AreEqual(getr.Status, Forbidden);
+        }
+
+        [TestMethod]
         public void Wait6Sec_BriefBadGetStatusCompleted()
         {
 
