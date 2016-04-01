@@ -457,6 +457,14 @@ namespace Boggle
             Assert.AreEqual(Forbidden, r_GameStatus.Status);
         }
 
+        [TestMethod]
+        public void GetStatusPending()
+        {
+            int GID = client.CreateGameWithPlayers();
+
+            client.DoGetAsync("games/" + GID,  );
+        }
+
     }
 
 }
