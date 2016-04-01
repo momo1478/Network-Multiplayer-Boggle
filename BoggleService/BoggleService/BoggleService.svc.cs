@@ -161,7 +161,7 @@ namespace Boggle
                     {
                         int wordScore;
                         // can be formed and in dictionary
-                        if (games[intID].Board.CanBeFormed(args.Word) && isWord(args.Word))
+                        if (isWord(args.Word) && games[intID].Board.CanBeFormed(args.Word))
                         {
                             SetStatus(OK);
                             if (player == 1)

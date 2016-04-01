@@ -250,8 +250,47 @@ namespace Boggle
         /// <summary>
         /// Play word PUT test.
         /// </summary>
+
         [TestMethod]
-        public void PlayWordTest()
+        public void PlayWordGameStatusTest()
+        {
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            expandoUser.Nickname = "Player2";
+            Response r_player2 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player2.Status);
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = r_player1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 5;
+            //Join first player
+            Response r_JoinGame1 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame1.Status == Accepted)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player1.Data.UserToken;
+                expandoPlayWord.Word = "Hi";
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+            }
+
+            //Join second player
+            expandoJoinGame.UserToken = r_player2.Data.UserToken;
+            expandoJoinGame.TimeLimit = 120;
+            Response r_JoinGame2 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame2.Status == Accepted)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player2.Data.UserToken;
+                expandoPlayWord.Word = "Hi";
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+            }
+        }
+
+        [TestMethod]
+        public void PlayWordInvalidWordTest()
         {
             bool success = false;
 
@@ -273,7 +312,7 @@ namespace Boggle
             {
                 dynamic expandoPlayWord = new ExpandoObject();
                 expandoPlayWord.UserToken = r_player1.Data.UserToken;
-                expandoPlayWord.Word = "Hi";
+                expandoPlayWord.Word = "a1234";
                 Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
                 if (r_PlayWord.Status == OK) success = true;
             }
@@ -286,14 +325,12 @@ namespace Boggle
             {
                 dynamic expandoPlayWord = new ExpandoObject();
                 expandoPlayWord.UserToken = r_player2.Data.UserToken;
-                expandoPlayWord.Word = "Hi";
+                expandoPlayWord.Word = "a1234";
                 Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
                 if (r_PlayWord.Status == OK) success = true;
             }
             Assert.IsTrue(success);
         }
-
-        // TODO : Playword
         [TestMethod]
         public void PlayWordNullTest1()
         {
@@ -381,7 +418,106 @@ namespace Boggle
             }
             Assert.IsTrue(success);
         }
+        /// <summary>
+        /// Play word PUT test.
+        /// </summary>
+        [TestMethod]
+        public void PlayWordDuplicatWordPlayer1Test()
+        {
+            bool success = false;
 
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            expandoUser.Nickname = "Player2";
+            Response r_player2 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = r_player1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 5;
+            //Join first player
+            Response r_JoinGame1 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame1.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player1.Data.UserToken;
+                expandoPlayWord.Word = "hi";
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                expandoPlayWord.Word = "hi";
+                Response r_PlayWord1 = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+
+                if (r_PlayWord.Status == OK) success = true;
+            }
+
+            //Join second player
+            expandoJoinGame.UserToken = r_player2.Data.UserToken;
+            expandoJoinGame.TimeLimit = 120;
+            Response r_JoinGame2 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame2.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player1.Data.UserToken;
+                expandoPlayWord.Word = "hi";
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                expandoPlayWord.Word = "hi";
+                Response r_PlayWord1 = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                if (r_PlayWord.Status == OK) success = true;
+            }
+            Assert.IsTrue(success);
+        }
+        /// <summary>
+        /// Play word PUT test.
+        /// </summary>
+        [TestMethod]
+        public void PlayWordDuplicatWordPlayer2Test()
+        {
+            bool success = false;
+
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            expandoUser.Nickname = "Player2";
+            Response r_player2 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = r_player1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 5;
+            //Join first player
+            Response r_JoinGame1 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame1.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player1.Data.UserToken;
+                expandoPlayWord.Word = "hi";
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                expandoPlayWord.Word = "hi";
+                Response r_PlayWord1 = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+
+                if (r_PlayWord.Status == OK) success = true;
+            }
+
+            //Join second player
+            expandoJoinGame.UserToken = r_player2.Data.UserToken;
+            expandoJoinGame.TimeLimit = 120;
+            Response r_JoinGame2 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame2.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player2.Data.UserToken;
+                expandoPlayWord.Word = "hi";
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                expandoPlayWord.Word = "hi";
+                Response r_PlayWord1 = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                if (r_PlayWord.Status == OK) success = true;
+            }
+            Assert.IsTrue(success);
+        }
         /// <summary>
         /// Play word PUT test on invalid UserToken.
         /// </summary>
@@ -508,6 +644,7 @@ namespace Boggle
                         {
                             expandoPlayWord.Word = reader.ReadLine();
                             Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                            Response r_PlayWord1 = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
                             if (r_PlayWord.Status == OK) success = true;
                         }
 
@@ -536,6 +673,7 @@ namespace Boggle
                         {
                             expandoPlayWord.Word = reader.ReadLine();
                             Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                            Response r_PlayWord1 = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
                             if (r_PlayWord.Status == OK) success = true;
                         }
 
@@ -580,6 +718,7 @@ namespace Boggle
                         {
                             expandoPlayWord.Word = reader.ReadLine();
                             Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                            Response r_PlayWord1 = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
                             if (r_PlayWord.Status == OK) success = true;
                         }
 
@@ -607,6 +746,7 @@ namespace Boggle
                         {
                             expandoPlayWord.Word = reader.ReadLine();
                             Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                            Response r_PlayWord1 = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
                             if (r_PlayWord.Status == OK) success = true;
                         }
 
