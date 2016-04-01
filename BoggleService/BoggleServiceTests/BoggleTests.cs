@@ -670,7 +670,7 @@ namespace Boggle
         {
             int GID = client.CreateGameWithPlayers();
 
-            client.DoGetAsync("games/" + GID,  );
+            client.DoGetAsync("games/" + GID);
         }
 
     }
