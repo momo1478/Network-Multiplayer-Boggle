@@ -474,7 +474,7 @@ namespace Boggle
         }
 
         [TestMethod]
-        public void PlayWordDictionaryPlayer2Test()
+        public void PlayWordDictionaryPlayer1Test()
         {
             bool success = false;
 
@@ -523,11 +523,11 @@ namespace Boggle
             if (r_JoinGame2.Status == Created)
             {
                 dynamic expandoPlayWord = new ExpandoObject();
-                expandoPlayWord.UserToken = r_player2.Data.UserToken;
+                expandoPlayWord.UserToken = r_player1.Data.UserToken;
 
                 using (TextReader reader = new StreamReader(File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "/../../dictionary.txt")))
                 {
-                    Response r_GetStatus = client.DoGetAsync("games/"+r_JoinGame2.Data.GameID).Result;
+                    Response r_GetStatus = client.DoGetAsync("games/" + r_JoinGame1.Data.GameID).Result;
 
                     BoggleBoard board = new BoggleBoard(r_GetStatus.Data.Board.ToString());
                     while (!((StreamReader)reader).EndOfStream)
@@ -535,19 +535,18 @@ namespace Boggle
                         if (board.CanBeFormed(reader.ReadLine()))
                         {
                             expandoPlayWord.Word = reader.ReadLine();
-                            Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                            Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
                             if (r_PlayWord.Status == OK) success = true;
                         }
 
                     }
 
                 }
-                Assert.IsTrue(success);
             }
         }
 
         [TestMethod]
-        public void PlayWordDictionaryPlayer1Test()
+        public void PlayWordDictionaryPlayer2Test()
         {
             bool success = false;
 
@@ -585,7 +584,6 @@ namespace Boggle
                         }
 
                     }
-
                 }
 
             }
