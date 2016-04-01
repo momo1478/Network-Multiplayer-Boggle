@@ -21,6 +21,11 @@ namespace Boggle
         private static Process process = null;
 
 
+        // TODO : JoinGame
+        // TODO : CancelRequest
+
+
+
         /// <summary>
         /// Starts IIS
         /// </summary>
@@ -50,6 +55,9 @@ namespace Boggle
     [TestClass]
     public class BoggleTests
     {
+        private static readonly object async = new Object();
+        
+
         /// <summary>
         /// This is automatically run prior to all the tests to start the server
         /// </summary>
@@ -70,6 +78,17 @@ namespace Boggle
 
         private RestTestClient client = new RestTestClient("http://localhost:60000/");
         //private RestTestClient client = new RestTestClient("http://bogglecs3500s16.azurewebsites.net/");
+
+        /// <summary>
+        /// API Test status.
+        /// </summary>
+        [TestMethod]
+        public void APIStatusTest()
+        {
+            // TODO : API
+            Response r_API = client.DoGetAsyncAPI("api").Result;
+            Assert.AreEqual(OK, r_API.Status);
+        }
 
         /// <summary>
         /// Create User POST test for response status on valid Nickname.
@@ -273,6 +292,50 @@ namespace Boggle
             }
             Assert.IsTrue(success);
         }
+
+        // TODO : Playword
+        [TestMethod]
+        public void PlayWordNullTest1()
+        {
+            bool success = false;
+
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            expandoUser.Nickname = "Player2";
+            Response r_player2 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = r_player1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 5;
+            //Join first player
+            Response r_JoinGame1 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame1.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player1.Data.UserToken;
+                expandoPlayWord.Word = null;
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                if (r_PlayWord.Status == Forbidden) success = true;
+            }
+
+            //Join second player
+            expandoJoinGame.UserToken = r_player2.Data.UserToken;
+            expandoJoinGame.TimeLimit = 120;
+            Response r_JoinGame2 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame2.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player2.Data.UserToken;
+                expandoPlayWord.Word = null;
+                Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                if (r_PlayWord.Status == Forbidden) success = true;
+            }
+            Assert.IsTrue(success);
+        }
         /// <summary>
         /// Play word PUT test on null word.
         /// </summary>
@@ -410,6 +473,151 @@ namespace Boggle
             Assert.IsTrue(success);
         }
 
+        [TestMethod]
+        public void PlayWordDictionaryPlayer2Test()
+        {
+            bool success = false;
+
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            expandoUser.Nickname = "Player2";
+            Response r_player2 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = r_player1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 5;
+            //Join first player
+            Response r_JoinGame1 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame1.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player1.Data.UserToken;
+
+                using (TextReader reader = new StreamReader(File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "/../../dictionary.txt")))
+                {
+                    Response r_GetStatus = client.DoGetAsync("games/" + r_JoinGame1.Data.GameID).Result;
+
+                    BoggleBoard board = new BoggleBoard(r_GetStatus.Data.Board.ToString());
+                    while (!((StreamReader)reader).EndOfStream)
+                    {
+                        if (board.CanBeFormed(reader.ReadLine()))
+                        {
+                            expandoPlayWord.Word = reader.ReadLine();
+                            Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                            if (r_PlayWord.Status == OK) success = true;
+                        }
+
+                    }
+
+                }
+
+            }
+            //Join second player
+            expandoJoinGame.UserToken = r_player2.Data.UserToken;
+            expandoJoinGame.TimeLimit = 120;
+            Response r_JoinGame2 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame2.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player2.Data.UserToken;
+
+                using (TextReader reader = new StreamReader(File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "/../../dictionary.txt")))
+                {
+                    Response r_GetStatus = client.DoGetAsync("games/"+r_JoinGame2.Data.GameID).Result;
+
+                    BoggleBoard board = new BoggleBoard(r_GetStatus.Data.Board.ToString());
+                    while (!((StreamReader)reader).EndOfStream)
+                    {
+                        if (board.CanBeFormed(reader.ReadLine()))
+                        {
+                            expandoPlayWord.Word = reader.ReadLine();
+                            Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                            if (r_PlayWord.Status == OK) success = true;
+                        }
+
+                    }
+
+                }
+                Assert.IsTrue(success);
+            }
+        }
+
+        [TestMethod]
+        public void PlayWordDictionaryPlayer1Test()
+        {
+            bool success = false;
+
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response r_player1 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            expandoUser.Nickname = "Player2";
+            Response r_player2 = client.DoPostAsync("Users", expandoUser).Result;
+            Assert.AreEqual(Created, r_player1.Status);
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = r_player1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 5;
+            //Join first player
+            Response r_JoinGame1 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame1.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player1.Data.UserToken;
+
+                using (TextReader reader = new StreamReader(File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "/../../dictionary.txt")))
+                {
+                    Response r_GetStatus = client.DoGetAsync("games/" + r_JoinGame1.Data.GameID).Result;
+
+                    BoggleBoard board = new BoggleBoard(r_GetStatus.Data.Board.ToString());
+                    while (!((StreamReader)reader).EndOfStream)
+                    {
+                        if (board.CanBeFormed(reader.ReadLine()))
+                        {
+                            expandoPlayWord.Word = reader.ReadLine();
+                            Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame1.Data.GameID).Result;
+                            if (r_PlayWord.Status == OK) success = true;
+                        }
+
+                    }
+
+                }
+
+            }
+            //Join second player
+            expandoJoinGame.UserToken = r_player2.Data.UserToken;
+            expandoJoinGame.TimeLimit = 120;
+            Response r_JoinGame2 = client.DoPostAsync("games", expandoJoinGame).Result;
+            if (r_JoinGame2.Status == Created)
+            {
+                dynamic expandoPlayWord = new ExpandoObject();
+                expandoPlayWord.UserToken = r_player2.Data.UserToken;
+
+                using (TextReader reader = new StreamReader(File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "/../../dictionary.txt")))
+                {
+                    Response r_GetStatus = client.DoGetAsync("games/" + r_JoinGame2.Data.GameID).Result;
+
+                    BoggleBoard board = new BoggleBoard(r_GetStatus.Data.Board.ToString());
+                    while (!((StreamReader)reader).EndOfStream)
+                    {
+                        if (board.CanBeFormed(reader.ReadLine()))
+                        {
+                            expandoPlayWord.Word = reader.ReadLine();
+                            Response r_PlayWord = client.DoPutAsync(expandoPlayWord, "games/" + r_JoinGame2.Data.GameID).Result;
+                            if (r_PlayWord.Status == OK) success = true;
+                        }
+
+                    }
+
+                }
+                Assert.IsTrue(success);
+            }
+        }
         /// <summary>
         /// Game Status Get test.
         /// </summary>

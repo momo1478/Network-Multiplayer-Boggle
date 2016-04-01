@@ -91,6 +91,29 @@ namespace Boggle
             }
         }
 
+        public async Task<Response> DoGetAsyncAPI(string url, params string[] parameterValues)
+        {
+            for (int i = 0; i < parameterValues.Length; i++)
+            {
+                parameterValues[i] = Uri.EscapeDataString(parameterValues[i]);
+            }
+
+            using (HttpClient client = CreateClient())
+            {
+                url = String.Format("BoggleService.svc/" + url, parameterValues);
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    String result = await response.Content.ReadAsStringAsync();
+                    return new Response { Status = response.StatusCode, Data = result };
+                }
+                else
+                {
+                    return response.StatusCode;
+                }
+            }
+        }
+
         /// <summary>
         /// Does a POST to the url, where the data is send in the request body.
         /// The response code and the response object is returned if the request was 
