@@ -664,11 +664,124 @@ namespace Boggle
         }
 
         [TestMethod]
-        public void GetStatusPending()
+        public void GetStatusActive()
         {
             int GID = client.CreateGameWithPlayers();
 
-            client.DoGetAsync("games/" + GID);
+            Response getr = client.DoGetAsync("games/" + GID).Result;
+
+            Assert.AreEqual(getr.Data.GameState.ToString(), "active");
+        }
+
+        [TestMethod]
+        public void GetStatusPending()
+        {
+
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response res1 = client.DoPostAsync("Users", expandoUser).Result;
+
+            expandoUser.Nickname = "Player2";
+            Response res2 = client.DoPostAsync("Users", expandoUser).Result;
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = res1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 5;
+            Response resJoin1 = client.DoPostAsync("games", expandoJoinGame).Result;
+
+            Response getr = client.DoGetAsync("games/" + resJoin1.Data.GameID).Result;
+
+            Assert.AreEqual(getr.Data.GameState.ToString(), "pending");
+
+            dynamic expando = new ExpandoObject();
+            expando.UserToken = expandoJoinGame.UserToken;
+
+            Response cancelJoin = client.DoPutAsync(expando, "games").Result;
+        }
+
+        [TestMethod]
+        public void BriefGetStatusPending()
+        {
+
+            dynamic expandoUser = new ExpandoObject();
+            expandoUser.Nickname = "Player1";
+            Response res1 = client.DoPostAsync("Users", expandoUser).Result;
+
+            expandoUser.Nickname = "Player2";
+            Response res2 = client.DoPostAsync("Users", expandoUser).Result;
+
+            dynamic expandoJoinGame = new ExpandoObject();
+            expandoJoinGame.UserToken = res1.Data.UserToken;
+            expandoJoinGame.TimeLimit = 5;
+            Response resJoin1 = client.DoPostAsync("games", expandoJoinGame).Result;
+
+            Response getr = client.DoGetAsync("games/" + resJoin1.Data.GameID + "?brief=yes").Result;
+
+            Assert.AreEqual(getr.Data.GameState.ToString(), "pending");
+
+            dynamic expando = new ExpandoObject();
+            expando.UserToken = expandoJoinGame.UserToken;
+
+            Response cancelJoin = client.DoPutAsync(expando,"games").Result;
+        }
+
+        [TestMethod]
+        public void BriefGetStatusActive()
+        {
+            int GID = client.CreateGameWithPlayers();
+
+            Response getr = client.DoGetAsync("games/" + GID + "?brief=yes").Result;
+
+            Assert.AreEqual(getr.Data.GameState.ToString(), "active");
+        }
+
+        [TestMethod]
+        public void BriefBadGetStatusActive()
+        {
+            int GID = client.CreateGameWithPlayers();
+
+            Response getr = client.DoGetAsync("games/" + GID + "?brief=blah").Result;
+
+            Assert.AreEqual(getr.Data.GameState.ToString(), "active");
+        }
+
+        [TestMethod]
+        public void Wait6Sec_BriefBadGetStatusCompleted()
+        {
+
+            int GID = client.CreateGameWithPlayers();
+
+            System.Threading.Thread.Sleep(6500);
+
+            Response getr = client.DoGetAsync("games/" + GID + "?brief=blah").Result;
+
+            Assert.AreEqual(getr.Data.GameState.ToString(), "completed");
+        }
+
+        [TestMethod]
+        public void Wait6Sec_BriefGetStatusCompleted()
+        {
+
+            int GID = client.CreateGameWithPlayers();
+
+            System.Threading.Thread.Sleep(6500);
+
+            Response getr = client.DoGetAsync("games/" + GID + "?brief=yes").Result;
+
+            Assert.AreEqual(getr.Data.GameState.ToString(), "completed");
+        }
+
+        [TestMethod]
+        public void Wait6Sec_GetStatusCompleted()
+        {
+
+            int GID = client.CreateGameWithPlayers();
+
+            System.Threading.Thread.Sleep(6500);
+
+            Response getr = client.DoGetAsync("games/" + GID).Result;
+
+            Assert.AreEqual(getr.Data.GameState.ToString(), "completed");
         }
 
     }
