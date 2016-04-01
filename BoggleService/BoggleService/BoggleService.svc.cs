@@ -261,40 +261,41 @@ namespace Boggle
             {
             int intID;
 
-            if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
-            {
-                if (games[intID].GameState.Equals("pending"))
+                if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
                 {
-                    SetStatus(OK);
+                    int? updateTimeLeft = games[intID].TimeLeft;
+                    if (games[intID].GameState.Equals("pending"))
+                    {
+                        SetStatus(OK);
                         return new GetStatusReturn() { GameState = games[intID].GameState };
-                }
+                    }
                 else if (games[intID].GameState.Equals("active"))
                 {
                     SetStatus(OK);
-                        return new GetStatusReturn()
-                        {
-                            Board = games[intID].Board.ToString(),
-                            TimeLimit = games[intID].TimeLimit,
-                            TimeLeft = games[intID].TimeLeft,
+                    return new GetStatusReturn()
+                    {
+                        Board = games[intID].Board.ToString(),
+                        TimeLimit = games[intID].TimeLimit,
+                        TimeLeft = games[intID].TimeLeft,
 
-                            GameState = games[intID].GameState,
-                            Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
-                            Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
-                        };
+                        GameState = games[intID].GameState,
+                        Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
+                        Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
+                    };
                 }
                 else if (games[intID].GameState.Equals("completed"))
                 {
                     SetStatus(OK);
-                        return new GetStatusReturn()
-                        {
-                            Board = games[intID].Board.ToString(),
-                            TimeLimit = games[intID].TimeLimit,
-                            TimeLeft = games[intID].TimeLeft,
+                    return new GetStatusReturn()
+                    {
+                        Board = games[intID].Board.ToString(),
+                        TimeLimit = games[intID].TimeLimit,
+                        TimeLeft = games[intID].TimeLeft,
 
-                            GameState = games[intID].GameState,
-                            Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
-                            Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
-                        };
+                        GameState = games[intID].GameState,
+                        Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
+                        Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
+                    };
                 }
             }
             SetStatus(Forbidden);
@@ -311,6 +312,7 @@ namespace Boggle
                 int intID;
                 if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
                 {
+                    int? updateTimeLeft = games[intID].TimeLeft;
                     if (games[intID].GameState.Equals("pending"))
                     {
                         SetStatus(OK);
