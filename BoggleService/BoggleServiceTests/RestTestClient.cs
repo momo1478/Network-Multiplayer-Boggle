@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net;
 using Newtonsoft.Json;
+using System.Dynamic;
 
 namespace Boggle
 {
@@ -176,6 +177,31 @@ namespace Boggle
                 {
                     return response.StatusCode;
                 }
+            }
+        }
+
+        public int CreateGameWithPlayers()
+        {
+            using (HttpClient client = CreateClient())
+            {
+                dynamic expandoUser = new ExpandoObject();
+                expandoUser.Nickname = "Player1";
+                Response res1 = DoPostAsync("Users", expandoUser).Result;
+
+                expandoUser.Nickname = "Player2";
+                Response res2 = DoPostAsync("Users", expandoUser).Result;
+
+                dynamic expandoJoinGame = new ExpandoObject();
+                expandoJoinGame.UserToken = res1.Data.UserToken;
+                expandoJoinGame.TimeLimit = 5;
+                Response resJoin1 = DoPostAsync("games", expandoJoinGame).Result;
+
+                dynamic expandoJoinGame2 = new ExpandoObject();
+                expandoJoinGame2.UserToken = res2.Data.UserToken;
+                expandoJoinGame2.TimeLimit = 5;
+                Response resJoin2 = DoPostAsync("games", expandoJoinGame2 ).Result;
+
+                return resJoin2.Data.GameID;
             }
         }
     }
