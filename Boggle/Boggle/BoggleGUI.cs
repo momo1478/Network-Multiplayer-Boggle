@@ -621,7 +621,7 @@ To submit words while playing the game press
             }));
 
             CreateName(CreateNameBoxText);
-            if (Network.SetBaseAddress(JoinDomainBoxText))
+            if (Network.SetBaseAddress(JoinDomainBoxText) && CreateNameBoxText != "")
             {
                 StatusJoinGame();
                 CanEnter = true;

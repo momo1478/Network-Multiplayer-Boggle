@@ -55,7 +55,6 @@ namespace Boggle
     [TestClass]
     public class BoggleTests
     {
-        private static readonly object async = new Object();
         
 
         /// <summary>

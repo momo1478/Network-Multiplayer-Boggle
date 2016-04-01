@@ -124,7 +124,7 @@ namespace Boggle
             }
 
         }
-
+        
         public void CancelJoinRequest(JoinGameArgs args)
         {
             lock (sync)
