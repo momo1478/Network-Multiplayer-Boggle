@@ -73,7 +73,7 @@ namespace Boggle
             {
                 GameStatus = Network.GetStatus(GameID);
 
-                if (GameStatus != null)
+                if (GameStatus != null && GameStatus.GameState != "pending")
                 {
                     //UpdateScore()
                     View.Player1ScoreBoxText = GameStatus.Player1.Score;

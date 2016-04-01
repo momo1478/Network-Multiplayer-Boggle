@@ -89,11 +89,21 @@ namespace Boggle
         public void CreateUserNullTest()
         {
             dynamic expando = new ExpandoObject();
-            expando.Nickname = "";
+            expando.Nickname = null;
             Response r = client.DoPostAsync("Users", expando).Result;
             Assert.AreEqual(Forbidden, r.Status);
         }
-
+        /// <summary>
+        /// Create User POST test for response status on blank.
+        /// </summary>
+        [TestMethod]
+        public void CreateUserBlank()
+        {
+            dynamic expando = new ExpandoObject();
+            expando.Nickname = "             ";
+            Response r = client.DoPostAsync("Users", expando).Result;
+            Assert.AreEqual(Forbidden, r.Status);
+        }
         /// <summary>
         /// Join game POST test for response status on valid UserToken and Time Limit.
         /// </summary>

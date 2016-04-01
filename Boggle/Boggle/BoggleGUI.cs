@@ -380,8 +380,8 @@ namespace Boggle
         void StatusCancled()
         {
             // Setting TextBox properties values.
-            JoinTimeBox.ReadOnly = false;
-            JoinTimeBox.Enabled = true;
+            JoinTimeBox.ReadOnly = true;
+            JoinTimeBox.Enabled = false;
             CreateNameBox.ReadOnly = false;
             CreateNameBox.Enabled = true;
             JoinDomainBox.ReadOnly = false;
@@ -390,7 +390,7 @@ namespace Boggle
             WordBox.Enabled = false;
 
             // Setting button properties values.
-            JoinButton.Enabled = true;
+            JoinButton.Enabled = false;
             CancelButton.Enabled = false;
             ExitGameToolStrip.Enabled = false;
             CreateButton.Enabled = true;

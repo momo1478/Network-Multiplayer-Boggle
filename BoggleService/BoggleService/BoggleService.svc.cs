@@ -134,7 +134,7 @@ namespace Boggle
                 {
                     if (games.ContainsKey(GameIDCounter) && games[GameIDCounter].GameState.Equals("pending") && games[GameIDCounter].Player1.UserToken.Equals(args.UserToken))
                     {
-                        games[GameIDCounter].Player1 = null;
+                        games.Remove(GameIDCounter);
                         SetStatus(OK);
                         return;
                     }
