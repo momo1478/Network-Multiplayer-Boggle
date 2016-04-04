@@ -24,8 +24,8 @@ namespace Boggle
         /// <summary>
         /// Join Game for Boggle API
         /// </summary>
-        [WebInvoke(Method = "POST", UriTemplate = "/games")]
-        JoinGameReturn JoinGame(JoinGameArgs args);
+        //[WebInvoke(Method = "POST", UriTemplate = "/games")]
+        //JoinGameReturn JoinGame(JoinGameArgs args);
 
         /// <summary>
         /// Join Game for Boggle API
