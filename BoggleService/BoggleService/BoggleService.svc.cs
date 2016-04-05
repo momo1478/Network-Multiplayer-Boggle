@@ -53,126 +53,133 @@ namespace Boggle
 
         public CreateUserReturn CreateUser(UserInfo user)
         {
-            if (user.Nickname == null || user.Nickname.Trim().Length == 0)
+            lock (sync)
             {
-                SetStatus(Forbidden);
-                return null;
-            }
-            using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
-            {
-                conn.Open();
-                using (SqlTransaction trans = conn.BeginTransaction())
+                if (user.Nickname == null || user.Nickname.Trim().Length == 0)
                 {
-                    using (SqlCommand command = new SqlCommand("insert into Users (UserID, Nickname) values(@UserID, @Nickname)", conn, trans))
-                    {
-                        // Generate user token.
-                        string userID = Guid.NewGuid().ToString();
-
-                        // Replace placeholders to add into the SQL database.
-                        command.Parameters.AddWithValue("@UserID", userID);
-                        command.Parameters.AddWithValue("@Nickname", user.Nickname.Trim());
-
-                        //Execute command with the transaction over the connection.
-                        command.ExecuteNonQuery();
-                        SetStatus(Created);
-
-                        // Commit the transaction immediatly before returning.
-                        trans.Commit();
-                        return new CreateUserReturn() { UserToken = userID };
-                    }
+                    SetStatus(Forbidden);
+                    return null;
                 }
-            }
-        }
-
-        // TODO : JoinGame implement DB.
-        public JoinGameReturn JoinGame(JoinGameArgs args)
-        {
-            if ((args.TimeLimit >= 5 && args.TimeLimit <= 120))
-            {
                 using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
                 {
                     conn.Open();
-                    SqlCommand topGID = new SqlCommand("SELECT TOP 1 * FROM Games ORDER BY GameID DESC ", conn);
-                    using (SqlDataReader reader = topGID.ExecuteReader())
+                    using (SqlTransaction trans = conn.BeginTransaction())
                     {
-                        while (reader.Read())
+                        using (SqlCommand command = new SqlCommand("insert into Users (UserID, Nickname) values(@UserID, @Nickname)", conn, trans))
                         {
-                            // if game doesn't exists.
-                            if (reader["GameID"] == null || reader["Player1"] == null)
-                            {
-                                string IDSave = reader["GameID"].ToString();
-                                
-                                SqlCommand createGame = new SqlCommand("insert into Games(GameState, TimeLimit, Player1) values(@GameState, @TimeLimit, @Player1)");
-                                using (SqlTransaction trans = conn.BeginTransaction())
-                                {
-                                    // Replace placeholders to add into the SQL database.
-                                    createGame.Parameters.AddWithValue("@GameState", "pending");
-                                    createGame.Parameters.AddWithValue("@TimeLimit", args.TimeLimit);
-                                    createGame.Parameters.AddWithValue("@Player1", args.UserToken);
+                            // Generate user token.
+                            string userID = Guid.NewGuid().ToString();
 
-                                    try
-                                    {
-                                        createGame.ExecuteNonQuery();
-                                        SetStatus(Accepted);
+                            // Replace placeholders to add into the SQL database.
+                            command.Parameters.AddWithValue("@UserID", userID);
+                            command.Parameters.AddWithValue("@Nickname", user.Nickname.Trim());
 
-                                        trans.Commit();
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Debug.WriteLine(e.Message);
-                                        SetStatus(HttpStatusCode.ExpectationFailed);
-                                    }
-                                    return new JoinGameReturn() { GameID = IDSave };
-                                }
-                            }
-                            else
-                            {
-                                string IDSave = reader["GameID"].ToString();
+                            //Execute command with the transaction over the connection.
+                            command.ExecuteNonQuery();
+                            SetStatus(Created);
 
-                                if (args.UserToken.Equals( GetFromGamesTable(GetLastGID(), "Player2")?.ToString() ))
-                                {
-                                    SetStatus(Conflict);
-                                    return null;
-                                }
-                                SqlCommand addPlayer2 = new SqlCommand("insert into Games(GameState, TimeLimit, Player2, StartTime, Board) values(@GameState, @TimeLimit, @Player2 , @StartTime, @Board)");
-                                using (SqlTransaction trans = conn.BeginTransaction())
-                                {
-                                    // Replace placeholders to add into the SQL database.
-                                    addPlayer2.Parameters.AddWithValue("@GameState", "active");
-                                    int previousTimeLimit = Convert.ToInt32(GetFromGamesTable(GetLastGID(), "TimeLimit"));
-
-                                    addPlayer2.Parameters.AddWithValue("@TimeLimit", (args.TimeLimit + previousTimeLimit)/2);
-                                    addPlayer2.Parameters.AddWithValue("@Player2", args.UserToken);
-                                    addPlayer2.Parameters.AddWithValue("@StartTime", DateTime.Now);
-                                    addPlayer2.Parameters.AddWithValue("@Board", new BoggleBoard().ToString());
-
-                                    try
-                                    {
-                                        addPlayer2.ExecuteNonQuery();
-                                        SetStatus(Created);
-
-                                        trans.Commit();
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Debug.WriteLine(e.Message);
-                                        SetStatus(HttpStatusCode.ExpectationFailed);
-                                    }
-                                    return new JoinGameReturn() { GameID = IDSave };
-                                }
-                            }
-
-
-                            // TODO: Store Game number from DB into createdGame.GameID property.
-                            // TODO: Add game new game number to the database.
+                            // Commit the transaction immediatly before returning.
+                            trans.Commit();
+                            return new CreateUserReturn() { UserToken = userID };
                         }
-
                     }
                 }
             }
-            SetStatus(Forbidden);
-            return null;
+
         }
+
+        public JoinGameReturn JoinGame(JoinGameArgs args)
+        {
+            lock (sync)
+            {    
+                if ((args.TimeLimit >= 5 && args.TimeLimit <= 120))
+                {
+                    string currentGID = GetLastGID();
+
+                    if (currentGID == null || GetFromGamesTable(currentGID, "Player1") == null)
+                    {
+                        //Creates Game if none exists
+                        currentGID = CreateEmptyGame(args).ToString();
+                    }
+
+                    if (GetFromGamesTable(currentGID, "Player1") == null)
+                    {
+                        //If a Game Exists and no one has joined we ACCEPT the player
+                        Player1Join(currentGID, args);
+                    }
+                    else
+                    {
+                        //If a player in the game is trying to join we have a CONFLICT
+                        if (GetFromGamesTable(currentGID, "Player1").Equals(args.UserToken))
+                        {
+                            SetStatus(Conflict);
+                            return null;
+                        }
+
+                        //If a new player is joining a game with an existing one we CREATED a game.
+                        Player2Join(currentGID, args);
+                    }
+                }
+                //If the timelimit (along with other conditions to be put) is out of bounds this request is FORBIDDEN
+                SetStatus(Forbidden);
+                return null;
+            }
+        }
+        void Player1Join(string GameID, JoinGameArgs args)
+        {
+            using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+            {
+                SqlCommand updateTable = new SqlCommand("UPDATE Games SET Player1 = @Player1, TimeLimit = @TimeLimit WHERE GameID = " + GameID, conn);
+                using (SqlTransaction createGameTrans = conn.BeginTransaction())
+                {
+                    updateTable.Parameters.AddWithValue("@Player1", args.UserToken);
+                    updateTable.Parameters.AddWithValue("@TimeLimit", args.TimeLimit);
+                }
+            }
+        }
+        void Player2Join(string GameID, JoinGameArgs args)
+        {
+            using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+            {
+                SqlCommand updateTable = new SqlCommand("UPDATE Games SET Player2 = @Player2, TimeLimit = @TimeLimit, Board = @Board, StartTime = @StartTime, GameState = @GameState @ WHERE GameID = " + GameID, conn);
+                using (SqlTransaction createGameTrans = conn.BeginTransaction())
+                {
+                    updateTable.Parameters.AddWithValue("@Player2", args.UserToken);
+                    updateTable.Parameters.AddWithValue("@TimeLimit", (args.TimeLimit + Convert.ToInt32(GetFromGamesTable(GameID, "TimeLimit"))) / 2 );
+                    updateTable.Parameters.AddWithValue("@Board", new BoggleBoard().ToString());
+                    updateTable.Parameters.AddWithValue("@StartTime", DateTime.Now);
+                    updateTable.Parameters.AddWithValue("@GameState", "active");
+                }
+            }
+        }
+        int CreateEmptyGame(JoinGameArgs args)
+        {
+            using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+            {
+                SqlCommand createGame = new SqlCommand("Insert into Games(GameState, TimeLimit) values(@GameState, @TimeLimit");
+                using (SqlTransaction createGameTrans = conn.BeginTransaction())
+                {
+                    createGame.Parameters.AddWithValue("@GameState", "pending");
+
+                    try
+                    {
+                        createGame.ExecuteNonQuery();
+                        createGameTrans.Commit();
+                        return int.Parse(GetLastGID());
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets last GameID added to games list.
+        /// </summary>
+        /// <returns></returns>
         string GetLastGID()
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
@@ -183,13 +190,20 @@ namespace Boggle
                 {
                     while (reader.Read())
                     {
-                        return reader["GameID"].ToString();
+                        return reader["GameID"]?.ToString();
                     }
                 }
             }
             return null;
         }
 
+        /// <summary>
+        /// Gets a column from a game given a GameID
+        /// Columns are : GameID, Player1, Player2, TimeStart, TimeLimit, GameState, and Board.
+        /// </summary>
+        /// <param name="GID"></param>
+        /// <param name="column"></param>
+        /// <returns></returns>
         object GetFromGamesTable(string GID, string column)
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
@@ -206,6 +220,95 @@ namespace Boggle
             }
             return null;
         }
+
+        //    if ((args.TimeLimit >= 5 && args.TimeLimit <= 120))
+        //    {
+        //        using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+        //        {
+        //            conn.Open();
+        //            SqlCommand topGID = new SqlCommand("SELECT TOP 1 * FROM Games ORDER BY GameID DESC ", conn);
+        //            using (SqlDataReader reader = topGID.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    // if game doesn't exists.
+        //                    if (reader["GameID"] == null || reader["Player1"] == null)
+        //                    {
+        //                        string IDSave = reader["GameID"].ToString();
+
+        //                        SqlCommand createGame = new SqlCommand("insert into Games(GameState, TimeLimit, Player1) values(@GameState, @TimeLimit, @Player1)");
+        //                        using (SqlTransaction trans = conn.BeginTransaction())
+        //                        {
+        //                            // Replace placeholders to add into the SQL database.
+        //                            createGame.Parameters.AddWithValue("@GameState", "pending");
+        //                            createGame.Parameters.AddWithValue("@TimeLimit", args.TimeLimit);
+        //                            createGame.Parameters.AddWithValue("@Player1", args.UserToken);
+
+        //                            try
+        //                            {
+        //                                createGame.ExecuteNonQuery();
+        //                                SetStatus(Accepted);
+
+        //                                trans.Commit();
+        //                            }
+        //                            catch (Exception e)
+        //                            {
+        //                                Debug.WriteLine(e.Message);
+        //                                SetStatus(HttpStatusCode.ExpectationFailed);
+        //                            }
+        //                            return new JoinGameReturn() { GameID = IDSave };
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        string IDSave = reader["GameID"].ToString();
+
+        //                        if (args.UserToken.Equals( GetFromGamesTable(GetLastGID(), "Player2")?.ToString() ))
+        //                        {
+        //                            SetStatus(Conflict);
+        //                            return null;
+        //                        }
+        //                        SqlCommand addPlayer2 = new SqlCommand("insert into Games(GameState, TimeLimit, Player2, StartTime, Board) values(@GameState, @TimeLimit, @Player2 , @StartTime, @Board)");
+        //                        using (SqlTransaction trans = conn.BeginTransaction())
+        //                        {
+        //                            // Replace placeholders to add into the SQL database.
+        //                            addPlayer2.Parameters.AddWithValue("@GameState", "active");
+        //                            int previousTimeLimit = Convert.ToInt32(GetFromGamesTable(GetLastGID(), "TimeLimit"));
+
+        //                            addPlayer2.Parameters.AddWithValue("@TimeLimit", (args.TimeLimit + previousTimeLimit)/2);
+        //                            addPlayer2.Parameters.AddWithValue("@Player2", args.UserToken);
+        //                            addPlayer2.Parameters.AddWithValue("@StartTime", DateTime.Now);
+        //                            addPlayer2.Parameters.AddWithValue("@Board", new BoggleBoard().ToString());
+
+        //                            try
+        //                            {
+        //                                addPlayer2.ExecuteNonQuery();
+        //                                SetStatus(Created);
+
+        //                                trans.Commit();
+        //                            }
+        //                            catch (Exception e)
+        //                            {
+        //                                Debug.WriteLine(e.Message);
+        //                                SetStatus(HttpStatusCode.ExpectationFailed);
+        //                            }
+        //                            return new JoinGameReturn() { GameID = IDSave };
+        //                        }
+        //                    }
+
+
+        //                    // TODO: Store Game number from DB into createdGame.GameID property.
+        //                    // TODO: Add game new game number to the database.
+        //                }
+
+        //            }
+        //        }
+        //    }
+        //    SetStatus(Forbidden);
+        //    return null;
+        //}
+
+
 
         //    Guid outR;
         //    //See if the userToken is Valid and timeLimit is within bounds
