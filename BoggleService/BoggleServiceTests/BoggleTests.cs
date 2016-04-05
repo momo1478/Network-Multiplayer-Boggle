@@ -21,10 +21,6 @@ namespace Boggle
         private static Process process = null;
 
 
-        // TODO : JoinGame
-        // TODO : CancelRequest
-
-
 
         /// <summary>
         /// Starts IIS
@@ -84,7 +80,6 @@ namespace Boggle
         [TestMethod]
         public void APIStatusTest()
         {
-            // TODO : API
             Response r_API = client.DoGetAsyncAPI("api").Result;
             Assert.AreEqual(OK, r_API.Status);
         }

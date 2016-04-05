@@ -20,8 +20,8 @@ namespace Boggle
         /// <summary>
         /// Poor mans data base static variables.
         /// </summary>
-        private static readonly Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
-        private static readonly Dictionary<int, BoggleGame> games = new Dictionary<int, BoggleGame>();
+        //private static readonly Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
+        //private static readonly Dictionary<int, BoggleGame> games = new Dictionary<int, BoggleGame>();
         private static readonly object sync = new object();
         private static int GameIDCounter = 1;
 
@@ -51,6 +51,7 @@ namespace Boggle
             WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
+
 
         public CreateUserReturn CreateUser(UserInfo user)
         {
@@ -88,7 +89,6 @@ namespace Boggle
             }
 
         }
-        // TODO : Accepted & Created Status needs to be implemented always returns status(forbiddin)
         public JoinGameReturn JoinGame(JoinGameArgs args)
         {
             lock (sync)
@@ -129,6 +129,7 @@ namespace Boggle
                 return null;
             }
         }
+        // JoinGame Helper methods
         void Player1Join(string GameID, JoinGameArgs args)
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
@@ -282,9 +283,6 @@ namespace Boggle
             return null;
         }
 
-
-
-        // TODO : CancelJoinRequest implement DB.
         public void CancelJoinRequest(JoinGameArgs args)
         {
             lock (sync)
@@ -302,6 +300,7 @@ namespace Boggle
                 return;
             }
         }
+        //Cancel Join Request Helper Method
         void RemovePlayer1(string GameID)
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
@@ -333,9 +332,9 @@ namespace Boggle
             lock (sync)
             {
                 args.Word = args.Word?.ToUpper() ?? "";
-
+                string currentGID = GetLastGID();
                 // checks for forbidden
-                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && games.ContainsKey(intID) && (games[intID].Player1.UserToken.Equals(args.UserToken) || games[intID].Player2.UserToken.Equals(args.UserToken)))
+                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) &&  && //getNickname != null(games[intID].Player1.UserToken.Equals(args.UserToken) || games[intID].Player2.UserToken.Equals(args.UserToken)))
                 {
                     //who is submiting player 1 or 2
                     int player = games[intID].Player1.UserToken.Equals(args.UserToken) ? 1 : 2;
