@@ -83,87 +83,69 @@ namespace Boggle
                }
         }
 
-        //// TODO : JoinGame implement DB.
-        //public JoinGameReturn JoinGame(JoinGameArgs args)
-        //{
-            //string gID = null;
-            //using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
-            //{
-            //    conn.Open();
-            //    string SQLselect = "Select * from Games";
-            //    SqlCommand command = new SqlCommand(SQLselect, conn);
-            //    using (SqlDataReader reader = command.ExecuteReader())
-            //    {
-            //        while (reader.Read())
-            //        {
-            //            // if game exists.
-            //            if (reader["GameID"].ToString() != null)
-            //            {
-            //                BoggleGame createdGame = new BoggleGame();
-            //                createdGame.GameID = Int32.Parse(reader["GameID"].ToString());
-            //                createdGame.GameState = "active";
-            //            }
-            //            //create pending game.
+        // TODO : JoinGame implement DB.
+        public JoinGameReturn JoinGame(JoinGameArgs args)
+        {
+            if (!games.ContainsKey(GameIDCounter))
+            {
+                //create pending game.
+                BoggleGame createdGame = new BoggleGame();
+                createdGame.GameState = "pending";
+                createdGame.GameID = GameIDCounter;
 
-            //             createdGame.GameState = "pending";
-            //            // TODO: Store Game number from DB into createdGame.GameID property.
-            //            // TODO: Add game new game number to the database.
-            //        }
+                games.Add(GameIDCounter, createdGame);
+            }
 
-            //    }
-            //}
+            Guid outR;
+            //See if the userToken is Valid and timeLimit is within bounds
+            if (Guid.TryParseExact(args.UserToken, "D", out outR) && users.ContainsKey(args.UserToken) && args.TimeLimit >= 5 && args.TimeLimit <= 120)
+            {
+                //If game exists and Player 1 is in. 
+                if (games.ContainsKey(GameIDCounter) && games[GameIDCounter]?.Player1 != null)
+                {
+                    //If UserToken is identical to one that is in the game we have CONFLICT.
+                    if (games[GameIDCounter].Player1.UserToken.Equals(args.UserToken))
+                    {
+                        SetStatus(Conflict);
+                        return null;
+                    }
+                    //If UserToken is not identical to the one in the game we have CREATED the game.
+                    else
+                    {
+                        SetStatus(Created);
 
-            //    Guid outR;
-            //    //See if the userToken is Valid and timeLimit is within bounds
-            //    if (Guid.TryParseExact(args.UserToken, "D", out outR) && users.ContainsKey(args.UserToken) && args.TimeLimit >= 5 && args.TimeLimit <= 120)
-            //    {
-            //        //If game exists and Player 1 is in. 
-            //        if (games.ContainsKey(GameIDCounter) && games[GameIDCounter]?.Player1 != null)
-            //        {
-            //            //If UserToken is identical to one that is in the game we have CONFLICT.
-            //            if (games[GameIDCounter].Player1.UserToken.Equals(args.UserToken))
-            //            {
-            //                SetStatus(Conflict);
-            //                return null;
-            //            }
-            //            //If UserToken is not identical to the one in the game we have CREATED the game.
-            //            else
-            //            {
-            //                SetStatus(Created);
+                        games[GameIDCounter].Player2 = new Player() { UserToken = args.UserToken, Nickname = users[args.UserToken].Nickname };
+                        games[GameIDCounter].TimeLimit = (games[GameIDCounter].TimeLimit + args.TimeLimit) / 2;
 
-            //                games[GameIDCounter].Player2 = new Player() { UserToken = args.UserToken, Nickname = users[args.UserToken].Nickname };
-            //                games[GameIDCounter].TimeLimit = (games[GameIDCounter].TimeLimit + args.TimeLimit) / 2;
+                        games[GameIDCounter].GameState = "active";
 
-            //                games[GameIDCounter].GameState = "active";
+                        //games[ActiveGameID].GameTimer.Start();
+                        // TODO: Set the timelimit.
 
-            //                //games[ActiveGameID].GameTimer.Start();
-            //                // TODO: Set the timelimit.
+                        return new JoinGameReturn() { GameID = GameIDCounter++.ToString() };
+                    }
+                }
+                else
+                {
+                    //If there are no players in the game. We ACCEPTED him as the first player.
+                    SetStatus(Accepted);
 
-            //                return new JoinGameReturn() { GameID = GameIDCounter++.ToString() };
-            //            }
-            //        }
-            //        else
-            //        {
-            //            //If there are no players in the game. We ACCEPTED him as the first player.
-            //            SetStatus(Accepted);
+                    games[GameIDCounter].Player1 = new Player() { UserToken = args.UserToken, Nickname = users[args.UserToken].Nickname };
+                    games[GameIDCounter].TimeLimit = args.TimeLimit;
 
-            //            games[GameIDCounter].Player1 = new Player() { UserToken = args.UserToken, Nickname = users[args.UserToken].Nickname };
-            //            games[GameIDCounter].TimeLimit = args.TimeLimit;
+                    return new JoinGameReturn() { GameID = GameIDCounter.ToString() };
+                }
+            }
+            else
+            {
+                //If the userToken is invalid or the timelimit is out of bounds, this request is FORBIDDEN.
+                SetStatus(Forbidden);
+                return null;
+            }
+    }
 
-            //            return new JoinGameReturn() { GameID = GameIDCounter.ToString() };
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //If the userToken is invalid or the timelimit is out of bounds, this request is FORBIDDEN.
-            //        SetStatus(Forbidden);
-            //        return null;
-            //    }
-        //    }
-        //}
-
-        // TODO : CancelJoinRequest implement DB.
-        public void CancelJoinRequest(JoinGameArgs args)
+    // TODO : CancelJoinRequest implement DB.
+    public void CancelJoinRequest(JoinGameArgs args)
         {
             lock (sync)
             {
