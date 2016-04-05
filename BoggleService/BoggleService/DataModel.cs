@@ -230,14 +230,70 @@ namespace Boggle
     public class DBGameInfo
     {
         public int GameID { get; set; }
-        public string Player1 { get; set; }
-        public string Player2 { get; set; }
+        public DBPlayerInfo Player1 { get; set; }
+        public DBPlayerInfo Player2 { get; set; }
         public string Board { get; set; }
         public int TimeLimit { get; set; }
         public DateTime StartTime { get; set; }
         public string GameState { get; set; }
         public int? TimeLeft { get; set; }
-
     }
 
+    public class DBPlayerInfo
+    {
+        public string UserToken { get; set; }
+
+        public string Nickname { get; set; }
+
+        public int? Score { get; set; } = 0;
+
+        public List<DBWord> WordsPlayed { get; set; } = new List<DBWord>();
+
+        public int WordScore(string word)
+        {
+            foreach (DBWord werd in WordsPlayed)
+            {
+                if (werd.Word.Equals(word))
+                    return 0;
+            }
+
+            if (word.Length < 3) return 0;
+            else if (word.Length == 3 || word.Length == 4) return 1;
+            else if (word.Length == 5) return 2;
+            else if (word.Length == 6) return 3;
+            else if (word.Length == 7) return 5;
+            else if (word.Length > 7) return 11;
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
+    public class DBWord
+    {
+        public string Word { get; set; }
+
+        public int? Score { get; set; }
+
+        public static int WordScore(string word, List<DBWord> WordsPlayed)
+        {
+            foreach (DBWord werd in WordsPlayed)
+            {
+                if (werd.Word.Equals(word))
+                    return 0;
+            }
+
+            if (word.Length < 3) return 0;
+            else if (word.Length == 3 || word.Length == 4) return 1;
+            else if (word.Length == 5) return 2;
+            else if (word.Length == 6) return 3;
+            else if (word.Length == 7) return 5;
+            else if (word.Length > 7) return 11;
+            else
+            {
+                return 0;
+            }
+        }
+    }
 }

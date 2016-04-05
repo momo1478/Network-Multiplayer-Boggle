@@ -273,37 +273,75 @@ namespace Boggle
         }
 
         /// <summary>
-        /// Returns all columns of a game in an object 
+        /// Gets all words 
         /// </summary>
         /// <param name="GID"></param>
-        /// <returns></returns>
-        DBGameInfo GetGameInfo(string GID)
+        /// <param name="UserToken"></param>
+        public IEnumerable<DBWord> GetWords(string GID, string UserToken)
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
-                SqlCommand Game = new SqlCommand("SELECT * FROM Games WHERE GameID = @GameId", conn);
-                Game.Parameters.AddWithValue("@GameId", GID);
-
+                SqlCommand Game = new SqlCommand("Select * from Words Where GameID = " + GID + " AND Player = " + UserToken, conn);
                 using (SqlDataReader reader = Game.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        return new DBGameInfo
-                        {
-                            Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
-                            GameID = (int)reader["GameID"],
-                            GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
-                            Player1 = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
-                            Player2 = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
-                            StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
-                            TimeLimit = (int)reader["TimeLimit"]
-                        };
+                        yield return new DBWord() { Word = reader["Word"].ToString(), Score = Convert.ToInt32(reader["Score"]) };
                     }
                 }
             }
-            return null;
         }
+
+        public int GetPlayerScore(string GID, string UserToken)
+        { 
+            using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+            {
+                conn.Open();
+                SqlCommand Game = new SqlCommand("Select Sum(Score) AS 'TotalScore' from Words Where GameID ="+GID+" AND Player =" + UserToken, conn);
+                using (SqlDataReader reader = Game.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        return Convert.ToInt32(reader["TotalScore"]);
+                    }
+                }
+            }
+            return default(int);
+        }
+
+        /// <summary>
+            /// Returns all columns of a game in an object 
+            /// </summary>
+            /// <param name="GID"></param>
+            /// <returns></returns>
+        DBGameInfo GetGameInfo(string GID)
+        {
+                using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+                {
+                    conn.Open();
+                    SqlCommand Game = new SqlCommand("SELECT * FROM Games WHERE GameID = @GameId", conn);
+                    Game.Parameters.AddWithValue("@GameId", GID);
+
+                    using (SqlDataReader reader = Game.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return new DBGameInfo
+                            {
+                                Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
+                                GameID = (int)reader["GameID"],
+                                GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
+                                Player1 = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
+                                Player2 = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
+                                StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
+                                TimeLimit = (int)reader["TimeLimit"]
+                            };
+                        }
+                    }
+                }
+                return null;
+            }
 
         public void CancelJoinRequest(JoinGameArgs args)
         {
@@ -342,7 +380,7 @@ namespace Boggle
                     {
                         throw e;
                     }
-                    
+
                 }
             }
         }
@@ -470,7 +508,7 @@ namespace Boggle
                 return false;
             }
         }
-        
+
 
         // TODO : Status implement DB.
         public GetStatusReturn Status(string GameID)
