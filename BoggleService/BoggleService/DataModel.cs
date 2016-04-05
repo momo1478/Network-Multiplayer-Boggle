@@ -227,4 +227,17 @@ namespace Boggle
         public List<Words> WordsPlayed { get; set; }
     }
 
+    public class DBGameInfo
+    {
+        public int GameID { get; set; }
+        public string Player1 { get; set; }
+        public string  Player2 { get; set; }
+        public string Board { get; set; }
+        public int TimeLimit { get; set; }
+        public DateTime StartTime { get; set; }
+        public string GameState { get; set; }
+        public int? TimeLeft { get; set; }
+
+    }
+
 }
