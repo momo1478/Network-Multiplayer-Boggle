@@ -88,7 +88,7 @@ namespace Boggle
             }
 
         }
-        // TODO : Accepted & Created Status needs to be implemented always returns status(forbiddin)
+
         public JoinGameReturn JoinGame(JoinGameArgs args)
         {
             lock (sync)
@@ -250,39 +250,59 @@ namespace Boggle
         }
 
         /// <summary>
-        /// Returns all columns of a game in an object 
+        /// Retrieves a Nickname given a UserToken
         /// </summary>
-        /// <param name="GID"></param>
+        /// <param name="UserToken"></param>
         /// <returns></returns>
-        DBGameInfo GetGameInfo(string GID)
+        string GetNickname(string UserToken)
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
-                SqlCommand Game = new SqlCommand("SELECT * FROM Games WHERE GameID = @GameId", conn);
-                Game.Parameters.AddWithValue("@GameId", GID);
-
+                SqlCommand Game = new SqlCommand("Select Nickname from Users Where UserID =" + UserToken, conn);
                 using (SqlDataReader reader = Game.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        return new DBGameInfo
-                        {
-                            Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
-                            GameID = (int)reader["GameID"],
-                            GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
-                            Player1 = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
-                            Player2 = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
-                            StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
-                            TimeLimit = (int)reader["TimeLimit"]
-                        };
+                        return reader["Nickname"]?.ToString();
                     }
                 }
             }
             return null;
         }
 
+        /// <summary>
+            /// Returns all columns of a game in an object 
+            /// </summary>
+            /// <param name="GID"></param>
+            /// <returns></returns>
+        DBGameInfo GetGameInfo(string GID)
+        {
+                using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+                {
+                    conn.Open();
+                    SqlCommand Game = new SqlCommand("SELECT * FROM Games WHERE GameID = @GameId", conn);
+                    Game.Parameters.AddWithValue("@GameId", GID);
 
+                    using (SqlDataReader reader = Game.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return new DBGameInfo
+                            {
+                                Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
+                                GameID = (int)reader["GameID"],
+                                GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
+                                Player1 = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
+                                Player2 = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
+                                StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
+                                TimeLimit = (int)reader["TimeLimit"]
+                            };
+                        }
+                    }
+                }
+                return null;
+            }
 
         // TODO : CancelJoinRequest implement DB.
         public void CancelJoinRequest(JoinGameArgs args)
@@ -321,7 +341,7 @@ namespace Boggle
                     {
                         throw e;
                     }
-                    
+
                 }
             }
         }

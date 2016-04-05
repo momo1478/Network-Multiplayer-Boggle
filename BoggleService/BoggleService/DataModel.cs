@@ -231,7 +231,7 @@ namespace Boggle
     {
         public int GameID { get; set; }
         public string Player1 { get; set; }
-        public string  Player2 { get; set; }
+        public string Player2 { get; set; }
         public string Board { get; set; }
         public int TimeLimit { get; set; }
         public DateTime StartTime { get; set; }
