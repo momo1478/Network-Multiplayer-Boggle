@@ -87,7 +87,7 @@ namespace Boggle
             }
 
         }
-
+        // TODO : Accepted & Created Status needs to be implemented always returns status(forbiddin)
         public JoinGameReturn JoinGame(JoinGameArgs args)
         {
             lock (sync)
@@ -96,12 +96,11 @@ namespace Boggle
                 {
                     string currentGID = GetLastGID();
 
-                    if (currentGID == null || GetFromGamesTable(currentGID, "Player1") == null)
+                    if (currentGID == null || GetFromGamesTable(currentGID, "Player2") != null)
                     {
                         //Creates Game if none exists
                         currentGID = CreateEmptyGame(args).ToString();
                     }
-
                     if (GetFromGamesTable(currentGID, "Player1") == null)
                     {
                         //If a Game Exists and no one has joined we ACCEPT the player
@@ -129,11 +128,22 @@ namespace Boggle
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
-                SqlCommand updateTable = new SqlCommand("UPDATE Games SET Player1 = @Player1, TimeLimit = @TimeLimit WHERE GameID = " + GameID, conn);
+                conn.Open();
+                
                 using (SqlTransaction createGameTrans = conn.BeginTransaction())
                 {
+                    SqlCommand updateTable = new SqlCommand("UPDATE Games SET Player1 = @Player1, TimeLimit = @TimeLimit WHERE GameID = " + GameID, conn,createGameTrans);
                     updateTable.Parameters.AddWithValue("@Player1", args.UserToken);
                     updateTable.Parameters.AddWithValue("@TimeLimit", args.TimeLimit);
+                    try
+                    {
+                        updateTable.ExecuteNonQuery();
+                        createGameTrans.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
                 }
             }
         }
@@ -141,14 +151,25 @@ namespace Boggle
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
-                SqlCommand updateTable = new SqlCommand("UPDATE Games SET Player2 = @Player2, TimeLimit = @TimeLimit, Board = @Board, StartTime = @StartTime, GameState = @GameState @ WHERE GameID = " + GameID, conn);
+                conn.Open();
                 using (SqlTransaction createGameTrans = conn.BeginTransaction())
                 {
+                    SqlCommand updateTable = new SqlCommand("UPDATE Games SET Player2 = @Player2, TimeLimit = @TimeLimit, Board = @Board, StartTime = @StartTime, GameState = @GameState WHERE GameID = " + GameID, conn,createGameTrans);
                     updateTable.Parameters.AddWithValue("@Player2", args.UserToken);
                     updateTable.Parameters.AddWithValue("@TimeLimit", (args.TimeLimit + Convert.ToInt32(GetFromGamesTable(GameID, "TimeLimit"))) / 2 );
                     updateTable.Parameters.AddWithValue("@Board", new BoggleBoard().ToString());
                     updateTable.Parameters.AddWithValue("@StartTime", DateTime.Now);
                     updateTable.Parameters.AddWithValue("@GameState", "active");
+                    try
+                    {
+                        updateTable.ExecuteNonQuery();
+                        createGameTrans.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        // TODO : fix bug where entering in a invalid User token.
+                        throw e;
+                    }
                 }
             }
         }
@@ -156,9 +177,11 @@ namespace Boggle
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
-                SqlCommand createGame = new SqlCommand("Insert into Games(GameState, TimeLimit) values(@GameState, @TimeLimit");
+                conn.Open();
+
                 using (SqlTransaction createGameTrans = conn.BeginTransaction())
                 {
+                    SqlCommand createGame = new SqlCommand("Insert into Games(GameState) values(@GameState)", conn, createGameTrans);
                     createGame.Parameters.AddWithValue("@GameState", "pending");
 
                     try
@@ -167,9 +190,9 @@ namespace Boggle
                         createGameTrans.Commit();
                         return int.Parse(GetLastGID());
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        throw;
+                        throw e;
                     }
                 }
             }
@@ -209,12 +232,12 @@ namespace Boggle
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
-                SqlCommand Game = new SqlCommand("SELECT * FROM Games WHERE GameID =" + column, conn);
+                SqlCommand Game = new SqlCommand("SELECT * FROM Games WHERE GameID =" + GID, conn);
                 using (SqlDataReader reader = Game.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        return reader[column];
+                        return reader[column] is DBNull ? null : reader[column];
                     }
                 }
             }
