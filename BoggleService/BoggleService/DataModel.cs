@@ -258,8 +258,8 @@ namespace Boggle
             int TimeNow = 0;
             unchecked
             {
-               TimeStart = Convert.ToInt32((StartTime.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
-               TimeNow = Convert.ToInt32((DateTime.Now.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
+               TimeNow = Convert.ToInt32( (DateTime.Now.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
+               TimeStart = Convert.ToInt32( (StartTime.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
             }
             int TimeLimitDifference = TimeNow - TimeStart;
 

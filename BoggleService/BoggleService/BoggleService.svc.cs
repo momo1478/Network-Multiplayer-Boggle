@@ -409,7 +409,7 @@ namespace Boggle
                 args.Word = args.Word?.ToUpper() ?? "";
                 DBGameInfo currentGameInfo = GetGameInfo(GameID);
                 // checks for forbidden
-                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && currentGameInfo != null && GetNickname(currentGameInfo.Player1.UserToken) != null && GetNickname(currentGameInfo.Player2.UserToken) != null) //GetNickname != null && currentGID = Game ID)
+                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && currentGameInfo != null && GetNickname(currentGameInfo.Player1.UserToken) != null && GetNickname(currentGameInfo.Player2.UserToken) != null && (args.UserToken== currentGameInfo.Player1.UserToken || args.UserToken == currentGameInfo.Player2.UserToken)) //GetNickname != null && currentGID = Game ID)
                 {
                     //who is submiting player 1 or 2
                     int player = currentGameInfo.Player1.UserToken.Equals(args.UserToken) ? 1 : 2;
