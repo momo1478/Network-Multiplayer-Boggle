@@ -16,7 +16,7 @@ namespace Boggle
     public class BoggleService : IBoggleService
     {
         // Connetion string to teh database
-        private static string BoggleServiceDB;
+        internal static string BoggleServiceDB;
         /// <summary>
         /// Poor mans data base static variables.
         /// </summary>
@@ -122,7 +122,7 @@ namespace Boggle
                         //If a new player is joining a game with an existing one we CREATED a game.
                         Player2Join(currentGID, args);
                         SetStatus(Created);
-                        
+
                         return new JoinGameReturn { GameID = currentGID };
                     }
                 }
@@ -297,7 +297,7 @@ namespace Boggle
         }
 
         public int GetPlayerScore(string GID, string UserToken)
-        { 
+        {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
@@ -314,12 +314,16 @@ namespace Boggle
         }
 
         /// <summary>
-            /// Returns all columns of a game in an object 
-            /// </summary>
-            /// <param name="GID"></param>
-            /// <returns></returns>
+        /// Returns all columns of a game in an object 
+        /// </summary>
+        /// <param name="GID"></param>
+        /// <returns></returns>
         DBGameInfo GetGameInfo(string GID)
         {
+            int outR;
+            if (int.TryParse(GID, out outR))
+            {
+
                 using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
                 {
                     conn.Open();
@@ -335,29 +339,33 @@ namespace Boggle
                                 Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
                                 GameID = (int)reader["GameID"],
                                 GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
-                            Player1 = new DBPlayerInfo()
-                            {
-                                UserToken = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
-                                Nickname = GetNickname(reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()),
-                                Score = GetPlayerScore(reader["GameID"].ToString(), reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()),
-                                WordsPlayed = GetWords(reader["GameID"].ToString(), reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()).ToList()
-                            },
-                            Player2 = new DBPlayerInfo()
-                            {
-                                UserToken = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
-                                Nickname = GetNickname(reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()),
-                                Score = GetPlayerScore(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()),
-                                WordsPlayed = GetWords(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()).ToList()
-                            },
-                            StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
-                            TimeLimit = (int)reader["TimeLimit"],
-                            TimeLeft = -300
+                                Player1 = new DBPlayerInfo()
+                                {
+                                    UserToken = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
+                                    Nickname = GetNickname(reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()),
+                                    Score = GetPlayerScore(reader["GameID"].ToString(), reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()),
+                                    WordsPlayed = GetWords(reader["GameID"].ToString(), reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()).ToList()
+                                },
+                                Player2 = new DBPlayerInfo()
+                                {
+                                    UserToken = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
+                                    Nickname = GetNickname(reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()),
+                                    Score = GetPlayerScore(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()),
+                                    WordsPlayed = GetWords(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()).ToList()
+                                },
+                                StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
+                                TimeLimit = (int)reader["TimeLimit"],
+                                TimeLeft = -300
                             };
                         }
                     }
                 }
                 return null;
+
             }
+            return new DBGameInfo() { GameID = -1 };
+        }
+        
 
         public void CancelJoinRequest(JoinGameArgs args)
         {
@@ -409,8 +417,9 @@ namespace Boggle
                 int intID;
                 args.Word = args.Word?.ToUpper() ?? "";
                 DBGameInfo currentGameInfo = GetGameInfo(GameID);
+
                 // checks for forbidden
-                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && currentGameInfo != null && GetNickname(currentGameInfo.Player1.UserToken) != null && GetNickname(currentGameInfo.Player2.UserToken) != null && (args.UserToken== currentGameInfo.Player1.UserToken || args.UserToken == currentGameInfo.Player2.UserToken)) //GetNickname != null && currentGID = Game ID)
+                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && currentGameInfo != null && currentGameInfo.GameID != -1 && GetNickname(currentGameInfo.Player1.UserToken) != null && GetNickname(currentGameInfo.Player2.UserToken) != null && (args.UserToken == currentGameInfo.Player1.UserToken || args.UserToken == currentGameInfo.Player2.UserToken)) //GetNickname != null && currentGID = Game ID)
                 {
                     //who is submiting player 1 or 2
                     int player = currentGameInfo.Player1.UserToken.Equals(args.UserToken) ? 1 : 2;
@@ -534,10 +543,10 @@ namespace Boggle
             {
                 DBGameInfo gameInfo = GetGameInfo(GameID);
 
-                if (gameInfo.GameID != 0)
-
-                    if (gameInfo.GameState.Equals("pending"))
+                if (gameInfo.GameID != -1 && gameInfo.GameID.ToString().Equals(GameID))
                 {
+                    if (gameInfo.GameState.Equals("pending"))
+                    {
                         SetStatus(OK);
                         return new GetStatusReturn() { GameState = gameInfo.GameState };
                     }
@@ -573,6 +582,7 @@ namespace Boggle
                 SetStatus(Forbidden);
                 return null;
             }
+        }
 
         // TODO : StatusBrief implement DB.
         public GetStatusReturn StatusBrief(string GameID, string brief)
@@ -581,7 +591,7 @@ namespace Boggle
             {
                 DBGameInfo gameInfo = GetGameInfo(GameID);
 
-                if (gameInfo.GameID != 0)
+                if (gameInfo.GameID != -1 && gameInfo.GameID.ToString().Equals(GameID))
                 {
                     int? updateTimeLeft = gameInfo.TimeLeft;
                     if (gameInfo.GameState.Equals("pending"))

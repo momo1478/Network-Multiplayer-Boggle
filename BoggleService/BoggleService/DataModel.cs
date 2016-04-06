@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -27,7 +28,7 @@ namespace Boggle
             {
                 unchecked
                 {
-                    return Convert.ToInt32( (DateTime.Now.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond) ;
+                    return Convert.ToInt32((DateTime.Now.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
                 }
             }
         }
@@ -215,7 +216,7 @@ namespace Boggle
 
     [DataContract]
     public class PlayerDump
-    { 
+    {
 
         [DataMember(EmitDefaultValue = false)]
         public string Nickname { get; set; }
@@ -251,18 +252,43 @@ namespace Boggle
         /// <summary>
         /// Gets the DateTime.Now
         /// </summary>
-       
+
         public int ComputeTimeLeft()
         {
             TimeSpan timeDifference = DateTime.Now.Subtract(StartTime);
 
-            if (TimeLimit - timeDifference.TotalSeconds <= 0 && !StartTime.Equals(default(DateTime)) )
+            if (TimeLimit - timeDifference.TotalSeconds <= 0 && !StartTime.Equals(default(DateTime)))
             {
                 GameState = "completed";
+                UpdateGameStatusToCompleted();
                 return 0;
             }
 
-            return Convert.ToInt32(TimeLimit - (timeDifference.TotalSeconds > int.MaxValue ? 0 : timeDifference.TotalSeconds) );
+            return Convert.ToInt32(TimeLimit - (timeDifference.TotalSeconds > int.MaxValue ? 0 : timeDifference.TotalSeconds));
+        }
+
+        public void UpdateGameStatusToCompleted()
+        {
+            using (SqlConnection conn = new SqlConnection(BoggleService.BoggleServiceDB))
+            {
+                conn.Open();
+
+                using (SqlTransaction GameTrans = conn.BeginTransaction())
+                {
+                    SqlCommand updateTable = new SqlCommand("UPDATE Games SET GameState = @GameState WHERE GameID = " + GameID, conn, GameTrans);
+                    updateTable.Parameters.AddWithValue("@GameState", "completed");
+
+                    try
+                    {
+                        updateTable.ExecuteNonQuery();
+                        GameTrans.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
+                }
+            }
         }
     }
 
