@@ -327,11 +327,11 @@ namespace Boggle
                     {
                         while (reader.Read())
                         {
-                        return new DBGameInfo
-                        {
-                            Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
-                            GameID = (int)reader["GameID"],
-                            GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
+                            return new DBGameInfo
+                            {
+                                Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
+                                GameID = (int)reader["GameID"],
+                                GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
                             Player1 = new DBPlayerInfo()
                             {
                                 UserToken = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
@@ -422,39 +422,27 @@ namespace Boggle
                             SetStatus(OK);
                             if (player == 1)
                             {
-                                // TODO: word score DB implementation (Player 1 if word is already played)
-                                if (games[intID].Player1.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
                                 {
-                                    wordScore = 0;
-                                }
-                                else //otherwise calculate score
-                                {
-                                    // TODO: word score DB implementation (Player 1 needs player object to get the value of word played)
-                                    wordScore = games[intID].Player1.WordScore(args.Word);
-                                    games[intID].Player1.Score += wordScore;
-                                }
-                                //TODO: word score DB implementation (Player 1 Add word played to words played in DB)
-                                games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
-                            }
-                            else //player 2
-                            {
-                                // TODO: word score DB implementation (Player 2 if word is already played)
-                                if (games[intID].Player2.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
-                                {
-                                    wordScore = 0;
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString(), args.Word, 0.ToString());
                                 }
                                 else
                                 {
-                                    // TODO: word score DB implementation (Player 2 needs player object to get the value of word played)
-                                    wordScore = games[intID].Player2.WordScore(args.Word);
-                                    games[intID].Player2.Score += wordScore;
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString(), args.Word, currentGameInfo.Player1.WordScore(args.Word).ToString());
                                 }
-                                //TODO: word score DB implementation (Player 2 Add word played to words played in DB)
-                                games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
-
+                            else //player 2
+                            {
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                {
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.ToString(), args.Word, 0.ToString());
+                                }
+                                else
+                                {
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.ToString(), args.Word, currentGameInfo.Player2.WordScore(args.Word).ToString());
+                                }
+                            }
                             return new PlayWordReturn() { Score = wordScore };
-
                         }
                         else
                         {
@@ -462,40 +450,28 @@ namespace Boggle
 
                             if (player == 1)
                             {
-                                // TODO: word score DB implementation (Player 1 word can't be formed, if word is already played)
-                                if (games[intID].Player1.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
                                 {
-                                    wordScore = 0;
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString(), args.Word, (0).ToString());
                                 }
                                 else
                                 {
-                                    // TODO: word score DB implementation (Player 1 word can't be formed)
-                                    wordScore = -1;
-                                    games[intID].Player1.Score += wordScore;
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString(), args.Word, (-1).ToString());
                                 }
-                                //TODO: word score DB implementation (Player 1 word can't be formed, Add word played to words played in DB)
-                                games[intID].Player1.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
                             else // Player 2
                             {
-                                // TODO: word score DB implementation (Player 2 word can't be formed, if word is already played)
-                                if (games[intID].Player2.WordsPlayed.Exists(x => x.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
                                 {
-                                    wordScore = 0;
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.ToString(), args.Word, (0).ToString());
                                 }
                                 else
                                 {
-                                    // TODO: word score DB implementation (Player 2 word can't be formed)
-                                    wordScore = -1;
-                                    games[intID].Player2.Score += wordScore;
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.ToString(), args.Word, (-1).ToString());
                                 }
-                                //TODO: word score DB implementation (Player 2 word can't be formed, Add word played to words played in DB)
-                                games[intID].Player2.WordsPlayed.Add(new Words() { Word = args.Word, Score = wordScore });
                             }
-
                             return new PlayWordReturn() { Score = wordScore };
                         }
-
                     }
                     else
                     {
@@ -521,7 +497,33 @@ namespace Boggle
                 return false;
             }
         }
- 
+        public int AddPlayedWord(string GID, string UserToken,string PlayedWord, string Score)
+        {
+            using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+            {
+                conn.Open();
+
+                using (SqlTransaction addPlayedWordTrans = conn.BeginTransaction())
+                {
+                    SqlCommand addPlayedWord = new SqlCommand("Insert into Words(Word, GameID, Player, Score) values(@Word, @GameID, @Player, @Score)", conn, addPlayedWordTrans);
+                    addPlayedWord.Parameters.AddWithValue("@Word", PlayedWord);
+                    addPlayedWord.Parameters.AddWithValue("@GameID", GID);
+                    addPlayedWord.Parameters.AddWithValue("@Player", UserToken);
+                    addPlayedWord.Parameters.AddWithValue("@Score", Score);
+                    try
+                    {
+                        addPlayedWord.ExecuteNonQuery();
+                        addPlayedWordTrans.Commit();
+                        return int.Parse(Score);
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
+                }
+            }
+        }
+
         // TODO : Status implement DB.
         public GetStatusReturn Status(string GameID)
         {
