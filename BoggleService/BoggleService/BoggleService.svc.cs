@@ -121,6 +121,7 @@ namespace Boggle
                         //If a new player is joining a game with an existing one we CREATED a game.
                         Player2Join(currentGID, args);
                         SetStatus(Created);
+                        
                         return new JoinGameReturn { GameID = currentGID };
                     }
                 }
@@ -160,9 +161,10 @@ namespace Boggle
                 conn.Open();
                 using (SqlTransaction createGameTrans = conn.BeginTransaction())
                 {
+                    args.TimeLimit = (args.TimeLimit + Convert.ToInt32(GetFromGamesTable(GameID, "TimeLimit"))) / 2;
                     SqlCommand updateTable = new SqlCommand("UPDATE Games SET Player2 = @Player2, TimeLimit = @TimeLimit, Board = @Board, StartTime = @StartTime, GameState = @GameState WHERE GameID = " + GameID, conn, createGameTrans);
                     updateTable.Parameters.AddWithValue("@Player2", args.UserToken);
-                    updateTable.Parameters.AddWithValue("@TimeLimit", (args.TimeLimit + Convert.ToInt32(GetFromGamesTable(GameID, "TimeLimit"))) / 2);
+                    updateTable.Parameters.AddWithValue("@TimeLimit", args.TimeLimit);
                     updateTable.Parameters.AddWithValue("@Board", new BoggleBoard().ToString());
                     updateTable.Parameters.AddWithValue("@StartTime", DateTime.Now);
                     updateTable.Parameters.AddWithValue("@GameState", "active");
@@ -327,16 +329,17 @@ namespace Boggle
                     {
                         while (reader.Read())
                         {
-                            return new DBGameInfo
-                            {
-                                Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
-                                GameID = (int)reader["GameID"],
-                                GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
-                                Player1 = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
-                                Player2 = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
-                                StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
-                                TimeLimit = (int)reader["TimeLimit"]
-                            };
+                        return new DBGameInfo
+                        {
+                            Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
+                            GameID = (int)reader["GameID"],
+                            GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
+                            Player1 = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
+                            Player2 = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
+                            StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
+                            TimeLimit = (int)reader["TimeLimit"],
+                            TimeLeft = -300
+                         };
                         }
                     }
                 }
@@ -521,7 +524,6 @@ namespace Boggle
 
                 if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
                 {
-                    int? updateTimeLeft = games[intID].TimeLeft;
                     if (games[intID].GameState.Equals("pending"))
                     {
                         SetStatus(OK);
@@ -569,7 +571,6 @@ namespace Boggle
                 int intID;
                 if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
                 {
-                    int? updateTimeLeft = games[intID].TimeLeft;
                     if (games[intID].GameState.Equals("pending"))
                     {
                         SetStatus(OK);

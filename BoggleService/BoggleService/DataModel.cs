@@ -236,7 +236,41 @@ namespace Boggle
         public int TimeLimit { get; set; }
         public DateTime StartTime { get; set; }
         public string GameState { get; set; }
-        public int? TimeLeft { get; set; }
+        int? timeLeft;
+        public int? TimeLeft
+        {
+            get
+            {
+                return ComputeTimeLeft();
+            }
+            set
+            {
+                timeLeft = ComputeTimeLeft();
+            }
+        }
+        /// <summary>
+        /// Gets the DateTime.Now
+        /// </summary>
+       
+        public int ComputeTimeLeft()
+        {
+            int TimeStart = 0;
+            int TimeNow = 0;
+            unchecked
+            {
+               TimeStart = Convert.ToInt32((StartTime.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
+               TimeNow = Convert.ToInt32((DateTime.Now.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
+            }
+            int TimeLimitDifference = TimeNow - TimeStart;
+
+            if (TimeLimit - TimeLimitDifference <= 0)
+            {
+                GameState = "completed";
+                return 0;
+            }
+
+            return TimeLimit - TimeLimitDifference;
+        }
     }
 
     public class DBPlayerInfo
