@@ -251,12 +251,6 @@ namespace Boggle
 
         public int WordScore(string word)
         {
-            foreach (DBWord werd in WordsPlayed)
-            {
-                if (werd.Word.Equals(word))
-                    return 0;
-            }
-
             if (word.Length < 3) return 0;
             else if (word.Length == 3 || word.Length == 4) return 1;
             else if (word.Length == 5) return 2;
