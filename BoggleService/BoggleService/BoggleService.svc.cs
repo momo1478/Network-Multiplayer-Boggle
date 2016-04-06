@@ -93,7 +93,8 @@ namespace Boggle
         {
             lock (sync)
             {
-                if ((args.TimeLimit >= 5 && args.TimeLimit <= 120))
+                Guid outR;
+                if ((args.TimeLimit >= 5 && args.TimeLimit <= 120) && Guid.TryParse(args.UserToken, out outR) && GetNickname(args.UserToken) != null)
                 {
                     string currentGID = GetLastGID();
 
@@ -267,7 +268,7 @@ namespace Boggle
                 {
                     while (reader.Read())
                     {
-                        return reader["Nickname"]?.ToString();
+                        return reader["Nickname"] is DBNull ? null : reader["Nickname"].ToString();
                     }
                 }
             }
@@ -348,7 +349,7 @@ namespace Boggle
                                 Score = GetPlayerScore(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()),
                                 WordsPlayed = GetWords(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()).ToList()
                             },
-                                StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
+                            StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
                             TimeLimit = (int)reader["TimeLimit"],
                             TimeLeft = -300
                             };

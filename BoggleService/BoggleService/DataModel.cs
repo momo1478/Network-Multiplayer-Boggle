@@ -254,22 +254,15 @@ namespace Boggle
        
         public int ComputeTimeLeft()
         {
-            int TimeStart = 0;
-            int TimeNow = 0;
-            unchecked
-            {
-               TimeNow = Convert.ToInt32( (DateTime.Now.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
-               TimeStart = Convert.ToInt32( (StartTime.Ticks - 635949596620000000) / TimeSpan.TicksPerSecond);
-            }
-            int TimeLimitDifference = TimeNow - TimeStart;
+            TimeSpan timeDifference = DateTime.Now.Subtract(StartTime);
 
-            if (TimeLimit - TimeLimitDifference <= 0)
+            if (TimeLimit - timeDifference.TotalSeconds <= 0 && !StartTime.Equals(default(DateTime)) )
             {
                 GameState = "completed";
                 return 0;
             }
 
-            return TimeLimit - TimeLimitDifference;
+            return Convert.ToInt32(TimeLimit - (timeDifference.TotalSeconds > int.MaxValue ? 0 : timeDifference.TotalSeconds) );
         }
     }
 
