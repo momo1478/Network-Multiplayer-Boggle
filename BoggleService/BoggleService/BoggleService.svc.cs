@@ -20,8 +20,8 @@ namespace Boggle
         /// <summary>
         /// Poor mans data base static variables.
         /// </summary>
-        //private static readonly Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
-        //private static readonly Dictionary<int, BoggleGame> games = new Dictionary<int, BoggleGame>();
+        private static readonly Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
+        private static readonly Dictionary<int, BoggleGame> games = new Dictionary<int, BoggleGame>();
         private static readonly object sync = new object();
 
         static BoggleService()
@@ -260,7 +260,7 @@ namespace Boggle
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
-                SqlCommand Game = new SqlCommand("Select Nickname from Users Where UserID =" + UserToken, conn);
+                SqlCommand Game = new SqlCommand("Select Nickname from Users Where UserID = '" + UserToken +"'", conn);
                 using (SqlDataReader reader = Game.ExecuteReader())
                 {
                     while (reader.Read())
@@ -282,7 +282,7 @@ namespace Boggle
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
-                SqlCommand Game = new SqlCommand("Select * from Words Where GameID = " + GID + " AND Player = " + UserToken, conn);
+                SqlCommand Game = new SqlCommand("Select * from Words Where GameID = " + GID + " AND Player = '" + UserToken + "'", conn);
                 using (SqlDataReader reader = Game.ExecuteReader())
                 {
                     while (reader.Read())
@@ -298,12 +298,12 @@ namespace Boggle
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
-                SqlCommand Game = new SqlCommand("Select Sum(Score) AS 'TotalScore' from Words Where GameID ="+GID+" AND Player =" + UserToken, conn);
+                SqlCommand Game = new SqlCommand("Select Sum(Score) AS 'TotalScore' from Words Where GameID ="+GID+ " AND Player ='" + UserToken + "'", conn);
                 using (SqlDataReader reader = Game.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        return Convert.ToInt32(reader["TotalScore"]);
+                        return reader["TotalScore"] is DBNull ? default(int) : Convert.ToInt32(reader["TotalScore"]);
                     }
                 }
             }
@@ -327,13 +327,25 @@ namespace Boggle
                     {
                         while (reader.Read())
                         {
-                            return new DBGameInfo
+                        return new DBGameInfo
+                        {
+                            Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
+                            GameID = (int)reader["GameID"],
+                            GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
+                            Player1 = new DBPlayerInfo()
                             {
-                                Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
-                                GameID = (int)reader["GameID"],
-                                GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
-                                Player1 = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
-                                Player2 = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
+                                UserToken = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
+                                Nickname = GetNickname(reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()),
+                                Score = GetPlayerScore(reader["GameID"].ToString(), reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()),
+                                WordsPlayed = GetWords(reader["GameID"].ToString(), reader["Player1"] is DBNull ? "" : reader["Player1"].ToString()).ToList()
+                            },
+                            Player2 = new DBPlayerInfo()
+                            {
+                                UserToken = reader["Player2"] is DBNull ? null : reader["Player2"].ToString(),
+                                Nickname = GetNickname(reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()),
+                                Score = GetPlayerScore(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()),
+                                WordsPlayed = GetWords(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()).ToList()
+                            },
                                 StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
                                 TimeLimit = (int)reader["TimeLimit"]
                             };
@@ -349,7 +361,7 @@ namespace Boggle
             {
                 DBGameInfo GameInfo = GetGameInfo(GetLastGID());
 
-                if (GameInfo?.Player1 != null && GameInfo.GameState.Equals("pending") && GameInfo.Player1.Equals(args.UserToken))
+                if (GameInfo?.Player1 != null && GameInfo.GameState.Equals("pending") && GameInfo.Player1.UserToken.Equals(args.UserToken))
                 {
                     RemovePlayer1(GameInfo.GameID.ToString());
                     SetStatus(OK);
@@ -388,13 +400,14 @@ namespace Boggle
         // TODO : PlayWord implement DB.
         public PlayWordReturn PlayWord(PlayWordArgs args, string GameID)
         {
-            int intID;
+            
             lock (sync)
             {
+                int intID;
                 args.Word = args.Word?.ToUpper() ?? "";
                 DBGameInfo currentGameInfo = GetGameInfo(GameID);
                 // checks for forbidden
-                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && currentGameInfo != null && GetNickname(currentGameInfo.Player1) != null && GetNickname(currentGameInfo.Player2) != null) //GetNickname != null && currentGID = Game ID)
+                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && currentGameInfo != null && GetNickname(currentGameInfo.Player1.UserToken) != null && GetNickname(currentGameInfo.Player2.UserToken) != null) //GetNickname != null && currentGID = Game ID)
                 {
                     //who is submiting player 1 or 2
                     int player = currentGameInfo.Player1.Equals(args.UserToken) ? 1 : 2;
@@ -508,8 +521,7 @@ namespace Boggle
                 return false;
             }
         }
-
-
+ 
         // TODO : Status implement DB.
         public GetStatusReturn Status(string GameID)
         {
