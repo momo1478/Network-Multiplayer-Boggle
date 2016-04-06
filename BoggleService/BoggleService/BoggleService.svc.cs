@@ -365,7 +365,7 @@ namespace Boggle
             {
                 DBGameInfo GameInfo = GetGameInfo(GetLastGID());
 
-                if (GameInfo?.Player1 != null && GameInfo.GameState.Equals("pending") && GameInfo.Player1.UserToken.Equals(args.UserToken))
+                if (GameInfo?.Player1 != null && GameInfo.GameState.Equals("pending") && GameInfo.Player1.UserToken == args.UserToken && GameInfo.Player2.UserToken == null)
                 {
                     RemovePlayer1(GameInfo.GameID.ToString());
                     SetStatus(OK);
