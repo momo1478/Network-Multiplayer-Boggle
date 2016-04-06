@@ -224,7 +224,7 @@ namespace Boggle
         public int? Score { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<Words> WordsPlayed { get; set; }
+        public List<DBWord> WordsPlayed { get; set; }
     }
 
     public class DBGameInfo

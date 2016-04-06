@@ -260,7 +260,7 @@ namespace Boggle
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
-                SqlCommand Game = new SqlCommand("Select Nickname from Users Where UserID = '" + UserToken +"'", conn);
+                SqlCommand Game = new SqlCommand("Select Nickname from Users Where UserID = '" + UserToken + "'", conn);
                 using (SqlDataReader reader = Game.ExecuteReader())
                 {
                     while (reader.Read())
@@ -294,11 +294,11 @@ namespace Boggle
         }
 
         public int GetPlayerScore(string GID, string UserToken)
-        { 
+        {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
                 conn.Open();
-                SqlCommand Game = new SqlCommand("Select Sum(Score) AS 'TotalScore' from Words Where GameID ="+GID+ " AND Player ='" + UserToken + "'", conn);
+                SqlCommand Game = new SqlCommand("Select Sum(Score) AS 'TotalScore' from Words Where GameID =" + GID + " AND Player ='" + UserToken + "'", conn);
                 using (SqlDataReader reader = Game.ExecuteReader())
                 {
                     while (reader.Read())
@@ -311,27 +311,27 @@ namespace Boggle
         }
 
         /// <summary>
-            /// Returns all columns of a game in an object 
-            /// </summary>
-            /// <param name="GID"></param>
-            /// <returns></returns>
+        /// Returns all columns of a game in an object 
+        /// </summary>
+        /// <param name="GID"></param>
+        /// <returns></returns>
         DBGameInfo GetGameInfo(string GID)
         {
-                using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
-                {
-                    conn.Open();
-                    SqlCommand Game = new SqlCommand("SELECT * FROM Games WHERE GameID = @GameId", conn);
-                    Game.Parameters.AddWithValue("@GameId", GID);
+            using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
+            {
+                conn.Open();
+                SqlCommand Game = new SqlCommand("SELECT * FROM Games WHERE GameID = @GameId", conn);
+                Game.Parameters.AddWithValue("@GameId", GID);
 
-                    using (SqlDataReader reader = Game.ExecuteReader())
+                using (SqlDataReader reader = Game.ExecuteReader())
+                {
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        return new DBGameInfo
                         {
-                            return new DBGameInfo
-                            {
-                                Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
-                                GameID = (int)reader["GameID"],
-                                GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
+                            Board = reader["Board"] is DBNull ? null : reader["Board"].ToString(),
+                            GameID = (int)reader["GameID"],
+                            GameState = reader["GameState"] is DBNull ? null : reader["GameState"].ToString(),
                             Player1 = new DBPlayerInfo()
                             {
                                 UserToken = reader["Player1"] is DBNull ? null : reader["Player1"].ToString(),
@@ -346,14 +346,14 @@ namespace Boggle
                                 Score = GetPlayerScore(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()),
                                 WordsPlayed = GetWords(reader["GameID"].ToString(), reader["Player2"] is DBNull ? "" : reader["Player2"].ToString()).ToList()
                             },
-                                StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
-                                TimeLimit = (int)reader["TimeLimit"]
-                            };
-                        }
+                            StartTime = reader["StartTime"] is DBNull ? default(DateTime) : Convert.ToDateTime(reader["StartTime"]),
+                            TimeLimit = (int)reader["TimeLimit"]
+                        };
                     }
                 }
-                return null;
             }
+            return null;
+        }
 
         public void CancelJoinRequest(JoinGameArgs args)
         {
@@ -400,7 +400,6 @@ namespace Boggle
         // TODO : PlayWord implement DB.
         public PlayWordReturn PlayWord(PlayWordArgs args, string GameID)
         {
-            
             lock (sync)
             {
                 int intID;
@@ -410,7 +409,7 @@ namespace Boggle
                 if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && currentGameInfo != null && GetNickname(currentGameInfo.Player1.UserToken) != null && GetNickname(currentGameInfo.Player2.UserToken) != null) //GetNickname != null && currentGID = Game ID)
                 {
                     //who is submiting player 1 or 2
-                    int player = currentGameInfo.Player1.Equals(args.UserToken) ? 1 : 2;
+                    int player = currentGameInfo.Player1.UserToken.Equals(args.UserToken) ? 1 : 2;
 
                     if (currentGameInfo.GameState.Equals("active"))
                     {
@@ -422,24 +421,24 @@ namespace Boggle
                             SetStatus(OK);
                             if (player == 1)
                             {
-                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
                                 {
-                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString(), args.Word, 0.ToString());
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString(), args.Word, 0.ToString());
                                 }
                                 else
                                 {
-                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString(), args.Word, currentGameInfo.Player1.WordScore(args.Word).ToString());
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString(), args.Word, currentGameInfo.Player1.WordScore(args.Word).ToString());
                                 }
                             }
                             else //player 2
                             {
-                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
                                 {
-                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.ToString(), args.Word, 0.ToString());
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString(), args.Word, 0.ToString());
                                 }
                                 else
                                 {
-                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.ToString(), args.Word, currentGameInfo.Player2.WordScore(args.Word).ToString());
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString(), args.Word, currentGameInfo.Player2.WordScore(args.Word).ToString());
                                 }
                             }
                             return new PlayWordReturn() { Score = wordScore };
@@ -450,24 +449,24 @@ namespace Boggle
 
                             if (player == 1)
                             {
-                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
                                 {
-                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString(), args.Word, (0).ToString());
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString(), args.Word, (0).ToString());
                                 }
                                 else
                                 {
-                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString(), args.Word, (-1).ToString());
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString(), args.Word, (-1).ToString());
                                 }
                             }
                             else // Player 2
                             {
-                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
                                 {
-                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.ToString(), args.Word, (0).ToString());
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString(), args.Word, (0).ToString());
                                 }
                                 else
                                 {
-                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.ToString(), args.Word, (-1).ToString());
+                                    wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString(), args.Word, (-1).ToString());
                                 }
                             }
                             return new PlayWordReturn() { Score = wordScore };
@@ -497,7 +496,7 @@ namespace Boggle
                 return false;
             }
         }
-        public int AddPlayedWord(string GID, string UserToken,string PlayedWord, string Score)
+        public int AddPlayedWord(string GID, string UserToken, string PlayedWord, string Score)
         {
             using (SqlConnection conn = new SqlConnection(BoggleServiceDB))
             {
@@ -529,48 +528,46 @@ namespace Boggle
         {
             lock (sync)
             {
-                int intID;
+                DBGameInfo gameInfo = GetGameInfo(GameID);
 
-                if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
-                {
-                    int? updateTimeLeft = games[intID].TimeLeft;
-                    if (games[intID].GameState.Equals("pending"))
+                if (gameInfo.GameID != 0)
+
+                    if (gameInfo.GameState.Equals("pending"))
                     {
                         SetStatus(OK);
-                        return new GetStatusReturn() { GameState = games[intID].GameState };
+                        return new GetStatusReturn() { GameState = gameInfo.GameState };
                     }
-                    else if (games[intID].GameState.Equals("active"))
-                    {
-                        SetStatus(OK);
-                        return new GetStatusReturn()
-                        {
-                            Board = games[intID].Board.ToString(),
-                            TimeLimit = games[intID].TimeLimit,
-                            TimeLeft = games[intID].TimeLeft,
-
-                            GameState = games[intID].GameState,
-                            Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
-                            Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
-                        };
-                    }
-                    else if (games[intID].GameState.Equals("completed"))
+                    else if (gameInfo.GameState.Equals("active"))
                     {
                         SetStatus(OK);
                         return new GetStatusReturn()
                         {
-                            Board = games[intID].Board.ToString(),
-                            TimeLimit = games[intID].TimeLimit,
-                            TimeLeft = games[intID].TimeLeft,
+                            Board = gameInfo.Board.ToString(),
+                            TimeLimit = gameInfo.TimeLimit,
+                            TimeLeft = gameInfo.TimeLeft,
 
-                            GameState = games[intID].GameState,
-                            Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
-                            Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
+                            GameState = gameInfo.GameState,
+                            Player1 = new PlayerDump() { Nickname = gameInfo.Player1.Nickname, Score = gameInfo.Player1.Score },
+                            Player2 = new PlayerDump() { Nickname = gameInfo.Player2.Nickname, Score = gameInfo.Player2.Score },
                         };
                     }
-                }
-                SetStatus(Forbidden);
-                return null;
+                    else if (gameInfo.GameState.Equals("completed"))
+                    {
+                        SetStatus(OK);
+                        return new GetStatusReturn()
+                        {
+                            Board = gameInfo.Board.ToString(),
+                            TimeLimit = gameInfo.TimeLimit,
+                            TimeLeft = gameInfo.TimeLeft,
+
+                            GameState = gameInfo.GameState,
+                            Player1 = new PlayerDump() { Nickname = gameInfo.Player1.Nickname, Score = gameInfo.Player1.Score, WordsPlayed = gameInfo.Player1.WordsPlayed },
+                            Player2 = new PlayerDump() { Nickname = gameInfo.Player2.Nickname, Score = gameInfo.Player2.Score, WordsPlayed = gameInfo.Player2.WordsPlayed }
+                        };
+                    }
             }
+            SetStatus(Forbidden);
+            return null;
         }
 
         // TODO : StatusBrief implement DB.
@@ -578,55 +575,56 @@ namespace Boggle
         {
             lock (sync)
             {
-                int intID;
-                if (int.TryParse(GameID, out intID) && games.ContainsKey(intID))
+                DBGameInfo gameInfo = GetGameInfo(GameID);
+
+                if (gameInfo.GameID != 0)
                 {
-                    int? updateTimeLeft = games[intID].TimeLeft;
-                    if (games[intID].GameState.Equals("pending"))
+                    int? updateTimeLeft = gameInfo.TimeLeft;
+                    if (gameInfo.GameState.Equals("pending"))
                     {
                         SetStatus(OK);
-                        return new GetStatusReturn() { GameState = games[intID].GameState };
+                        return new GetStatusReturn() { GameState = gameInfo.GameState };
                     }
                     else if (brief != null && brief.ToLower().Equals("yes"))
                     {
-                        if (games[intID].GameState.Equals("active") || games[intID].GameState.Equals("completed"))
+                        if (gameInfo.GameState.Equals("active") || gameInfo.GameState.Equals("completed"))
                         {
                             SetStatus(OK);
                             return new GetStatusReturn()
                             {
-                                TimeLeft = games[intID].TimeLeft,
-                                GameState = games[intID].GameState,
-                                Player1 = new PlayerDump() { Score = games[intID].Player1.Score },
-                                Player2 = new PlayerDump() { Score = games[intID].Player2.Score }
+                                TimeLeft = gameInfo.TimeLeft,
+                                GameState = gameInfo.GameState,
+                                Player1 = new PlayerDump() { Score = gameInfo.Player1.Score },
+                                Player2 = new PlayerDump() { Score = gameInfo.Player2.Score }
                             };
                         }
                     }
-                    else if (games[intID].GameState.Equals("active"))
+                    else if (gameInfo.GameState.Equals("active"))
                     {
                         SetStatus(OK);
                         return new GetStatusReturn()
                         {
-                            Board = games[intID].Board.ToString(),
-                            TimeLimit = games[intID].TimeLimit,
-                            TimeLeft = games[intID].TimeLeft,
+                            Board = gameInfo.Board.ToString(),
+                            TimeLimit = gameInfo.TimeLimit,
+                            TimeLeft = gameInfo.TimeLeft,
 
-                            GameState = games[intID].GameState,
-                            Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score },
-                            Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score },
+                            GameState = gameInfo.GameState,
+                            Player1 = new PlayerDump() { Nickname = gameInfo.Player1.Nickname, Score = gameInfo.Player1.Score },
+                            Player2 = new PlayerDump() { Nickname = gameInfo.Player2.Nickname, Score = gameInfo.Player2.Score },
                         };
                     }
-                    else if (games[intID].GameState.Equals("completed"))
+                    else if (gameInfo.GameState.Equals("completed"))
                     {
                         SetStatus(OK);
                         return new GetStatusReturn()
                         {
-                            Board = games[intID].Board.ToString(),
-                            TimeLimit = games[intID].TimeLimit,
-                            TimeLeft = games[intID].TimeLeft,
+                            Board = gameInfo.Board.ToString(),
+                            TimeLimit = gameInfo.TimeLimit,
+                            TimeLeft = gameInfo.TimeLeft,
 
-                            GameState = games[intID].GameState,
-                            Player1 = new PlayerDump() { Nickname = games[intID].Player1.Nickname, Score = games[intID].Player1.Score, WordsPlayed = games[intID].Player1.WordsPlayed },
-                            Player2 = new PlayerDump() { Nickname = games[intID].Player2.Nickname, Score = games[intID].Player2.Score, WordsPlayed = games[intID].Player2.WordsPlayed }
+                            GameState = gameInfo.GameState,
+                            Player1 = new PlayerDump() { Nickname = gameInfo.Player1.Nickname, Score = gameInfo.Player1.Score, WordsPlayed = gameInfo.Player1.WordsPlayed },
+                            Player2 = new PlayerDump() { Nickname = gameInfo.Player2.Nickname, Score = gameInfo.Player2.Score, WordsPlayed = gameInfo.Player2.WordsPlayed }
                         };
                     }
                 }
