@@ -884,7 +884,7 @@ namespace Boggle
         {
             int GID = client.CreateGameWithPlayers();
 
-            Response getr = client.DoGetAsync("games/" + 99 + "?brief=blah").Result;
+            Response getr = client.DoGetAsync("games/" + (GID + 1) + "?brief=blah").Result;
 
             Assert.AreEqual(getr.Status, Forbidden);
         }

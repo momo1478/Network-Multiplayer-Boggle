@@ -360,7 +360,7 @@ namespace Boggle
                         }
                     }
                 }
-                return null;
+                return new DBGameInfo() { GameID = -1 };
 
             }
             return new DBGameInfo() { GameID = -1 };
@@ -415,16 +415,15 @@ namespace Boggle
             lock (sync)
             {
                 int intID;
-                args.Word = args.Word?.ToUpper() ?? "";
                 DBGameInfo currentGameInfo = GetGameInfo(GameID);
 
                 // checks for forbidden
-                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && currentGameInfo != null && currentGameInfo.GameID != -1 && GetNickname(currentGameInfo.Player1.UserToken) != null && GetNickname(currentGameInfo.Player2.UserToken) != null && (args.UserToken == currentGameInfo.Player1.UserToken || args.UserToken == currentGameInfo.Player2.UserToken)) //GetNickname != null && currentGID = Game ID)
+                if (args?.Word != null && args.Word.Trim().Length != 0 && int.TryParse(GameID, out intID) && GetNickname(args.UserToken) != null && (args.UserToken == currentGameInfo.Player1.UserToken || args.UserToken == currentGameInfo.Player2.UserToken)) //GetNickname != null && currentGID = Game ID)
                 {
                     //who is submiting player 1 or 2
                     int player = currentGameInfo.Player1.UserToken.Equals(args.UserToken) ? 1 : 2;
 
-                    if (currentGameInfo.GameState.Equals("active"))
+                    if (currentGameInfo.GameState.Equals("active") && currentGameInfo.Player2.UserToken != null)
                     {
                         int wordScore;
                         BoggleBoard CurrentGameBoard = new BoggleBoard(currentGameInfo.Board);
@@ -434,7 +433,7 @@ namespace Boggle
                             SetStatus(OK);
                             if (player == 1)
                             {
-                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)) || args.Word.Trim().Length < 3)
                                 {
                                     wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString(), args.Word, 0.ToString());
                                 }
@@ -445,7 +444,7 @@ namespace Boggle
                             }
                             else //player 2
                             {
-                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)) || args.Word.Trim().Length < 3)
                                 {
                                     wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString(), args.Word, 0.ToString());
                                 }
@@ -462,7 +461,7 @@ namespace Boggle
 
                             if (player == 1)
                             {
-                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)) || args.Word.Trim().Length < 3)
                                 {
                                     wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player1.UserToken.ToString(), args.Word, (0).ToString());
                                 }
@@ -473,7 +472,7 @@ namespace Boggle
                             }
                             else // Player 2
                             {
-                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)))
+                                if (GetWords(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString()).ToList().Exists(s => s.Word.Equals(args.Word)) || args.Word.Trim().Length < 3)
                                 {
                                     wordScore = AddPlayedWord(currentGameInfo.GameID.ToString(), currentGameInfo.Player2.UserToken.ToString(), args.Word, (0).ToString());
                                 }
@@ -539,7 +538,7 @@ namespace Boggle
         // TODO : Status implement DB.
         public GetStatusReturn Status(string GameID)
         {
-            lock (sync)
+            //lock (sync)
             {
                 DBGameInfo gameInfo = GetGameInfo(GameID);
 
@@ -587,11 +586,11 @@ namespace Boggle
         // TODO : StatusBrief implement DB.
         public GetStatusReturn StatusBrief(string GameID, string brief)
         {
-            lock (sync)
+            //lock (sync)
             {
                 DBGameInfo gameInfo = GetGameInfo(GameID);
 
-                if (gameInfo.GameID != -1 && gameInfo.GameID.ToString().Equals(GameID))
+                if (gameInfo != null && gameInfo.GameID != -1 && gameInfo.GameID.ToString().Equals(GameID))
                 {
                     int? updateTimeLeft = gameInfo.TimeLeft;
                     if (gameInfo.GameState.Equals("pending"))

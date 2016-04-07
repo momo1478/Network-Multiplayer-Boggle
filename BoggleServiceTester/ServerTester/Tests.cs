@@ -227,34 +227,6 @@ namespace ServerGrader
         }
 
         /// <summary>
-        /// Try to make a game.
-        /// </summary>
-        [TestMethod]
-        public void TestJoinGame()
-        {
-            JoinGame("hello", 10, Forbidden).Wait();
-            JoinGame("hello", 1, Forbidden).Wait();
-            String player1 = MakeUser("Player 1", Created).Result;
-            String player2 = MakeUser("Player 2", Created).Result;
-            JoinGame(player1, 4, Forbidden).Wait();
-            JoinGame(player1, 121, Forbidden).Wait();
-
-            String game1 = JoinGame(player1, 10, Accepted).Result;
-            JoinGame(player1, 10, Conflict).Wait();
-            String game2 = JoinGame(player2, 10, Created).Result;
-            Assert.AreEqual(game1, game2);
-
-            String player3 = MakeUser("Player 3", Created).Result;
-            String player4 = MakeUser("Player 4", Created).Result;
-            String game3 = JoinGame(player3, 10, Accepted).Result;
-            JoinGame(player3, 10, Conflict).Wait();
-            String game4 = JoinGame(player4, 10, Created).Result;
-            Assert.AreEqual(game3, game4);
-
-            Assert.AreNotEqual(game1, game3);
-        }
-
-        /// <summary>
         /// Test canceling a game.
         /// </summary>
         [TestMethod]
@@ -359,6 +331,34 @@ namespace ServerGrader
                     Assert.AreEqual(GetScore(word), PlayWord(player2, game1, word, OK).Result);
                 }
             }
+        }
+
+        /// <summary>
+        /// Try to make a game.
+        /// </summary>
+        [TestMethod]
+        public void TestJoinGame()
+        {
+            JoinGame("hello", 10, Forbidden).Wait();
+            JoinGame("hello", 1, Forbidden).Wait();
+            String player1 = MakeUser("Player 1", Created).Result;
+            String player2 = MakeUser("Player 2", Created).Result;
+            JoinGame(player1, 4, Forbidden).Wait();
+            JoinGame(player1, 121, Forbidden).Wait();
+
+            String game1 = JoinGame(player1, 10, Accepted).Result;
+            JoinGame(player1, 10, Conflict).Wait();
+            String game2 = JoinGame(player2, 10, Created).Result;
+            Assert.AreEqual(game1, game2);
+
+            String player3 = MakeUser("Player 3", Created).Result;
+            String player4 = MakeUser("Player 4", Created).Result;
+            String game3 = JoinGame(player3, 10, Accepted).Result;
+            JoinGame(player3, 10, Conflict).Wait();
+            String game4 = JoinGame(player4, 10, Created).Result;
+            Assert.AreEqual(game3, game4);
+
+            Assert.AreNotEqual(game1, game3);
         }
 
         /// <summary>
