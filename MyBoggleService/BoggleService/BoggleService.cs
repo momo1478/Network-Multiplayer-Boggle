@@ -27,7 +27,7 @@ namespace Boggle
         static BoggleService()
         {
             // Create connection string
-            //BoggleServiceDB = "Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\\BoggleDB.mdf; Integrated Security = True";
+            //BoggleServiceDB = "Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\\App_Data\\BoggleDB.mdf; Integrated Security = True";
             BoggleServiceDB = ConfigurationManager.ConnectionStrings["BoggleDB"].ConnectionString;
         }
         /// <summary>
@@ -365,7 +365,7 @@ namespace Boggle
             }
             return new DBGameInfo() { GameID = -1 };
         }
-        
+
 
         public void CancelJoinRequest(JoinGameArgs args)
         {
@@ -498,7 +498,7 @@ namespace Boggle
         //Playword helper method.
         private static bool isWord(string word)
         {
-            using (TextReader reader = new StreamReader(File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "dictionary.txt")))
+            using (TextReader reader = new StreamReader(File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"..\dictionary.txt")))
             {
                 while (!((StreamReader)reader).EndOfStream)
                 {
