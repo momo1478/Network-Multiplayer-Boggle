@@ -43,6 +43,8 @@ namespace Boggle
         private int contentLength;
         private string type;
         private string URL;
+        private string GID;
+        private string brief;
 
         public HttpRequest(StringSocket stringSocket)
         {
@@ -82,6 +84,7 @@ namespace Boggle
 
         private void ContentReceived(string s, Exception e, object payload)
         {
+            //TODO: Fill in cases with actual methods.
             if (s != null)
             {
                 string method = methodChooser();
@@ -89,6 +92,21 @@ namespace Boggle
                 switch (method)
                 {
                     case "CreateUser":
+                        break;
+
+                    case "JoinGame":
+                        break;
+
+                    case "CancelJoin":
+                        break;
+
+                    case "PlayWord":
+                        break;
+
+                    case "Status":
+                        break;
+
+                    case "StatusBrief":
                         break;
 
                     default:
@@ -99,11 +117,41 @@ namespace Boggle
 
         public string methodChooser()
         {
+            
+
             if (type.Equals("POST"))
             {
-                if (Regex.IsMatch(URL, "/BoggleService.svc/[0-9]+")) { return ""; }
+                if (Regex.IsMatch(URL, "/BoggleService.svc/users")) { return "CreateUser"; }
+
+                if (Regex.IsMatch(URL, "/BoggleService.svc/games")) { return "JoinGame"; }
             }
-            return null;
+            else if (type.Equals("PUT"))
+            {
+                Match URLParams = Regex.Match(URL, "/BoggleService.svc/games/([0-9]+)");
+
+                if (Regex.IsMatch(URL, "/BoggleService.svc/games/[0-9]+")) { GID = URLParams.Groups[1]?.Success == true ? URLParams.Groups[1].Value : "" ; return "PlayWord"; }
+
+                if (Regex.IsMatch(URL, "/BoggleService.svc/games")) { return "CancelJoin"; }
+            }
+            else if (type.Equals("GET"))
+            {
+                Match URLParams = Regex.Match(URL, @"\/BoggleService.svc\/games\/([0-9]+)\?(brief=yes)?");
+
+                if (URLParams.Groups[1]?.Success == true)
+                {
+                    GID = URLParams.Groups[1].Value;
+
+                    if (URLParams.Groups[2]?.Success == true)
+                    {
+                        brief = URLParams.Groups[2].Value;
+                        return "StatusBrief";
+                    }
+
+                    return "Status";
+                }
+            }
+
+                return "";
         }
 
         private void Ignore(Exception e, object payload)
@@ -134,9 +182,4 @@ namespace Boggle
         }
     }
 
-    public class Person
-    {
-        public String Name { get; set; }
-        public String Eyes { get; set; }
-    }
 }

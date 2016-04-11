@@ -39,36 +39,40 @@ namespace Boggle
         /// <param name="status"></param>
         private static void SetStatus(HttpStatusCode status)
         {
-            switch (status)
+            lock (sync)
             {
-                case HttpStatusCode.OK:
-                    StatusString = (int)HttpStatusCode.OK + " " + status.ToString();
-                    break;
-                case HttpStatusCode.Created:
-                    StatusString = (int)HttpStatusCode.Created + " " + status.ToString();
-                    break;
-                case HttpStatusCode.Accepted:
-                    StatusString = (int)HttpStatusCode.Accepted + " " + status.ToString();
-                    break;
-                case HttpStatusCode.BadRequest:
-                    StatusString = (int)HttpStatusCode.BadRequest + " " + status.ToString();
-                    break;
-                case HttpStatusCode.Forbidden:
-                    StatusString = (int)HttpStatusCode.Forbidden + " " + status.ToString();
-                    break;
-                case HttpStatusCode.NotFound:
-                    StatusString = (int)HttpStatusCode.NotFound + " " + status.ToString();
-                    break;
-                case HttpStatusCode.Conflict:
-                    StatusString = (int)HttpStatusCode.Conflict + " " + status.ToString();
-                    break;
-                case HttpStatusCode.InternalServerError:
-                    StatusString = (int)HttpStatusCode.InternalServerError + " " + status.ToString();
-                    break;
-                default:
-                    StatusString = 0 + " " + status.ToString();
-                    break;
+                switch (status)
+                {
+                    case HttpStatusCode.OK:
+                        StatusString = (int)HttpStatusCode.OK + " " + status.ToString();
+                        break;
+                    case HttpStatusCode.Created:
+                        StatusString = (int)HttpStatusCode.Created + " " + status.ToString();
+                        break;
+                    case HttpStatusCode.Accepted:
+                        StatusString = (int)HttpStatusCode.Accepted + " " + status.ToString();
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        StatusString = (int)HttpStatusCode.BadRequest + " " + status.ToString();
+                        break;
+                    case HttpStatusCode.Forbidden:
+                        StatusString = (int)HttpStatusCode.Forbidden + " " + status.ToString();
+                        break;
+                    case HttpStatusCode.NotFound:
+                        StatusString = (int)HttpStatusCode.NotFound + " " + status.ToString();
+                        break;
+                    case HttpStatusCode.Conflict:
+                        StatusString = (int)HttpStatusCode.Conflict + " " + status.ToString();
+                        break;
+                    case HttpStatusCode.InternalServerError:
+                        StatusString = (int)HttpStatusCode.InternalServerError + " " + status.ToString();
+                        break;
+                    default:
+                        StatusString = 0 + " " + status.ToString();
+                        break;
+                }
             }
+            
         }
 
         /// <summary>
