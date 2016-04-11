@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -21,7 +22,7 @@ namespace Boggle
 
         public WebServer()
         {
-            server = new TcpListener(IPAddress.Any, 54321);
+            server = new TcpListener(IPAddress.Any, 60000);//54321
             server.Start();
             server.BeginAcceptSocket(ConnectionRequested, null);
         }
@@ -36,9 +37,12 @@ namespace Boggle
 
     class HttpRequest
     {
+        BoggleService Service = new BoggleService();
         private StringSocket ss;
         private int lineCount;
         private int contentLength;
+        private string type;
+        private string URL;
 
         public HttpRequest(StringSocket stringSocket)
         {
@@ -56,8 +60,10 @@ namespace Boggle
                 {
                     Regex r = new Regex(@"^(\S+)\s+(\S+)");
                     Match m = r.Match(s);
-                    Console.WriteLine("Method: " + m.Groups[1].Value);
-                    Console.WriteLine("URL: " + m.Groups[2].Value);
+                    type = m.Groups[1].Value;
+                    Console.WriteLine("Method: " + type);
+                    URL = m.Groups[2].Value;
+                    Console.WriteLine("URL: " + URL);
                 }
                 if (s.StartsWith("Content-Length:"))
                 {
@@ -78,21 +84,24 @@ namespace Boggle
         {
             if (s != null)
             {
-                Person p = JsonConvert.DeserializeObject<Person>(s);
-                Console.WriteLine(p.Name + " " + p.Eyes);
+                UserInfo user = JsonConvert.DeserializeObject<UserInfo>(s);
+                Console.WriteLine("Nickname = " + user.Nickname);
+
+
 
                 // Call service method
+                CreateUserReturn result = Service.CreateUser(user);
 
-                string result =
+                string jsonResult =
                     JsonConvert.SerializeObject(
-                            new Person { Name = "June", Eyes = "Blue" },
+                            new CreateUserReturn { UserToken = result.UserToken },
                             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-                ss.BeginSend("HTTP/1.1 200 OK\n", Ignore, null);
+                ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
                 ss.BeginSend("Content-Type: application/json\n", Ignore, null);
-                ss.BeginSend("Content-Length: " + result.Length + "\n", Ignore, null);
+                ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
                 ss.BeginSend("\r\n", Ignore, null);
-                ss.BeginSend(result, (ex, py) => { ss.Shutdown(); }, null);
+                ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
             }
         }
 

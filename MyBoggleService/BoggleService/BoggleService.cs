@@ -15,13 +15,15 @@ namespace Boggle
 {
     public class BoggleService : IBoggleService
     {
-        // Connetion string to teh database
+        static internal string StatusString { get; set; }
+
+        // Connetion string to the database
         internal static string BoggleServiceDB;
         /// <summary>
         /// Poor mans data base static variables.
         /// </summary>
-        private static readonly Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
-        private static readonly Dictionary<int, BoggleGame> games = new Dictionary<int, BoggleGame>();
+        //private static readonly Dictionary<String, UserInfo> users = new Dictionary<String, UserInfo>();
+        //private static readonly Dictionary<int, BoggleGame> games = new Dictionary<int, BoggleGame>();
         private static readonly object sync = new object();
 
         static BoggleService()
@@ -37,7 +39,36 @@ namespace Boggle
         /// <param name="status"></param>
         private static void SetStatus(HttpStatusCode status)
         {
-            WebOperationContext.Current.OutgoingResponse.StatusCode = status;
+            switch (status)
+            {
+                case HttpStatusCode.OK:
+                    StatusString = (int)HttpStatusCode.OK + " " + status.ToString();
+                    break;
+                case HttpStatusCode.Created:
+                    StatusString = (int)HttpStatusCode.Created + " " + status.ToString();
+                    break;
+                case HttpStatusCode.Accepted:
+                    StatusString = (int)HttpStatusCode.Accepted + " " + status.ToString();
+                    break;
+                case HttpStatusCode.BadRequest:
+                    StatusString = (int)HttpStatusCode.BadRequest + " " + status.ToString();
+                    break;
+                case HttpStatusCode.Forbidden:
+                    StatusString = (int)HttpStatusCode.Forbidden + " " + status.ToString();
+                    break;
+                case HttpStatusCode.NotFound:
+                    StatusString = (int)HttpStatusCode.NotFound + " " + status.ToString();
+                    break;
+                case HttpStatusCode.Conflict:
+                    StatusString = (int)HttpStatusCode.Conflict + " " + status.ToString();
+                    break;
+                case HttpStatusCode.InternalServerError:
+                    StatusString = (int)HttpStatusCode.InternalServerError + " " + status.ToString();
+                    break;
+                default:
+                    StatusString = 0 + " " + status.ToString();
+                    break;
+            }
         }
 
         /// <summary>
