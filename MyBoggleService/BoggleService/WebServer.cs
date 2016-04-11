@@ -132,6 +132,94 @@ namespace Boggle
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
         }
+        private void JoinGame(string s)
+        {
+            JoinGameArgs joinGame = JsonConvert.DeserializeObject<JoinGameArgs>(s);
+            Console.WriteLine("UserToken = " + joinGame.UserToken);
+            Console.WriteLine("TimeLimit = " + joinGame.TimeLimit);
+
+            // Call service method
+            JoinGameReturn result = Service.JoinGame(joinGame);
+
+            string jsonResult =
+                JsonConvert.SerializeObject(
+                        new JoinGameReturn { GameID = result.GameID },
+                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            ss.BeginSend("\r\n", Ignore, null);
+            ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
+        }
+        private void CancelJoinRequest(string s)
+        {
+            CancelGameArgs cancelJoin = JsonConvert.DeserializeObject<CancelGameArgs>(s);
+            Console.WriteLine("UserToken = " + cancelJoin.UserToken);
+
+            // Call service method
+            Service.CancelJoinRequest(cancelJoin);
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
+            // TODO : Find out what Content-Length should be.
+            ss.BeginSend("Content-Length: " + 0 + "\n", Ignore, null);
+            ss.BeginSend("\r\n", Ignore, null);
+            // TODO : Find out if we should pass in null as the first parameter
+            ss.BeginSend(null, (ex, py) => { ss.Shutdown(); }, null);
+        }
+        // TODO : Add a way to get the game ID out of the URL inside the ContentRecieved or method chooser.  
+        private void PlayWord(string s, string GID)
+        {
+            PlayWordArgs playWord = JsonConvert.DeserializeObject<PlayWordArgs>(s);
+            Console.WriteLine("UserToken = " + playWord.UserToken);
+            Console.WriteLine("Word = " + playWord.Word);
+
+            // Call service method
+            PlayWordReturn result = Service.PlayWord(playWord,GID);
+
+            string jsonResult =
+                JsonConvert.SerializeObject(
+                        new PlayWordReturn { Score = result.Score },
+                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            ss.BeginSend("\r\n", Ignore, null);
+            ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
+        }
+        private void GameSatus(string GID)
+        {
+            // Call service method
+            GetStatusReturn result = Service.Status(GID);
+
+            string jsonResult =
+                JsonConvert.SerializeObject(
+                        result,
+                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            ss.BeginSend("\r\n", Ignore, null);
+            ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
+        }
+        private void GameSatus(string GID, string Brief)
+        {
+            GetStatusReturn result = Service.StatusBrief(GID,Brief);
+
+            string jsonResult =
+                JsonConvert.SerializeObject(
+                        result,
+                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            ss.BeginSend("\r\n", Ignore, null);
+            ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
+        }
     }
 
     public class Person
