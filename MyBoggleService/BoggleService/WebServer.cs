@@ -116,7 +116,7 @@ namespace Boggle
                         break;
 
                     default:
-                        break;
+                        throw new Exception(e.Message);
                 }
             }
         }
