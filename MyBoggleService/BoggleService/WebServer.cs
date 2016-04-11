@@ -84,18 +84,26 @@ namespace Boggle
         {
             if (s != null)
             {
-                switch (type)
+                string method = methodChooser();
+
+                switch (method)
                 {
-                    case "POST":
+                    case "CreateUser":
                         break;
-                    case "GET":
-                        break;
-                    case "PUT":
-                        break;
+
                     default:
                         break;
                 }
             }
+        }
+
+        public string methodChooser()
+        {
+            if (type.Equals("POST"))
+            {
+                if (Regex.IsMatch(URL, "/BoggleService.svc/[0-9]+")) { return ""; }
+            }
+            return null;
         }
 
         private void Ignore(Exception e, object payload)

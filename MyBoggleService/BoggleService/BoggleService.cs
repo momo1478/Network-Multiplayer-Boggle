@@ -78,8 +78,8 @@ namespace Boggle
         public Stream API()
         {
             SetStatus(OK);
-            WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
-            return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
+            WebOperationContext.Current.OutgoingResponse.ContentType = @"..\text.html";
+            return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"..\index.html");
         }
 
 
