@@ -92,21 +92,27 @@ namespace Boggle
                 switch (method)
                 {
                     case "CreateUser":
+                        CreateUser(s);
                         break;
 
                     case "JoinGame":
+                        JoinGame(s);
                         break;
 
                     case "CancelJoin":
+                        CancelJoinRequest(s);
                         break;
 
                     case "PlayWord":
+                        PlayWord(s, GID);
                         break;
 
                     case "Status":
+                        GameSatus(GID);
                         break;
 
                     case "StatusBrief":
+                        GameSatus(GID, brief);
                         break;
 
                     default:
