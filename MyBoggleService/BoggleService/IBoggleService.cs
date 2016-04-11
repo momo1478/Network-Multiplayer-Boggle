@@ -31,7 +31,7 @@ namespace Boggle
         /// Join Game for Boggle API
         /// </summary>
         [WebInvoke(Method = "PUT", UriTemplate = "/games")]
-        void CancelJoinRequest(JoinGameArgs args);
+        void CancelJoinRequest(CancelGameArgs args);
 
 
         [WebInvoke(Method = "PUT", UriTemplate = "/games/{GameID}")]

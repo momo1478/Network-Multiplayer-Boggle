@@ -85,10 +85,9 @@ namespace Boggle
         private void ContentReceived(string s, Exception e, object payload)
         {
             //TODO: Fill in cases with actual methods.
-            if (s != null)
+            string method = methodChooser();
+            if (s != null || method.Contains("Status"))
             {
-                string method = methodChooser();
-
                 switch (method)
                 {
                     case "CreateUser":
@@ -123,8 +122,6 @@ namespace Boggle
 
         public string methodChooser()
         {
-            
-
             if (type.Equals("POST"))
             {
                 if (Regex.IsMatch(URL, "/BoggleService.svc/users")) { return "CreateUser"; }
@@ -177,7 +174,7 @@ namespace Boggle
 
             string jsonResult =
                 JsonConvert.SerializeObject(
-                        new CreateUserReturn { UserToken = result.UserToken },
+                        new CreateUserReturn { UserToken = result?.UserToken },
                         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
@@ -197,7 +194,7 @@ namespace Boggle
 
             string jsonResult =
                 JsonConvert.SerializeObject(
-                        new JoinGameReturn { GameID = result.GameID },
+                        new JoinGameReturn { GameID = result?.GameID },
                         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
@@ -234,7 +231,7 @@ namespace Boggle
 
             string jsonResult =
                 JsonConvert.SerializeObject(
-                        new PlayWordReturn { Score = result.Score },
+                        new PlayWordReturn { Score = result?.Score },
                         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
             ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
