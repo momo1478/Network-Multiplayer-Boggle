@@ -84,29 +84,45 @@ namespace Boggle
         {
             if (s != null)
             {
-                UserInfo user = JsonConvert.DeserializeObject<UserInfo>(s);
-                Console.WriteLine("Nickname = " + user.Nickname);
-
-
-
-                // Call service method
-                CreateUserReturn result = Service.CreateUser(user);
-
-                string jsonResult =
-                    JsonConvert.SerializeObject(
-                            new CreateUserReturn { UserToken = result.UserToken },
-                            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
-                ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-                ss.BeginSend("Content-Type: application/json\n", Ignore, null);
-                ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
-                ss.BeginSend("\r\n", Ignore, null);
-                ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
+                switch (type)
+                {
+                    case "POST":
+                        break;
+                    case "GET":
+                        break;
+                    case "PUT":
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         private void Ignore(Exception e, object payload)
         {
+        }
+
+        // Helper methods
+        private void CreateUser(string s)
+        {
+            UserInfo user = JsonConvert.DeserializeObject<UserInfo>(s);
+            Console.WriteLine("Nickname = " + user.Nickname);
+
+
+
+            // Call service method
+            CreateUserReturn result = Service.CreateUser(user);
+
+            string jsonResult =
+                JsonConvert.SerializeObject(
+                        new CreateUserReturn { UserToken = result.UserToken },
+                        new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            ss.BeginSend("\r\n", Ignore, null);
+            ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
         }
     }
 
