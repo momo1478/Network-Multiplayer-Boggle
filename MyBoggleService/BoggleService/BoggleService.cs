@@ -83,7 +83,7 @@ namespace Boggle
         {
             SetStatus(OK);
             //WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
-            return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
+            return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"\..\index.html");
         }
 
 

@@ -66,6 +66,11 @@ namespace Boggle
                     Console.WriteLine("Method: " + type);
                     URL = m.Groups[2].Value;
                     Console.WriteLine("URL: " + URL);
+
+                    if (type.Equals("GET"))
+                    {
+                        ss.BeginReceive(ContentReceived, null);
+                    }
                 }
                 if (s.StartsWith("Content-Length:"))
                 {
@@ -74,6 +79,7 @@ namespace Boggle
                 if (s == "\r")
                 {
                     ss.BeginReceive(ContentReceived, null, contentLength);
+                    Console.WriteLine("Omg it's an R.");
                 }
                 else
                 {
@@ -115,7 +121,8 @@ namespace Boggle
                         break;
 
                     default:
-                        throw new Exception(e.Message);
+                        API();
+                        break;
                 }
             }
         }
