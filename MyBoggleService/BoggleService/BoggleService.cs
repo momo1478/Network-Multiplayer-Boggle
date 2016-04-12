@@ -80,10 +80,10 @@ namespace Boggle
         /// Returns a Stream version of index.html.
         /// </summary>
         /// <returns></returns>
-        public Stream API()
+        public FileStream API()
         {
             SetStatus(OK);
-            //if(WebOperationContext.Current?.OutgoingResponse.ContentType == null)
+            //WebOperationContext.Current.OutgoingResponse.ContentType = "index/html";
 
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"..\index.html");
         }

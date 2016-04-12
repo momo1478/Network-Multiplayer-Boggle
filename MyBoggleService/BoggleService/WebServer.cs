@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -281,14 +282,12 @@ namespace Boggle
         }
         private void API()
         {
-            // Call service method
-            Service.API();
+            string api = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"..\index.html");
 
             ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
-            ss.BeginSend("Content-Length: " + 0 + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: text/html\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
-            ss.BeginSend("", (ex, py) => { ss.Shutdown(); }, null);
+            ss.BeginSend(api, (ex, py) => { ss.Shutdown(); }, null);
         }
     }
 

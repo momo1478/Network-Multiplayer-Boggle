@@ -13,7 +13,7 @@ namespace Boggle
         /// Sends back index.html as the response body.
         /// </summary>
         [WebGet(UriTemplate = "/api")]
-        Stream API();
+        FileStream API();
 
         /// <summary>
         /// Create User for Boggle API
