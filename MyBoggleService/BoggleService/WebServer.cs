@@ -138,7 +138,7 @@ namespace Boggle
             }
             else if (type.Equals("GET"))
             {
-                Match URLParams = Regex.Match(URL, @"\/BoggleService.svc\/games\/([0-9]+)\?(brief=yes)?");
+                Match URLParams = Regex.Match(URL, @"\/BoggleService.svc\/games\/([0-9]+)?(brief=yes)?");
 
                 if (URLParams.Groups[1]?.Success == true)
                 {
