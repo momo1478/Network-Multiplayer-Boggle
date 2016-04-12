@@ -271,6 +271,17 @@ namespace Boggle
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
         }
+        private void API()
+        {
+            // Call service method
+            Service.API();
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + 0 + "\n", Ignore, null);
+            ss.BeginSend("\r\n", Ignore, null);
+            ss.BeginSend(null, (ex, py) => { ss.Shutdown(); }, null);
+        }
     }
 
 }

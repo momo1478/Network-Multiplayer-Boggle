@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Dynamic;
 using System.IO;
 using System.Net;
-using System.ServiceModel.Web;
+//using System.ServiceModel.Web;
 using static System.Net.HttpStatusCode;
 using System.Diagnostics;
 using System.Linq;
@@ -82,14 +82,14 @@ namespace Boggle
         public Stream API()
         {
             SetStatus(OK);
-            WebOperationContext.Current.OutgoingResponse.ContentType = "text.html";
+            //WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
             return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "index.html");
         }
 
 
         public CreateUserReturn CreateUser(UserInfo user)
         {
-            lock (sync)
+            //lock (sync)
             {
                 if (user.Nickname == null || user.Nickname.Trim().Length == 0)
                 {
@@ -126,7 +126,7 @@ namespace Boggle
 
         public JoinGameReturn JoinGame(JoinGameArgs args)
         {
-            lock (sync)
+            //lock (sync)
             {
                 Guid outR;
                 if ((args.TimeLimit >= 5 && args.TimeLimit <= 120) && Guid.TryParse(args.UserToken, out outR) && GetNickname(args.UserToken) != null)
@@ -447,7 +447,7 @@ namespace Boggle
         // TODO : PlayWord implement DB.
         public PlayWordReturn PlayWord(PlayWordArgs args, string GameID)
         {
-            lock (sync)
+            //lock (sync)
             {
                 int intID;
                 DBGameInfo currentGameInfo = GetGameInfo(GameID);
