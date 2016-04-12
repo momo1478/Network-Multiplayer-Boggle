@@ -39,7 +39,7 @@ namespace Boggle
         /// <param name="status"></param>
         private static void SetStatus(HttpStatusCode status)
         {
-            lock (sync)
+            //lock (sync)
             {
                 switch (status)
                 {
@@ -404,7 +404,7 @@ namespace Boggle
 
         public void CancelJoinRequest(CancelGameArgs args)
         {
-            lock (sync)
+            //lock (sync)
             {
                 DBGameInfo GameInfo = GetGameInfo(GetLastGID());
 
