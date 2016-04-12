@@ -70,6 +70,7 @@ namespace Boggle
                     if (type.Equals("GET"))
                     {
                         ss.BeginReceive(ContentReceived, null);
+
                     }
                 }
                 if (s.StartsWith("Content-Length:"))
@@ -287,7 +288,7 @@ namespace Boggle
             ss.BeginSend("Content-Type: application/json\n", Ignore, null);
             ss.BeginSend("Content-Length: " + 0 + "\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
-            ss.BeginSend(null, (ex, py) => { ss.Shutdown(); }, null);
+            ss.BeginSend("", (ex, py) => { ss.Shutdown(); }, null);
         }
     }
 

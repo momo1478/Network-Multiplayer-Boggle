@@ -10,6 +10,7 @@ using System.Net;
 using static System.Net.HttpStatusCode;
 using System.Diagnostics;
 using System.Linq;
+using System.ServiceModel.Web;
 
 namespace Boggle
 {
@@ -82,8 +83,9 @@ namespace Boggle
         public Stream API()
         {
             SetStatus(OK);
-            //WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
-            return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"\..\index.html");
+            //if(WebOperationContext.Current?.OutgoingResponse.ContentType == null)
+
+            return File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + @"..\index.html");
         }
 
 
