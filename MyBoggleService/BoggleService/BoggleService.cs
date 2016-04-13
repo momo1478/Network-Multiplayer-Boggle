@@ -30,8 +30,8 @@ namespace Boggle
         static BoggleService()
         {
             // Create connection string
-            //BoggleServiceDB = "Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\\App_Data\\BoggleDB.mdf; Integrated Security = True";
-            BoggleServiceDB = ConfigurationManager.ConnectionStrings["BoggleDB"].ConnectionString;
+            BoggleServiceDB = "Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\\App_Data\\BoggleDB.mdf; Integrated Security = True";
+            //BoggleServiceDB = ConfigurationManager.ConnectionStrings["BoggleDB"].ConnectionString;
         }
         /// <summary>
         /// The most recent call to SetStatus determines the response code used when

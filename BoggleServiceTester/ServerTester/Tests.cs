@@ -253,10 +253,11 @@ namespace ServerGrader
         {
             String player1 = MakeUser("Player 1", Created).Result;
             String player2 = MakeUser("Player 2", Created).Result;
+
             String game1 = JoinGame(player1, 10, Accepted).Result;
-            GetStatus(game1, "no", OK).Wait();
+            GetStatus(game1, "no", OK).Wait(500000);
             String game2 = JoinGame(player2, 20, Created).Result;
-            GetStatus(game1, "no", OK).Wait();
+            GetStatus(game1, "no", OK).Wait(500000);
 
             GetStatus("blank", "no", Forbidden).Wait();
             dynamic status = GetStatus(game1, "no", OK).Result;

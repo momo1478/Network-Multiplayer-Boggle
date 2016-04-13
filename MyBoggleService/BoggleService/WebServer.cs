@@ -39,6 +39,8 @@ namespace Boggle
 
     class HttpRequest
     {
+        private readonly object sync = new object();
+
         BoggleService Service = new BoggleService();
         private StringSocket ss;
         private int lineCount;
@@ -56,6 +58,7 @@ namespace Boggle
 
         private void LineReceived(string s, Exception e, object payload)
         {
+
             lineCount++;
             Console.WriteLine(s);
             if (s != null)
@@ -65,14 +68,21 @@ namespace Boggle
                     Regex r = new Regex(@"^(\S+)\s+(\S+)");
                     Match m = r.Match(s);
                     type = m.Groups[1].Value;
-                    Console.WriteLine("Method: " + type);
-                    URL = m.Groups[2].Value;
-                    Console.WriteLine("URL: " + URL);
 
-                    if (type.Equals("GET"))
+                    Console.WriteLine();
+                    Console.WriteLine("Method : " + type);
+
+                    URL = m.Groups[2].Value;
+
+                    if (URL.Equals("/"))
                     {
-                        ss.BeginReceive(ContentReceived, null);
+                        ContentReceived("", null, null);
+                        Console.WriteLine("Omg it's THE API.");
                     }
+
+                    Console.WriteLine();
+                    Console.WriteLine("URL : " + URL);
+
                 }
                 if (s.StartsWith("Content-Length:"))
                 {
@@ -80,14 +90,23 @@ namespace Boggle
                 }
                 if (s == "\r")
                 {
-                    ss.BeginReceive(ContentReceived, null, contentLength);
-                    Console.WriteLine("Omg it's an R.");
+                        if (type.Equals("GET"))
+                        {
+                        ContentReceived("", null, null);
+                        Console.WriteLine("Omg it's a GET.");
+                        }
+                        else
+                        {
+                        ss.BeginReceive(ContentReceived, null, contentLength);
+                        Console.WriteLine("Omg it's NOT A GET.");
+                        }
                 }
                 else
                 {
                     ss.BeginReceive(LineReceived, null);
                 }
             }
+
         }
 
         private void ContentReceived(string s, Exception e, object payload)
@@ -122,7 +141,7 @@ namespace Boggle
                         GameSatus(GID, brief);
                         break;
                     default:
-                        if (Regex.IsMatch(URL, "/BoggleService.svc/api") || URL.Equals("/") ) API();
+                        if (Regex.IsMatch(URL, "/http://localhost:60000/", RegexOptions.IgnoreCase) || URL.Equals("/")) API();
                         else { Blank(); }
                         break;
                 }
@@ -133,21 +152,21 @@ namespace Boggle
         {
             if (type.Equals("POST"))
             {
-                if (Regex.IsMatch(URL, "/BoggleService.svc/users")) { return "CreateUser"; }
+                if (Regex.IsMatch(URL, "/BoggleService.svc/users", RegexOptions.IgnoreCase)) { return "CreateUser"; }
 
-                if (Regex.IsMatch(URL, "/BoggleService.svc/games")) { return "JoinGame"; }
+                if (Regex.IsMatch(URL, "/BoggleService.svc/games", RegexOptions.IgnoreCase)) { return "JoinGame"; }
             }
             else if (type.Equals("PUT"))
             {
-                Match URLParams = Regex.Match(URL, "/BoggleService.svc/games/([0-9]+)");
+                Match URLParams = Regex.Match(URL, "/BoggleService.svc/games/([0-9]+)", RegexOptions.IgnoreCase);
 
-                if (Regex.IsMatch(URL, "/BoggleService.svc/games/[0-9]+")) { GID = URLParams.Groups[1]?.Success == true ? URLParams.Groups[1].Value : "" ; return "PlayWord"; }
+                if (Regex.IsMatch(URL, "/BoggleService.svc/games/[0-9]+", RegexOptions.IgnoreCase)) { GID = URLParams.Groups[1]?.Success == true ? URLParams.Groups[1].Value : ""; return "PlayWord"; }
 
-                if (Regex.IsMatch(URL, "/BoggleService.svc/games")) { return "CancelJoin"; }
+                if (Regex.IsMatch(URL, "/BoggleService.svc/games", RegexOptions.IgnoreCase)) { return "CancelJoin"; }
             }
             else if (type.Equals("GET"))
             {
-                Match URLParams = Regex.Match(URL, @"\/BoggleService.svc\/games\/([0-9]+)(\?brief=([A-Za-z1-9]*))?$");
+                Match URLParams = Regex.Match(URL, @"\/BoggleService.svc\/games\/([A-Za-z0-9]+)(\?brief=([A-Za-z1-9]*))?$", RegexOptions.IgnoreCase);
 
                 if (URLParams.Groups[1]?.Success == true)
                 {
@@ -163,7 +182,7 @@ namespace Boggle
                 }
             }
 
-                return "";
+            return "";
         }
 
         private void Ignore(Exception e, object payload)
@@ -193,9 +212,9 @@ namespace Boggle
                         new CreateUserReturn { UserToken = result?.UserToken },
                         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
-            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\r\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
         }
@@ -220,15 +239,15 @@ namespace Boggle
                         new JoinGameReturn { GameID = result?.GameID },
                         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
-            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\r\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
         }
         private void CancelJoinRequest(string s)
         {
-            CancelGameArgs cancelJoin  = null;
+            CancelGameArgs cancelJoin = null;
             try
             {
                 cancelJoin = JsonConvert.DeserializeObject<CancelGameArgs>(s);
@@ -241,13 +260,12 @@ namespace Boggle
                 BoggleService.SetStatus(BadRequest);
             }
 
-            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\r\n", Ignore, null);
             // TODO : Find out what Content-Length should be.
-            ss.BeginSend("Content-Length: " + 0 + "\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + 0 + "\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             // TODO : Find out if we should pass in null as the first parameter
-            ss.BeginSend("", (ex, py) => { ss.Shutdown(); }, null);
         }
         // TODO : Add a way to get the game ID out of the URL inside the ContentRecieved or method chooser.  
         private void PlayWord(string s, string GID)
@@ -259,7 +277,7 @@ namespace Boggle
                 playWord = JsonConvert.DeserializeObject<PlayWordArgs>(s);
                 Console.WriteLine("UserToken = " + playWord.UserToken);
                 Console.WriteLine("Word = " + playWord.Word);
-                result = Service.PlayWord(playWord,GID);
+                result = Service.PlayWord(playWord, GID);
             }
             catch (Exception)
             {
@@ -273,9 +291,9 @@ namespace Boggle
                         new PlayWordReturn { Score = result?.Score },
                         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
-            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\r\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
         }
@@ -289,44 +307,50 @@ namespace Boggle
                         result,
                         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
-            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            Console.WriteLine();
+            Console.WriteLine("GameStatus was called");
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\r\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
         }
         private void GameSatus(string GID, string Brief)
         {
-            GetStatusReturn result = Service.StatusBrief(GID,Brief);
+            GetStatusReturn result = Service.StatusBrief(GID, Brief);
 
             string jsonResult =
                 JsonConvert.SerializeObject(
                         result,
                         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 
-            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: application/json\n", Ignore, null);
-            ss.BeginSend("Content-Length: " + jsonResult.Length + "\n", Ignore, null);
+            Console.WriteLine();
+            Console.WriteLine("GameStatusBrief was called");
+
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
+            ss.BeginSend("Content-Type: application/json\r\n", Ignore, null);
+            ss.BeginSend("Content-Length: " + jsonResult.Length + "\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(jsonResult, (ex, py) => { ss.Shutdown(); }, null);
         }
         private void API()
         {
-            string api = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"..\index.html");
+            string api = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\index.html");
             BoggleService.SetStatus(OK);
-            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: text/html\n", Ignore, null);
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
+            ss.BeginSend("Content-Type: text/html\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(api, (ex, py) => { ss.Shutdown(); }, null);
         }
         private void Blank()
         {
             BoggleService.SetStatus(BadRequest);
-            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
-            ss.BeginSend("Content-Type: text/html\n", Ignore, null);
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
+            ss.BeginSend("Content-Type: text/html\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
-            ss.BeginSend("", (ex, py) => { ss.Shutdown(); }, null);
         }
+
     }
 
 }

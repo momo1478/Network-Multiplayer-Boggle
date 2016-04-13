@@ -1,15 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <configuration>
+
   <appSettings>
     <add key="aspnet:UseTaskFriendlySynchronizationContext" value="true" />
-    <add key="microsoft.visualstudio.teamsystems.aspnetdevserver:/" value="60000;True;21120;1;-8587410327372330799" />
-    <add key="microsoft.visualstudio.teamsystems.backupinfo" value="1;web.config.backup" />
   </appSettings>
+
   <system.web>
     <compilation debug="true" targetFramework="4.5.2" />
     <httpRuntime targetFramework="4.5.2" />
   </system.web>
+
   <system.serviceModel>
+
     <services>
       <!-- This configures the service.  The behaviorConfiguration is written so that
            this service uses JSON in requests and responses. -->
@@ -17,6 +19,7 @@
         <endpoint behaviorConfiguration="BoggleServiceBehavior" binding="webHttpBinding" contract="Boggle.IBoggleService" />
       </service>
     </services>
+
     <behaviors>
       <serviceBehaviors>
         <behavior name="BoggleServiceBehavior">
@@ -26,20 +29,28 @@
           <serviceDebug includeExceptionDetailInFaults="true" />
         </behavior>
       </serviceBehaviors>
+
       <endpointBehaviors>
         <behavior name="BoggleServiceBehavior">
           <webHttp helpEnabled="true" defaultBodyStyle="Bare" defaultOutgoingResponseFormat="Json" />
         </behavior>
       </endpointBehaviors>
+
     </behaviors>
+
     <protocolMapping>
       <add binding="basicHttpsBinding" scheme="https" />
     </protocolMapping>
+
+
+
     <serviceHostingEnvironment aspNetCompatibilityEnabled="true" multipleSiteBindingsEnabled="true" />
   </system.serviceModel>
-  <connectionStrings>
+  
+ <connectionStrings>
     <add name="BoggleDB" connectionString="Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\App_Data\BoggleDB.mdf; Integrated Security = True" />
-  </connectionStrings>
+ </connectionStrings>
+  
   <system.webServer>
     <!--
         To browse web app root directory during debugging, set the value below to true.
@@ -54,20 +65,36 @@
       <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="*" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
     </handlers>
   </system.webServer>
+
   <runtime>
+
     <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+
       <dependentAssembly>
+
         <assemblyIdentity name="System.Net.Http.Formatting" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+
         <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
+
       </dependentAssembly>
+
       <dependentAssembly>
+
         <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
+
         <bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
+
       </dependentAssembly>
+
       <dependentAssembly>
+
         <assemblyIdentity name="System.Web.Http" publicKeyToken="31bf3856ad364e35" culture="neutral" />
+
         <bindingRedirect oldVersion="0.0.0.0-5.2.3.0" newVersion="5.2.3.0" />
+
       </dependentAssembly>
+
     </assemblyBinding>
+
   </runtime>
 </configuration>

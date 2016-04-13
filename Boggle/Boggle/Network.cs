@@ -28,7 +28,7 @@ namespace Boggle
 
                 using (HttpClient client = CreateClient())
                 {
-                    return client.GetAsync("/games/0").Result.StatusCode.ToString().Equals("NotFound");
+                    return client.GetAsync("/BoggleService.svc/games/25").Result.StatusCode.ToString().Equals("NotFound");
                 }
             }
             catch

@@ -57,7 +57,10 @@ namespace Boggle
         /// This is automatically run prior to all the tests to start the server
         /// </summary>
         [ClassInitialize()]
-        
+        public static void StartIIS(TestContext testContext)
+        {
+           //WebServer.Main();
+        }
 
         /// <summary>
         /// This is automatically run when all tests have completed to stop the server
@@ -65,7 +68,7 @@ namespace Boggle
         [ClassCleanup()]
         public static void StopIIS()
         {
-            IISAgent.Stop();
+           //System.Environment.Exit(0);
         }
 
         private RestTestClient client = new RestTestClient("http://localhost:60000/");

@@ -187,7 +187,7 @@
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
           <servers defaultServer="SelfHostServer">
-            <server name="SelfHostServer" exePath="" cmdArgs="" url="http://localhost:60000" workingDir="" />
+            <server name="SelfHostServer" exePath="" cmdArgs="" url="http://localhost:60000/" workingDir="" />
           </servers>
         </WebProjectProperties>
       </FlavorProperties>
