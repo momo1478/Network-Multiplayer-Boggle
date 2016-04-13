@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Net.HttpStatusCode;
 
 namespace Boggle
 {
@@ -71,7 +72,6 @@ namespace Boggle
                     if (type.Equals("GET"))
                     {
                         ss.BeginReceive(ContentReceived, null);
-
                     }
                 }
                 if (s.StartsWith("Content-Length:"))
@@ -121,9 +121,9 @@ namespace Boggle
                     case "StatusBrief":
                         GameSatus(GID, brief);
                         break;
-
                     default:
-                        API();
+                        if (Regex.IsMatch(URL, "/BoggleService.svc/api") || URL.Equals("/") ) API();
+                        else { Blank(); }
                         break;
                 }
             }
@@ -147,7 +147,7 @@ namespace Boggle
             }
             else if (type.Equals("GET"))
             {
-                Match URLParams = Regex.Match(URL, @"\/BoggleService.svc\/games\/([0-9]+)?(brief=yes)?");
+                Match URLParams = Regex.Match(URL, @"\/BoggleService.svc\/games\/([0-9]+)(\?brief=([A-Za-z1-9]*))?$");
 
                 if (URLParams.Groups[1]?.Success == true)
                 {
@@ -155,7 +155,7 @@ namespace Boggle
 
                     if (URLParams.Groups[2]?.Success == true)
                     {
-                        brief = URLParams.Groups[2].Value;
+                        brief = URLParams.Groups[3].Value;
                         return "StatusBrief";
                     }
 
@@ -173,13 +173,20 @@ namespace Boggle
         // Helper methods
         private void CreateUser(string s)
         {
-            UserInfo user = JsonConvert.DeserializeObject<UserInfo>(s);
-            Console.WriteLine("Nickname = " + user.Nickname);
+            UserInfo user = null;
+            CreateUserReturn result = null;
+            try
+            {
+                user = JsonConvert.DeserializeObject<UserInfo>(s);
+                Console.WriteLine("Nickname = " + user.Nickname);
+                // Call service method
+                result = Service.CreateUser(user);
+            }
+            catch (Exception)
+            {
+                BoggleService.SetStatus(BadRequest);
+            }
 
-
-
-            // Call service method
-            CreateUserReturn result = Service.CreateUser(user);
 
             string jsonResult =
                 JsonConvert.SerializeObject(
@@ -194,13 +201,20 @@ namespace Boggle
         }
         private void JoinGame(string s)
         {
-            JoinGameArgs joinGame = JsonConvert.DeserializeObject<JoinGameArgs>(s);
-            Console.WriteLine("UserToken = " + joinGame.UserToken);
-            Console.WriteLine("TimeLimit = " + joinGame.TimeLimit);
-
-            // Call service method
-            JoinGameReturn result = Service.JoinGame(joinGame);
-
+            JoinGameArgs joinGame = null;
+            JoinGameReturn result = null;
+            try
+            {
+                joinGame = JsonConvert.DeserializeObject<JoinGameArgs>(s);
+                Console.WriteLine("UserToken = " + joinGame.UserToken);
+                Console.WriteLine("TimeLimit = " + joinGame.TimeLimit);
+                // Call service method
+                result = Service.JoinGame(joinGame);
+            }
+            catch (Exception)
+            {
+                BoggleService.SetStatus(BadRequest);
+            }
             string jsonResult =
                 JsonConvert.SerializeObject(
                         new JoinGameReturn { GameID = result?.GameID },
@@ -214,11 +228,18 @@ namespace Boggle
         }
         private void CancelJoinRequest(string s)
         {
-            CancelGameArgs cancelJoin = JsonConvert.DeserializeObject<CancelGameArgs>(s);
-            Console.WriteLine("UserToken = " + cancelJoin.UserToken);
-
-            // Call service method
-            Service.CancelJoinRequest(cancelJoin);
+            CancelGameArgs cancelJoin  = null;
+            try
+            {
+                cancelJoin = JsonConvert.DeserializeObject<CancelGameArgs>(s);
+                Console.WriteLine("UserToken = " + cancelJoin.UserToken);
+                // Call service method
+                Service.CancelJoinRequest(cancelJoin);
+            }
+            catch (Exception)
+            {
+                BoggleService.SetStatus(BadRequest);
+            }
 
             ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
             ss.BeginSend("Content-Type: application/json\n", Ignore, null);
@@ -226,17 +247,26 @@ namespace Boggle
             ss.BeginSend("Content-Length: " + 0 + "\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             // TODO : Find out if we should pass in null as the first parameter
-            ss.BeginSend(null, (ex, py) => { ss.Shutdown(); }, null);
+            ss.BeginSend("", (ex, py) => { ss.Shutdown(); }, null);
         }
         // TODO : Add a way to get the game ID out of the URL inside the ContentRecieved or method chooser.  
         private void PlayWord(string s, string GID)
         {
-            PlayWordArgs playWord = JsonConvert.DeserializeObject<PlayWordArgs>(s);
-            Console.WriteLine("UserToken = " + playWord.UserToken);
-            Console.WriteLine("Word = " + playWord.Word);
+            PlayWordArgs playWord = null;
+            PlayWordReturn result = null;
+            try
+            {
+                playWord = JsonConvert.DeserializeObject<PlayWordArgs>(s);
+                Console.WriteLine("UserToken = " + playWord.UserToken);
+                Console.WriteLine("Word = " + playWord.Word);
+                result = Service.PlayWord(playWord,GID);
+            }
+            catch (Exception)
+            {
+                BoggleService.SetStatus(BadRequest);
+            }
 
             // Call service method
-            PlayWordReturn result = Service.PlayWord(playWord,GID);
 
             string jsonResult =
                 JsonConvert.SerializeObject(
@@ -283,11 +313,19 @@ namespace Boggle
         private void API()
         {
             string api = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"..\index.html");
-
+            BoggleService.SetStatus(OK);
             ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
             ss.BeginSend("Content-Type: text/html\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
             ss.BeginSend(api, (ex, py) => { ss.Shutdown(); }, null);
+        }
+        private void Blank()
+        {
+            BoggleService.SetStatus(BadRequest);
+            ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\n", Ignore, null);
+            ss.BeginSend("Content-Type: text/html\n", Ignore, null);
+            ss.BeginSend("\r\n", Ignore, null);
+            ss.BeginSend("", (ex, py) => { ss.Shutdown(); }, null);
         }
     }
 

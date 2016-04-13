@@ -38,7 +38,7 @@ namespace Boggle
         /// an http response is sent.
         /// </summary>
         /// <param name="status"></param>
-        private static void SetStatus(HttpStatusCode status)
+        internal static void SetStatus(HttpStatusCode status)
         {
             //lock (sync)
             {
@@ -93,7 +93,7 @@ namespace Boggle
         {
             //lock (sync)
             {
-                if (user.Nickname == null || user.Nickname.Trim().Length == 0)
+                if (user?.Nickname == null || user?.Nickname.Trim().Length == 0)
                 {
                     SetStatus(Forbidden);
                     return null;
