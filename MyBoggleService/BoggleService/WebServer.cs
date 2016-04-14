@@ -141,7 +141,7 @@ namespace Boggle
                         GameSatus(GID, brief);
                         break;
                     default:
-                        if (Regex.IsMatch(URL, "/http://localhost:60000/", RegexOptions.IgnoreCase) || URL.Equals("/")) API();
+                        if (Regex.IsMatch(URL, "/http://localhost:60000/", RegexOptions.IgnoreCase) || URL.Equals("/") || Regex.IsMatch(URL, "/BoggleService.svc/api", RegexOptions.IgnoreCase)) { API(); }
                         else { Blank(); }
                         break;
                 }
