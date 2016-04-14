@@ -141,7 +141,7 @@ namespace Boggle
                         GameSatus(GID, brief);
                         break;
                     default:
-                        if (Regex.IsMatch(URL, "/http://localhost:60000/", RegexOptions.IgnoreCase) || URL.Equals("/")) API();
+                        if (Regex.IsMatch(URL, "/http://localhost:60000/", RegexOptions.IgnoreCase) || URL.Equals("/") || Regex.IsMatch(URL, "/BoggleService.svc/api", RegexOptions.IgnoreCase)) { API(); }
                         else { Blank(); }
                         break;
                 }
@@ -338,6 +338,9 @@ namespace Boggle
         {
             string api = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + @"\index.html");
             BoggleService.SetStatus(OK);
+
+            Console.WriteLine("API CALLED");
+
             ss.BeginSend("HTTP/1.1 " + BoggleService.StatusString + "\r\n", Ignore, null);
             ss.BeginSend("Content-Type: text/html\r\n", Ignore, null);
             ss.BeginSend("\r\n", Ignore, null);
