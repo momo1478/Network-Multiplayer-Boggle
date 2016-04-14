@@ -25,27 +25,27 @@ namespace Boggle
         /// <summary>
         /// Starts IIS
         /// </summary>
-        //public static void Start(string arguments)
-        //{
-        //    if (process == null)
-        //    {
-        //        ProcessStartInfo info = new ProcessStartInfo(Properties.Resources.IIS_EXECUTABLE, arguments);
-        //        info.WindowStyle = ProcessWindowStyle.Minimized;
-        //        info.UseShellExecute = false;
-        //        process = Process.Start(info);
-        //    }
-        //}
+        public static void Start(string arguments)
+        {
+            if (process == null)
+            {
+                ProcessStartInfo info = new ProcessStartInfo(Properties.Resources.IIS_EXECUTABLE, arguments);
+                info.WindowStyle = ProcessWindowStyle.Minimized;
+                info.UseShellExecute = false;
+                process = Process.Start(info);
+            }
+        }
 
         /// <summary>
         ///  Stops IIS
         /// </summary>
-        //public static void Stop()
-        //{
-        //    if (process != null)
-        //    {
-        //        process.Kill();
-        //    }
-        //}
+        public static void Stop()
+        {
+            if (process != null)
+            {
+                process.Kill();
+            }
+        }
     }
 
     [TestClass]
