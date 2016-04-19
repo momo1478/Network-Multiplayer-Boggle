@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
+using System.Collections.Concurrent;
 
 namespace CustomNetworking
 {
@@ -55,6 +56,25 @@ namespace CustomNetworking
     public class StringSocket
     {
         /// <summary>
+        /// Object that links CallBack to its payload
+        /// </summary>
+        public class CallBackObject
+        {
+            internal SendCallback method;
+            internal object payload;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="s"></param>
+            /// <param name="p"></param>
+            public CallBackObject(SendCallback s, object p)
+            {
+                method = s;
+                payload = p;
+            }
+        }
+        /// <summary>
         /// The type of delegate that is called when a send has completed.
         /// </summary>
         public delegate void SendCallback(Exception e, object payload);
@@ -67,6 +87,26 @@ namespace CustomNetworking
         // Underlying socket
         private Socket socket;
 
+        // Encoding for Socket to translate bytes.
+        private Encoding encoding;
+
+        // synching object for send.
+        private readonly object sendSync = new object();
+
+        // String buffer for pending bytes.
+        private StringBuilder outgoing;
+
+        // Determines if an ansyc send operation is happening.
+        private bool sendIsOngoing = false;
+
+        //Byte buffer for asynchronous send.
+        //Amount of bytes successfully sent.
+        private byte[] pendingBytes = new byte[0];
+        private int pendingIndex = 0;
+
+        //
+        private ConcurrentQueue<CallBackObject> callbackQueue = new ConcurrentQueue<CallBackObject>();
+
         /// <summary>
         /// Creates a StringSocket from a regular Socket, which should already be connected.  
         /// The read and write methods of the regular Socket must not be called after the
@@ -76,6 +116,9 @@ namespace CustomNetworking
         public StringSocket(Socket s, Encoding e)
         {
             socket = s;
+            encoding = e;
+
+            outgoing = new StringBuilder();
         }
 
         /// <summary>
@@ -118,6 +161,97 @@ namespace CustomNetworking
         /// </summary>
         public void BeginSend(String s, SendCallback callback, object payload)
         {
+            //writes string to socket (break string into bytes to send)
+            callbackQueue.Enqueue(new CallBackObject(callback, payload));
+            SendMessage(s);
+
+            //sends string via socket connection
+
+            //calls callback on THREAD when send is complete
+            
+        }
+
+        private void SendMessage(string lines)
+        {
+            // Get exclusive access to send mechanism
+            lock (sendSync)
+            {
+                // Append the message to the outgoing lines
+                outgoing.Append(lines);
+
+                // If there's not a send ongoing, start one.
+                if (!sendIsOngoing)
+                {
+                    sendIsOngoing = true;
+                    SendBytes();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Attempts to send the entire outgoing string.
+        /// This method should not be called unless sendSync has been acquired.
+        /// </summary>
+        private void SendBytes()
+        {
+            // If we're in the middle of the process of sending out a block of bytes,
+            // keep doing that.
+            if (pendingIndex < pendingBytes.Length)
+            {
+                socket.BeginSend(pendingBytes, pendingIndex, pendingBytes.Length - pendingIndex,
+                                 SocketFlags.None, MessageSent, null);
+            }
+
+            // If we're not currently dealing with a block of bytes, make a new block of bytes
+            // out of outgoing and start sending that.
+            else if (outgoing.Length > 0)
+            {
+                pendingBytes = encoding.GetBytes(outgoing.ToString());
+                pendingIndex = 0;
+                outgoing.Clear();
+                socket.BeginSend(pendingBytes, 0, pendingBytes.Length,
+                                 SocketFlags.None, MessageSent, null);
+            }
+
+            // If there's nothing to send, shut down for the time being.
+            else
+            {
+                //Call callback here.
+                sendIsOngoing = false;
+
+                CallBackObject del;
+                while (callbackQueue.TryDequeue(out del))
+                {
+                    del.method.Invoke(null, del.payload);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when a message has been successfully sent
+        /// </summary>
+        private void MessageSent(IAsyncResult result)
+        {
+            // Find out how many bytes were actually sent
+            int bytesSent = socket.EndSend(result);
+
+            // Get exclusive access to send mechanism
+            lock (sendSync)
+            {
+                // The socket has been closed
+                if (bytesSent == 0)
+                {
+                    socket.Close();
+                    Console.WriteLine("Socket closed");
+                }
+
+                // Update the pendingIndex and keep trying
+                else
+                {
+                    pendingIndex += bytesSent;
+                    SendBytes();
+                }
+            }
         }
 
         /// <summary>
@@ -151,7 +285,7 @@ namespace CustomNetworking
         /// from buffering an unbounded number of incoming bytes beyond what is required to service
         /// the pending callbacks.
         /// </summary>
-        public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
+        public async void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
         }
     }
