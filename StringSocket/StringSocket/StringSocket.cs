@@ -201,7 +201,7 @@ namespace CustomNetworking
         public void BeginSend(String s, SendCallback callback, object payload)
         {
             //writes string to socket (break string into bytes to send)
-            callbackQueue.Enqueue(new CallBackObject(callback, payload));
+            callbackQueue.Enqueue(new CallBackObject(callback, payload) );
             SendMessage(s);
 
             //sends string via socket connection
@@ -250,6 +250,7 @@ namespace CustomNetworking
                 outgoing.Clear();
                 socket.BeginSend(pendingBytes, 0, pendingBytes.Length,
                                  SocketFlags.None, MessageSent, null);
+
                 CallBackObject del;
                 bool hasInvoked = false;
                 while (!hasInvoked && callbackQueue.TryDequeue(out del))
@@ -352,6 +353,9 @@ namespace CustomNetworking
                 return;
             }
 
+            //Have we hit a \n ?
+            bool readMore = true;
+
             // Figure out how many bytes have come in
             int bytesRead = socket.EndReceive(result);
 
@@ -373,6 +377,8 @@ namespace CustomNetworking
                 {
                     if (incomingChars[i].Equals('\n'))
                     {
+                        readMore = false;
+
                         newLineIndex = i;
                         break;
                     }
@@ -380,20 +386,24 @@ namespace CustomNetworking
                 }
                 incoming.Append(incomingChars, 0, newLineIndex);
                 Debug.WriteLine("Data Recieved is : " + incoming);
-
-
-                CallBackReceive del;
-                bool hasInvoked = false;
-                // Invoke method.
-                while (!hasInvoked && callbackReceiveQueue.TryDequeue(out del))
+                
+                if (readMore)
                 {
-                    hasInvoked = true;
-                    Task.Run(() => del.method.Invoke(incoming.ToString(), null, del.payload));
+                    // Ask for some more data
+                    socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
                 }
+                else
+                {
+                    // If we are done recieving data call the callback method.
 
-
-                // Ask for some more data
-                socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
+                    CallBackReceive del;
+                    bool hasInvoked = false;
+                    while (!hasInvoked && callbackReceiveQueue.TryDequeue(out del))
+                    {
+                        hasInvoked = true;
+                        Task.Run(() => del.method.Invoke(incoming.ToString(), null, del.payload));
+                    }
+                }
 
 
             }

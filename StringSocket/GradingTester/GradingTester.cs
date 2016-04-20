@@ -228,6 +228,7 @@ namespace GradingTester
                     {
                         sender.BeginSend(c.ToString(), (e, p) => { }, null);
                     }
+                    //Thread.Sleep(1000);
                     receiver.BeginReceive((s, e, p) => { line = s; mre.Set(); }, null);
                     mre.WaitOne();
                     Assert.AreEqual("Hello", line);
