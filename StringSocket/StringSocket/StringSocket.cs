@@ -74,6 +74,28 @@ namespace CustomNetworking
                 method = s;
                 payload = p;
             }
+
+            
+        }
+
+        /// <summary>
+        /// Same as CallBackObject but for Recieve objects.
+        /// </summary>
+        public class CallBackReceive
+        {
+            internal ReceiveCallback method;
+            internal object payload;
+
+            /// <summary>
+            /// Constructor 2.
+            /// </summary>
+            /// <param name="r"></param>
+            /// <param name="p"></param>
+            public CallBackReceive(ReceiveCallback r , object p)
+            {
+                method = r;
+                payload = p;
+            }
         }
         /// <summary>
         /// The type of delegate that is called when a send has completed.
@@ -107,18 +129,19 @@ namespace CustomNetworking
         private byte[] pendingBytes = new byte[0];
         private int pendingIndex = 0;
 
-        //queue
+        // A queue to add call back methods to.
         private ConcurrentQueue<CallBackObject> callbackQueue = new ConcurrentQueue<CallBackObject>();
+        private ConcurrentQueue<CallBackReceive> callbackReceiveQueue = new ConcurrentQueue<CallBackReceive>();
 
         // Used to decoud our UTF8-encoded byte stream.
-        //private Decoder decoder = encoding.GetDecoder();
+        private Decoder decoder = encoding.GetDecoder();
 
         // Used to help declare our array size.
-        //private const int BUFFER_SIZE = 1024;
+        private const int BUFFER_SIZE = 1024;
 
         // Buffers that will contain incoming bytes and characters.
-        //private byte[] incomingBytes = new byte[BUFFER_SIZE];
-        //private char[] incomingChars = new char[BUFFER_SIZE];
+        private byte[] incomingBytes = new byte[BUFFER_SIZE];
+        private char[] incomingChars = new char[BUFFER_SIZE];
 
 
         /// <summary>
@@ -134,14 +157,12 @@ namespace CustomNetworking
 
             outgoing = new StringBuilder();
             incoming = new StringBuilder();
-
-            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
         }
 
         /// <summary>
         /// Shuts down and closes the socket.  No need to change this.
         /// </summary>
-        public void Shutdown  ()
+        public void Shutdown()
         {
             try
             {
@@ -313,51 +334,40 @@ namespace CustomNetworking
         /// from buffering an unbounded number of incoming bytes beyond what is required to service
         /// the pending callbacks.
         /// </summary>
-        public async void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
+        public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
-            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
+            callbackReceiveQueue.Enqueue(new CallBackReceive(callback, payload));
+
+            socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
         }
 
         /// <summary>
         /// Called when some data has been received.
         /// </summary>
-        //private void MessageReceived(IAsyncResult result)
-        //{
-        //    // Figure out how many bytes have come in
-        //    int bytesRead = socket.EndReceive(result);
+        private void MessageReceived(IAsyncResult result)
+        {
+            // Figure out how many bytes have come in
+            int bytesRead = socket.EndReceive(result);
 
-        //    // If no bytes were received, it means the client closed its side of the socket.
-        //    // Report that to the console and close our socket.
-        //    if (bytesRead == 0)
-        //    {
-        //        Console.WriteLine("Socket closed");
-        //        socket.Close();
-        //    }
-        //    // Otherwise, decode and display the incoming bytes.  Then request more bytes.
-        //    else
-        //    {
-        //        // Convert the bytes into characters and appending to incoming
-        //        int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-        //        incoming.Append(incomingChars, 0, charsRead);
-        //        Console.WriteLine(incoming);
+            // If no bytes were received, it means the client closed its side of the socket.
+            // Report that to the console and close our socket.
+            if (bytesRead == 0)
+            {
+                Console.WriteLine("Socket closed");
+                socket.Close();
+            }
+            // Otherwise, decode and display the incoming bytes.  Then request more bytes.
+            else
+            {
+                // Convert the bytes into characters and appending to incoming
+                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                incoming.Append(incomingChars, 0, charsRead);
 
-        //        // Echo any complete lines, after capitalizing them
-        //        for (int i = incoming.Length - 1; i >= 0; i--)
-        //        {
-        //            if (incoming[i] == '\n')
-        //            {
-        //                String lines = incoming.ToString(0, i + 1);
-        //                incoming.Remove(0, i + 1);
-        //                SendMessage(lines.ToUpper());
-        //                break;
-        //            }
-        //        }
-
-        //        // Ask for some more data
-        //        socket.BeginReceive(incomingBytes, 0, incomingBytes.Length,
-        //            SocketFlags.None, MessageReceived, null);
-        //    }
-        //}
+                // Ask for some more data
+                socket.BeginReceive(incomingBytes, 0, incomingBytes.Length,
+                    SocketFlags.None, MessageReceived, null);
+            }
+        }
 
     }
 }
