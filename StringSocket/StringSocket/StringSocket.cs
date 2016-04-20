@@ -53,7 +53,6 @@ namespace CustomNetworking
     /// it is the requested string (with the newline removed).  If the Exception is non-null, 
     /// it is the Exception that caused the send attempt to fail.
     /// </summary>
-
     public class StringSocket
     {
         /// <summary>
@@ -337,8 +336,9 @@ namespace CustomNetworking
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
             callbackReceiveQueue.Enqueue(new CallBackReceive(callback, payload));
-
             socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
+            //TODO : Invoke call back method when a string of text is terminated by a newline character or failed to atempt to do so.
+            //TODO : 
         }
 
         /// <summary>
@@ -346,6 +346,10 @@ namespace CustomNetworking
         /// </summary>
         private void MessageReceived(IAsyncResult result)
         {
+            if (!socket.Connected)
+            {
+                return;
+            }
             // Figure out how many bytes have come in
             int bytesRead = socket.EndReceive(result);
 
@@ -361,11 +365,22 @@ namespace CustomNetworking
             {
                 // Convert the bytes into characters and appending to incoming
                 int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
-                incoming.Append(incomingChars, 0, charsRead);
+
+                int newLineIndex = Array.FindIndex(incomingChars, (c) => (c.Equals('\n'))) == -1 ? 0 : Array.FindIndex(incomingChars, (c) => (c.Equals('\n')));
+
+                incoming.Append(incomingChars, 0, newLineIndex);
+
+                // Invoke method.
+                CallBackReceive del;
+                bool hasInvoked = false;
+                while (!hasInvoked && callbackReceiveQueue.TryDequeue(out del))
+                {
+                    hasInvoked = true;
+                    Task.Run(() => del.method.Invoke(incoming.ToString() , null, del.payload));
+                }
 
                 // Ask for some more data
-                socket.BeginReceive(incomingBytes, 0, incomingBytes.Length,
-                    SocketFlags.None, MessageReceived, null);
+                socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
             }
         }
 
