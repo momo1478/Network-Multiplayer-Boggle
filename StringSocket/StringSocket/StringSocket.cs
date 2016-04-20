@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CustomNetworking
 {
@@ -74,7 +75,7 @@ namespace CustomNetworking
                 payload = p;
             }
 
-            
+
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace CustomNetworking
             /// </summary>
             /// <param name="r"></param>
             /// <param name="p"></param>
-            public CallBackReceive(ReceiveCallback r , object p)
+            public CallBackReceive(ReceiveCallback r, object p)
             {
                 method = r;
                 payload = p;
@@ -142,6 +143,7 @@ namespace CustomNetworking
         private byte[] incomingBytes = new byte[BUFFER_SIZE];
         private char[] incomingChars = new char[BUFFER_SIZE];
 
+        private readonly object sync = new object();
 
         /// <summary>
         /// Creates a StringSocket from a regular Socket, which should already be connected.  
@@ -205,7 +207,7 @@ namespace CustomNetworking
             //sends string via socket connection
 
             //calls callback on THREAD when send is complete
-            
+
         }
 
         private void SendMessage(string lines)
@@ -270,7 +272,7 @@ namespace CustomNetworking
                 {
                     hasInvoked = true;
 
-                    Task.Run( () => del.method.Invoke(null, del.payload) );
+                    Task.Run(() => del.method.Invoke(null, del.payload));
                 }
             }
         }
@@ -290,7 +292,7 @@ namespace CustomNetworking
                 if (bytesSent == 0)
                 {
                     socket.Close();
-                    Console.WriteLine("Socket closed");
+                    Debug.WriteLine("Socket closed");
                 }
 
                 // Update the pendingIndex and keep trying
@@ -338,7 +340,6 @@ namespace CustomNetworking
             callbackReceiveQueue.Enqueue(new CallBackReceive(callback, payload));
             socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
             //TODO : Invoke call back method when a string of text is terminated by a newline character or failed to atempt to do so.
-            //TODO : 
         }
 
         /// <summary>
@@ -350,14 +351,15 @@ namespace CustomNetworking
             {
                 return;
             }
+
             // Figure out how many bytes have come in
             int bytesRead = socket.EndReceive(result);
 
             // If no bytes were received, it means the client closed its side of the socket.
-            // Report that to the console and close our socket.
+            // Report that to the debug and close our socket.
             if (bytesRead == 0)
             {
-                Console.WriteLine("Socket closed");
+                Debug.WriteLine("Socket closed");
                 socket.Close();
             }
             // Otherwise, decode and display the incoming bytes.  Then request more bytes.
@@ -366,21 +368,34 @@ namespace CustomNetworking
                 // Convert the bytes into characters and appending to incoming
                 int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
 
-                int newLineIndex = Array.FindIndex(incomingChars, (c) => (c.Equals('\n'))) == -1 ? 0 : Array.FindIndex(incomingChars, (c) => (c.Equals('\n')));
+                int newLineIndex = charsRead;// = Array.FindIndex(incomingChars, (c) => (c.Equals('\n'))) == -1 ? 0 : Array.FindIndex(incomingChars, (c) => (c.Equals('\n')));
+                for (int i = 0; i < charsRead; i++)
+                {
+                    if (incomingChars[i].Equals('\n'))
+                    {
+                        newLineIndex = i;
+                        break;
+                    }
 
+                }
                 incoming.Append(incomingChars, 0, newLineIndex);
+                Debug.WriteLine("Data Recieved is : " + incoming);
 
-                // Invoke method.
+
                 CallBackReceive del;
                 bool hasInvoked = false;
+                // Invoke method.
                 while (!hasInvoked && callbackReceiveQueue.TryDequeue(out del))
                 {
                     hasInvoked = true;
-                    Task.Run(() => del.method.Invoke(incoming.ToString() , null, del.payload));
+                    Task.Run(() => del.method.Invoke(incoming.ToString(), null, del.payload));
                 }
+
 
                 // Ask for some more data
                 socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
+
+
             }
         }
 
