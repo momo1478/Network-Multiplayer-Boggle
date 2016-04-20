@@ -8,6 +8,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace CustomNetworking
 {
@@ -88,13 +89,15 @@ namespace CustomNetworking
         private Socket socket;
 
         // Encoding for Socket to translate bytes.
-        private Encoding encoding;
+        private static System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
 
         // synching object for send.
         private readonly object sendSync = new object();
 
         // String buffer for pending bytes.
         private StringBuilder outgoing;
+        // String buffer for recieving bytes.
+        private StringBuilder incoming;
 
         // Determines if an ansyc send operation is happening.
         private bool sendIsOngoing = false;
@@ -104,8 +107,19 @@ namespace CustomNetworking
         private byte[] pendingBytes = new byte[0];
         private int pendingIndex = 0;
 
-        //
+        //queue
         private ConcurrentQueue<CallBackObject> callbackQueue = new ConcurrentQueue<CallBackObject>();
+
+        // Used to decoud our UTF8-encoded byte stream.
+        //private Decoder decoder = encoding.GetDecoder();
+
+        // Used to help declare our array size.
+        //private const int BUFFER_SIZE = 1024;
+
+        // Buffers that will contain incoming bytes and characters.
+        //private byte[] incomingBytes = new byte[BUFFER_SIZE];
+        //private char[] incomingChars = new char[BUFFER_SIZE];
+
 
         /// <summary>
         /// Creates a StringSocket from a regular Socket, which should already be connected.  
@@ -113,12 +127,15 @@ namespace CustomNetworking
         /// StringSocket is created.  Otherwise, the StringSocket will not behave properly.  
         /// The encoding to use to convert between raw bytes and strings is also provided.
         /// </summary>
-        public StringSocket(Socket s, Encoding e)
+        public StringSocket(Socket s, UTF8Encoding e)
         {
             socket = s;
             encoding = e;
 
             outgoing = new StringBuilder();
+            incoming = new StringBuilder();
+
+            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
         }
 
         /// <summary>
@@ -211,6 +228,14 @@ namespace CustomNetworking
                 outgoing.Clear();
                 socket.BeginSend(pendingBytes, 0, pendingBytes.Length,
                                  SocketFlags.None, MessageSent, null);
+                CallBackObject del;
+                bool hasInvoked = false;
+                while (!hasInvoked && callbackQueue.TryDequeue(out del))
+                {
+                    hasInvoked = true;
+
+                    Task.Run(() => del.method.Invoke(null, del.payload));
+                }
             }
 
             // If there's nothing to send, shut down for the time being.
@@ -220,9 +245,12 @@ namespace CustomNetworking
                 sendIsOngoing = false;
 
                 CallBackObject del;
-                while (callbackQueue.TryDequeue(out del))
+                bool hasInvoked = false;
+                while (!hasInvoked && callbackQueue.TryDequeue(out del))
                 {
-                    del.method.Invoke(null, del.payload);
+                    hasInvoked = true;
+
+                    Task.Run( () => del.method.Invoke(null, del.payload) );
                 }
             }
         }
@@ -264,7 +292,7 @@ namespace CustomNetworking
         /// string of text terminated by a newline character from the underlying Socket, or
         /// failed in the attempt, it invokes the callback.  The parameters to the callback are
         /// a (possibly null) string, a (possibly null) Exception, and the payload.  Either the
-        /// string or the Exception will be null, or possibly boh.  If the string is non-null, 
+        /// string or the Exception will be null, or possibly both.  If the string is non-null, 
         /// it is the requested string (with the newline removed).  If the Exception is non-null, 
         /// it is the Exception that caused the send attempt to fail.  If both are null, this
         /// indicates that the sending end of the remote socket has been shut down.
@@ -287,6 +315,49 @@ namespace CustomNetworking
         /// </summary>
         public async void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
+            //socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
         }
+
+        /// <summary>
+        /// Called when some data has been received.
+        /// </summary>
+        //private void MessageReceived(IAsyncResult result)
+        //{
+        //    // Figure out how many bytes have come in
+        //    int bytesRead = socket.EndReceive(result);
+
+        //    // If no bytes were received, it means the client closed its side of the socket.
+        //    // Report that to the console and close our socket.
+        //    if (bytesRead == 0)
+        //    {
+        //        Console.WriteLine("Socket closed");
+        //        socket.Close();
+        //    }
+        //    // Otherwise, decode and display the incoming bytes.  Then request more bytes.
+        //    else
+        //    {
+        //        // Convert the bytes into characters and appending to incoming
+        //        int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+        //        incoming.Append(incomingChars, 0, charsRead);
+        //        Console.WriteLine(incoming);
+
+        //        // Echo any complete lines, after capitalizing them
+        //        for (int i = incoming.Length - 1; i >= 0; i--)
+        //        {
+        //            if (incoming[i] == '\n')
+        //            {
+        //                String lines = incoming.ToString(0, i + 1);
+        //                incoming.Remove(0, i + 1);
+        //                SendMessage(lines.ToUpper());
+        //                break;
+        //            }
+        //        }
+
+        //        // Ask for some more data
+        //        socket.BeginReceive(incomingBytes, 0, incomingBytes.Length,
+        //            SocketFlags.None, MessageReceived, null);
+        //    }
+        //}
+
     }
 }

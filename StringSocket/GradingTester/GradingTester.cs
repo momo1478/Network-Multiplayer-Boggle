@@ -800,7 +800,7 @@ namespace GradingTester
                         receiver.BeginReceive((s, e, p) => { Interlocked.Decrement(ref count2); }, null);
                     }
 
-                    if (!SpinWait.SpinUntil(() => count1 == 0 && count2 == 0, 5000))
+                    if (!SpinWait.SpinUntil(() => count1 == 0 && count2 == 0, 50000))
                     {
                         Assert.Fail();
                     }
