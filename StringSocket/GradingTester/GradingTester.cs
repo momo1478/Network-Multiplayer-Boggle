@@ -7,6 +7,7 @@ using System.Threading;
 using System.Collections.Generic;
 using CustomNetworking;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace GradingTester
 {
@@ -287,6 +288,7 @@ namespace GradingTester
         public void Test7()
         {
             new Test7Class().run(4007);
+            Debug.WriteLine("Finished Test");
         }
 
         public class Test7Class
@@ -403,7 +405,7 @@ namespace GradingTester
                     {
                         sender.BeginSend(i.ToString() + "\n", (e, p) => { }, null);
                     }
-                    if (!SpinWait.SpinUntil(() => count == LIMIT, 5000))
+                    if (!SpinWait.SpinUntil(() => count == LIMIT, 90000))
                     {
                         Assert.Fail();
                     }

@@ -74,8 +74,6 @@ namespace CustomNetworking
                 method = s;
                 payload = p;
             }
-
-
         }
 
         /// <summary>
@@ -132,6 +130,8 @@ namespace CustomNetworking
         // A queue to add call back methods to.
         private ConcurrentQueue<CallBackObject> callbackQueue = new ConcurrentQueue<CallBackObject>();
         private ConcurrentQueue<CallBackReceive> callbackReceiveQueue = new ConcurrentQueue<CallBackReceive>();
+
+        private ConcurrentQueue<string> splitLines = new ConcurrentQueue<string>();
 
         // Used to decoud our UTF8-encoded byte stream.
         private Decoder decoder = encoding.GetDecoder();
@@ -201,7 +201,7 @@ namespace CustomNetworking
         public void BeginSend(String s, SendCallback callback, object payload)
         {
             //writes string to socket (break string into bytes to send)
-            callbackQueue.Enqueue(new CallBackObject(callback, payload) );
+            callbackQueue.Enqueue(new CallBackObject(callback, payload));
             SendMessage(s);
 
             //sends string via socket connection
@@ -339,7 +339,10 @@ namespace CustomNetworking
         public void BeginReceive(ReceiveCallback callback, object payload, int length = 0)
         {
             callbackReceiveQueue.Enqueue(new CallBackReceive(callback, payload));
-            socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
+            if (callbackReceiveQueue.Count == 1)
+            {
+                TryInvokeCallback();
+            }
             //TODO : Invoke call back method when a string of text is terminated by a newline character or failed to atempt to do so.
         }
 
@@ -352,10 +355,8 @@ namespace CustomNetworking
             {
                 return;
             }
-
-            //Have we hit a \n ?
-            bool readMore = true;
-
+            byte[] buffer = (byte[])result.AsyncState;
+            char[] charBuffer = new char[1024];
             // Figure out how many bytes have come in
             int bytesRead = socket.EndReceive(result);
 
@@ -370,42 +371,46 @@ namespace CustomNetworking
             else
             {
                 // Convert the bytes into characters and appending to incoming
-                int charsRead = decoder.GetChars(incomingBytes, 0, bytesRead, incomingChars, 0, false);
+                int charsRead = decoder.GetChars(buffer, 0, bytesRead, charBuffer, 0, false);
+                incoming.Append(charBuffer, 0, charsRead);
 
-                int newLineIndex = charsRead;// = Array.FindIndex(incomingChars, (c) => (c.Equals('\n'))) == -1 ? 0 : Array.FindIndex(incomingChars, (c) => (c.Equals('\n')));
-                for (int i = 0; i < charsRead; i++)
+                if (incoming.ToString().Contains('\n'))
                 {
-                    if (incomingChars[i].Equals('\n'))
+
+                    string[] splits = incoming.ToString().Split('\n').Where((s) => (!s.Equals(""))).ToArray();
+                    incoming.Clear();
+
+                    foreach (string split in splits)
                     {
-                        readMore = false;
-
-                        newLineIndex = i;
-                        break;
+                        splitLines.Enqueue(split);
                     }
-
                 }
-                incoming.Append(incomingChars, 0, newLineIndex);
-                Debug.WriteLine("Data Recieved is : " + incoming);
-                
-                if (readMore)
-                {
-                    // Ask for some more data
-                    socket.BeginReceive(incomingBytes, 0, incomingBytes.Length, SocketFlags.None, MessageReceived, null);
-                }
-                else
-                {
-                    // If we are done recieving data call the callback method.
 
-                    CallBackReceive del;
-                    bool hasInvoked = false;
-                    while (!hasInvoked && callbackReceiveQueue.TryDequeue(out del))
+                TryInvokeCallback();
+            }
+        }
+
+        private void TryInvokeCallback()
+        {
+            while (splitLines.Count > 0 && callbackReceiveQueue.Count > 0)
+            {
+                CallBackReceive del;
+                bool hasInvoked = false;
+                while (!hasInvoked && callbackReceiveQueue.TryDequeue(out del))
+                {
+                    string line;
+                    if (splitLines.TryDequeue(out line))
                     {
                         hasInvoked = true;
-                        Task.Run(() => del.method.Invoke(incoming.ToString(), null, del.payload));
+                        Task.Run(() => del.method.Invoke(line, null, del.payload));
                     }
                 }
+            }
 
-
+            if (callbackReceiveQueue.Count > 0)
+            {
+                byte[] buffer = new byte[1024];
+                socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, MessageReceived, buffer);
             }
         }
 
